@@ -1,0 +1,36 @@
+version: "0.1"
+services:
+
+  redis:
+    image: "redis:6"
+
+    command: redis-server /usr/local/etc/redis/redis.conf/redis.config
+
+    ports:
+     - "6379:6379"
+
+    volumes:
+     - ./redis-data:/var/lib/redis
+     - ./redis.conf:/usr/local/etc/redis/redis.conf
+
+    environment:
+     - REDIS_REPLICATION_MODE=master
+
+#    sysctls:
+#     - net.core.somaxconn=65535
+#     - vm.overcommit_memory=1
+
+#    env_file:
+#     - ./.env
+
+#    networks:
+#      node_net:
+#        ipv4_address: 91.134.128.89
+
+networks:
+  node_net:
+    ipam:
+      driver: default
+      config:
+#        - subnet: 91.134.128.89/16
+        - subnet: 0.0.0.0/16
