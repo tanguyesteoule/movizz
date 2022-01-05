@@ -1,0 +1,36 @@
+{% extends "lyrizz/base.html" %}
+
+{% block nav-about %}<li class="active"><a href="{% url 'lyrizz:about' %}"><b>A propos</b></a></li>{% endblock %}
+{% block nav-about2 %}<li class="active"><a href="{% url 'lyrizz:about' %}"><b>A propos</b></a></li>{% endblock %}
+
+{% block content %}
+<br /><br />
+<div style="margin-left: 1em;">
+<h5 class="title-about">Quelques mots sur Lyrizz</h5>
+<p class="content-about">
+Lyrizz est un mini-jeu consistant à deviner de quelle musique sont tirées des paroles.
+</p>
+<br />
+
+<h5 class="title-about">Combien de musiques ?</h5>
+<p class="content-about">Actuellement en base :
+    <ul class="browser-default">
+        <li><b>Musiques</b> : {{ nb_song }}</li>
+        <li><b>Paroles</b> : {{ nb_lyrics }}</li>
+        <li><b>Questions posées</b> : {{ nb_question }}</li>
+    </ul>
+</p>
+<br />
+
+<h5 class="title-about">Quelles technologies ?</h5>
+<p class="content-about">
+    <ul>
+        <li>Back end : Django, Django Channels (pour gérer les websockets en multi-joueur), BDD MySQL</li>
+        <li>Front end : Django template natif + Materialize</li>
+    </ul>
+</p>
+<br />
+
+</div>
+
+{% endblock %}

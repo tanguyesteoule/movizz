@@ -1,0 +1,94 @@
+{% extends "quizz/base.html" %}
+
+{% block nav-about %}<li class="active"><a href="{% url 'quizz:about' %}"><b>A propos</b></a></li>{% endblock %}
+{% block nav-about2 %}<li class="active"><a href="{% url 'quizz:about' %}"><b>A propos</b></a></li>{% endblock %}
+
+{% block content %}
+<br /><br />
+<div style="margin-left: 1em;">
+<h5 class="title-about">Quelques mots sur Movizz</h5>
+<p class="content-about">
+Movizz est un mini-jeu consistant à deviner de quel film est tirée une réplique.
+    J'avais cette idée en tête mais je n'ai rien trouvé qui me satisfaisait (la partie jeu de <a href="https://www.kaakook.fr/jeu">kaakook</a> est sans soute ce qui s'en rapproche le plus) donc j'ai décidé de le faire moi même !
+    Travaillant dans l'intelligence artificielle (IA), ce projet était aussi l'occasion de mettre mes compétences sur quelque chose qui me plait
+    (même si la partie IA est au final très légère pour l'instant, mais il y a des choses sympas à faire).
+    Je fais ça sur mon temps libre par plaisir, soyez indulgents si le developpement n'avance pas assez vite ou s'il y a des bugs.
+</p>
+<br />
+
+<h5 class="title-about">Combien de films ?</h5>
+<p class="content-about">Actuellement en base :
+    <ul class="browser-default">
+        <li><b>Films</b> : {{ nb_movie }}</li>
+        <li><b>Répliques</b> : {{ nb_quote }}</li>
+        <li><b>Questions posées</b> : {{ nb_question }}</li>
+    </ul>
+</p>
+<br />
+
+<h5 class="title-about">Quelles technologies ?</h5>
+<p class="content-about">
+    <ul>
+        <li>Back end : Django, Django Channels (pour gérer les websockets en multi-joueur), BDD MySQL</li>
+        <li>Front end : Django template natif + Materialize</li>
+    </ul>
+</p>
+<br />
+
+<h5 class="title-about">D'où viennent les données ?</h5>
+<p class="content-about">
+    <ul class="browser-default">
+        <li>Les citations sont tirées des fichiers de sous-titre provenant de <a href="https://www.opensubtitles.org/">OpenSubtitle</a></li>
+        <li>Les données sur les films sont tirées de <a href="https://www.imdb.com/">IMDb</a></li>
+        <li>Les films sont sélectionnés à partir de divers listes (Notamment <a href="https://www.imdb.com/">IMDb</a> et <a href="https://www.senscritique.com/">Sens Critique</a>)</li>
+        <li>Les images de film sont tirés de l'excellent site <a href="https://film-grab.com/">FilmGrab</a></li>
+    </ul>
+</p>
+<br />
+
+<h5 class="title-about">Pourquoi certains films ne sont pas dans la bonne catégorie ?</h5>
+<p class="content-about">
+    Les données sur les films (Pays et genres) sont issues du site collaboratif IMDb.
+    Tout comme Wikipedia, sur IMDb, n'importe quel utilisateur peut modifier les informations d'un film et donc des erreurs ou des trolls peuvent apparaîtrent.
+    De plus, même parmi les experts, le genre ainsi que la nationalité d'un film peut poser débat (le choix se portant souvent entre la nationalité des réalisateurs / producteurs).
+    A noter qu'un film peut appartenir à plusieurs genres et avoir plusieurs nationalités.
+</p>
+<br />
+
+<h5 class="title-about">Pourquoi certaines citations ont des caractères bizarres ou n'ont pas de sens ?</h5>
+<p class="content-about">
+    Tout est automatique et les répliques sont tirées de fichiers .srt pouvant comporter des pubs, des annotations additionnelles, des erreurs.
+    Un filtre est appliqué sur ces données mais il peut arriver que certaines anomalies passent entre les mailles du filet.
+</p>
+<br />
+
+<h5 class="title-about">Je n'arrive plus à répondre aux questions, c'est normal ?</h5>
+<p class="content-about">
+    Il peut arriver que l'hôte de la partie soit comme deconnecté et ne puisse plus répondre / passer à la question suivante.
+    Pour l'instant ce bug n'est pas géré. Si cela vous arrive, le mieux est de recréer une salle et de repartir sur des bases plus saines.
+</p>
+<br />
+
+<h5 class="title-about">Idées de nouvelles fonctionnalités</h5>
+<p class="content-about">
+
+    <ul class="browser-default">
+        <li>Correction de bugs divers et variés</li>
+        <li>Mode personnalisé : Pouvoir proposer sa propre liste de film (par exemple Film de Miyazaki, les James Bonds, les Flims de la Classe Américaine...), la sauvegarder et la proposer à la communauté.</li>
+        <li>Mode expert : On choisit un seul film et il faut savoir si oui ou non une réplique est dans ce film</li>
+        <li>Mode enquête : A partir de différents indices (plusieurs repliques, acteurs principaux, réalisateur, année, pochette floutée), retrouver le titre de film (parmi l'ensemble de la base de donnée). Plus on prend d'indices et moins on marque de points.</li>
+        <li>IA pour filtrer les répliques trop banales ou pour évaluer la difficulté des questions</li>
+        <li>Système de report pour pouvoir signaler les répliques présentant des erreurs</li>
+    </ul>
+</p>
+<br />
+
+<h5 class="title-about">Comment aider ?</h5>
+<p class="content-about">
+    N'hésitez pas à faire des remarques sur ce qui vous ne plait pas (et ce qui vous plait, c'est bien aussi !). Je suis preneur de tous conseils, idées et remarques, qu'ils soient sur le côté technique, visuel ou sur le gameplay..<br />
+    Vous pouvez me contacter à l'adresse suivante : moviz<!-- abc@def -->z@proton<!-- @abc.de -->mail.com<br />
+    Suivez le développement du jeu sur notre compte <a href="https://twitter.com/MovizzGame">twitter</a>
+</p>
+</div>
+
+{% endblock %}

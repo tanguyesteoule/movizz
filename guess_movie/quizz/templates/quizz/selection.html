@@ -1,0 +1,133 @@
+{% include "quizz/header.html" %}
+
+<div class="topnav">
+  <a href="{% url 'quizz:home' %}">Home</a>
+  <a href="{% url 'quizz:game' %}">Game</a>
+  <a class="active" href="{% url 'quizz:selection' %}">Selection</a>
+  <a href="{% url 'quizz:about' %}">About</a>
+  {% if user.is_authenticated %}
+    <a id="nav-account" href="{% url 'quizz:profile'%}">{{ user.get_username }}</a>
+  {% else %}
+    <a id="nav-account" href="{% url 'login'%}?next={{request.path}}">Login</a>
+  {% endif %}
+</div>
+
+{% block javascript %}
+  <script>
+$(document).ready ( function () {
+    $(".update").change(function () {
+        $('#nb_movies').removeClass('normal-selection').addClass('waiting-selection');
+        var list_m = $("input.update:checked").map(function(){return $(this).attr("name");}).get();
+        data_g = {'select':1}
+        for (i=0; i < list_m.length; i++) {
+            data_g[list_m[i]] = 1
+        }
+        data_g['year1'] = $('#year1').val()
+        data_g['year2'] = $('#year2').val()
+        data_g['popularity'] = $('#popularity').val()
+
+        console.log(data_g)
+        $.ajax({
+            url: '/quizz/update_selection/',
+            data: data_g,
+            dataType: 'json',
+            success: function (data) {
+                $("#nb_movies").text(data['nb_movies_sel'])
+                $('#nb_movies').removeClass('waiting-selection').addClass('normal-selection');
+                console.log(data)
+            }
+        });
+    });
+    $("#select_all_cbx").click(function () {
+        $('input.update:checkbox').prop( "checked", true ).first().change();
+
+    });
+
+    $("#reset_all_cbx").click(function () {
+        $('input.update:checkbox').prop( "checked", false ).first().change();
+    });
+
+    $("#reset_all_year").click(function () {
+        console.log('reset')
+        $('#year1').val(1900).change()
+        $('#year2').val(2020).change()
+    });
+
+    $("#reset_all_popularity").click(function () {
+        console.log('reset')
+        $('#popularity').val('').change()
+
+    });
+
+});
+</script>
+{% endblock %}
+<br />
+<p>Si vous trouvez le jeu trop difficile ou que vous avez des goûts spécifiques, cette page vous permet de filtrer
+les films par genre, année et par popularité (Nombre d'avis sur IMDB).</p>
+<br />
+
+<b>Nombre de films sélectionnés : </b>
+{% if request.session.list_movie_sel %}
+<span class="normal-selection" id="nb_movies">{{ request.session.list_movie_sel|length }}</span> films
+{% else %}
+<span class="normal-selection" id="nb_movies">{{ nb_movies_tot }}</span> films
+{% endif %}
+
+<br /><br />
+
+
+
+
+{% csrf_token %}
+<fieldset>
+    <input id="select" name="select" type="hidden" value="1">
+    <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx">Tout cocher</span> / <span class="clickable-link" id="reset_all_cbx">Tout décocher</span>)</legend>
+
+
+    <ul class="checkbox">
+    {% for genre in genres %}
+    {% if request.session.list_genre %}
+        {% if genre.id in request.session.list_genre %}
+    <li><input type="checkbox" class="check-with-label update" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1" checked><label class="label-for-check" for='idcbx{{ genre.id }}'>{{ genre.name }}</label></li>
+        {% else %}
+    <li><input type="checkbox" class="check-with-label update" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1"><label class="label-for-check" for='idcbx{{ genre.id }}'>{{ genre.name }}</label></li>
+        {% endif %}
+    {% else %}
+        <li><input type="checkbox" class="check-with-label update" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1" checked><label class="label-for-check" for='idcbx{{ genre.id }}'>{{ genre.name }}</label></li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+
+</fieldset>
+<br />
+<fieldset>
+    <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year">Réinitialiser</span>)</legend>
+    {% if request.session.year1 or request.session.year2 %}
+    De <input class="update" type="number" id="year1" name="year1" maxlength="4" size="5" value="{{ request.session.year1 }}"> à
+    <input class="update" type="number" id="year2" name="year2" maxlength="4" size="5" value="{{ request.session.year2 }}"><br />
+    {% else %}
+    <input class="update" type="number" id="year1" name="year1" maxlength="4" size="5" value="1900"> to
+    <input class="update" type="number" id="year2" name="year2" maxlength="4" size="5" value="2020"><br />
+    {% endif %}
+    <i>Format : AAAA (Les bornes sont inclues)</i>
+
+</fieldset>
+
+    <br />
+<fieldset>
+    <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
+    <label for="popularity">Sélectionner les N films les plus populaires parmis la sélection </label><br />
+    {% if request.session.popularity %}
+    <input class="update" type="number" id="popularity" name="popularity" maxlength="10" size="5" value="{{ request.session.popularity }}">
+    {% else %}
+    <input class="update" type="number" id="popularity" name="popularity" maxlength="10" size="5" value="">
+    {% endif %}
+</fieldset>
+
+
+
+
+<br />
+<i>Note : Si le nombre de films est inférieur à 3, tous les films sont selectionnés.</i>
+<!--<a href="{% url 'quizz:game' %}">Return to game</a>-->

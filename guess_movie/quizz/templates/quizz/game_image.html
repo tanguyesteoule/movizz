@@ -1,0 +1,185 @@
+{% extends "quizz/base.html" %}
+{% load quizz_extras %}
+
+{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+
+{% block javascript %}
+
+<style>
+
+{% comment %} *,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	outline: none;
+	box-sizing: border-box;
+} {% endcomment %}
+
+.container-gal {
+	margin: 0 auto;
+	max-width: 700px;
+	max-height: 100vh;
+	/*background-color: white;*/
+}
+
+
+/* Useful Classes */
+.xy-center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.transition-gal {
+	transition: all 350ms ease-in-out;
+}
+
+.r-3-2 {
+	width: 100%;
+	padding-bottom: 66.667%;
+	/*background-color: #ddd;*/
+}
+
+.image-holder {
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+/* Main Styles */
+.gallery-wrapper {
+	position: relative;
+	overflow: hidden;
+}
+
+.gallery {
+	position: relative;
+	white-space: nowrap;
+	font-size: 0;
+}
+
+.item-wrapper {
+	cursor: pointer;
+	width: 23%; /* arbitrary value */
+	display: inline-block;
+	/*background-color: white;*/
+}
+
+.gallery-item { opacity: 0.5; }
+.gallery-item.active { opacity: 1; }
+
+</style>
+
+<script>
+
+$(document).ready ( function () {
+
+
+
+
+
+  dict_data = {}
+  {% for movie in list_movie %} dict_data["{{ movie|safe }}"] = null; {% endfor %}
+  
+  $('input.autocomplete').autocomplete({
+    data: dict_data,
+    onAutocomplete: function(movie_name) {
+      $('#name-input').val('').focus();
+      //list_m.push(movie_name);
+      //delete dict_data[movie_name];
+      $.ajax({
+          type: "POST",
+          url: '/guess_image/',
+          data: {
+              'movie_name': movie_name,
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+              'real_movie': '{{ movie.id }}'
+          },
+          dataType: 'json',
+          success: function (data) {
+              if (data['res'] == 1) {
+                str_html = "<span style='color:green'>" +  movie_name + " est la bonne réponse !</span>"
+              } else {
+                str_html = "<span style='color:red'>" +  movie_name + " n'est pas la bonne réponse.</span>"
+              }
+              $('#result').html(str_html)
+          }
+      });
+
+    },
+  });
+
+  
+  $('.screenshot-thumb').click(function() {
+    $('img#screenshot-img').attr('src', $(this).attr('src'))
+  })
+
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+<br />  
+  
+
+  
+<br />
+
+  {% comment %} <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="text" id="name-input" class="autocomplete" value="">
+          <label for="name-input">Nom du film</label>
+        </div>
+      </div>
+    </div>
+  </div>
+<br />
+
+<div id="result"></div>
+</div> {% endcomment %}
+
+
+<br />
+<div style="display: inline-block; max-width:50%; height:auto; width:auto;">
+<img id="screenshot-img" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ screenshot_sample.0.image }}" /><br />
+    <div class="row">
+      <div class="col s4"><img id="thumb1" class="screenshot-thumb" src="{{ MEDIA_URL }}/screenshot/{{ screenshot_sample.0.image }}" /></div>
+      <div class="col s4"><img id="thumb2" class="screenshot-thumb" src="{{ MEDIA_URL }}/screenshot/{{ screenshot_sample.1.image }}" /></div>
+      <div class="col s4"><img id="thumb3" style="visibility: hidden;" class="screenshot-thumb" /></div>
+    </div>
+</div>
+
+{% comment %} <div class="container-gal">
+	<div class="feature">
+		<figure class="featured-item image-holder r-3-2 transition-gal"></figure>
+	</div>
+	
+	<div class="gallery-wrapper">
+		<div class="gallery">
+				<div class="item-wrapper">
+					<figure class="gallery-item image-holder r-3-2 active transition-gal"></figure>
+				</div>
+				<div class="item-wrapper">
+					<figure class="gallery-item image-holder r-3-2 transition-gal"></figure>
+				</div>
+				<div class="item-wrapper">
+					<figure class="gallery-item image-holder r-3-2 transition-gal"></figure>
+				</div>
+		</div>
+	</div> {% endcomment %}
+	
+	{% comment %} <div class="controls">
+		<button class="move-btn left">&larr;</button>
+		<button class="move-btn right">&rarr;</button>
+	</div> {% endcomment %}
+	
+</div>
+
+{% endblock %}

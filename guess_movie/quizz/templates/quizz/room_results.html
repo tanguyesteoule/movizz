@@ -1,0 +1,122 @@
+{% extends "quizz/base.html" %}
+{% load quizz_extras %}
+{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+
+$(document).ready ( function () {
+
+if (window.location.protocol == 'https:') {
+  wsProtocol = 'wss://'
+} else {
+  wsProtocol = 'ws://'
+}
+
+
+{% if request.session.game_master == room_name%}
+  const url_socket_game = wsProtocol + window.location.host + '/ws/room/results/m/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const gameSocket = new WebSocket(url_socket_game);
+
+{% endif %}
+
+  const url_socket_user = wsProtocol + window.location.host + '/ws/room/results/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const userSocket = new WebSocket(url_socket_user);
+
+  userSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      if(data['code'] == 'event_new'){
+        {% if request.session.game_master == room_name%}
+          location.replace(window.location.protocol +'//'+window.location.host + '/room/' + '{{room_name}}' + '/')
+        {% else %}
+        setTimeout(() => {
+          location.replace(window.location.protocol +'//'+window.location.host + '/room/' + '{{room_name}}' + '/')
+        }, 2000);
+        {% endif %}
+
+
+
+      }
+  };
+
+  $("#new-link").click(function() {
+    data = JSON.stringify({'message': 'new_game'})
+    gameSocket.send(data)
+  })
+
+
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+<h4>La partie est finie !</h4>
+
+<h5 style="color:#C3073F">Scores</h5>
+<div>
+<table class="centered" style="margin-left:auto; margin-right:auto; width:50%;">
+  <thead>
+    <tr>
+        <th></th>
+        {% for _ in list_answer %}
+          <th>{{ forloop.counter }}</th>
+        {% endfor %}
+        <th>Score</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for u_id in dict_answer %}
+    <tr>
+        {% if u_id == request.session.user_id %}
+          <td><span style="color:#C3073F"><b>{{dict_name|keyvalue:u_id}}</b></span></td>
+        {% else %}
+          <td>{{dict_name|keyvalue:u_id}}</td>
+        {% endif%}
+
+        {% for answer in dict_answer|keyvalue:u_id %}
+          {% if answer == 1 %}
+            <td><i class="material-icons" style="color: #96d800;">check</i></td>
+          {% else %}
+            <td><i class="material-icons" style="color: #b7241b;">clear</i></td>
+          {% endif%}
+        {% endfor%}
+
+        <td>{{ dict_score|keyvalue:u_id }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<br />
+  {% if request.session.game_master == room_name%}
+<!--<a href="#" ></a>-->
+  <a id="new-link" class="btn-large waves-effect btn-color">Rejouer</a><br />
+{% else %}
+(En attente de l'hote pour une nouvelle partie)
+{% endif%}
+  <br />
+<h5 style="color:#C3073F">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>
+  <div style="margin: 0 auto; display: inline-block;">
+  <ul class="collection">
+{% for question in questions %}
+  <li class="collection-item" style="background-color: #1A1A1D;">
+  <span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>
+  {% if list_answer|index:forloop.counter0 == 1 %}
+      “ {{ question.quote }} ” <span style="color: #96d800;"><br /><b>{{ question.movie_guessed }}</b></span>
+  {% else %}
+      “ {{ question.quote }} ” <span style="color: #b7241b"><br /><b>{{ question.movie_guessed }}</b></span>
+  {% endif %}
+  </li>
+{% endfor %}
+  </ul>
+</div>
+<br /><br />
+</div>
+<br />
+
+{% endblock %}

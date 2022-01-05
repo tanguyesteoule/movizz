@@ -1,0 +1,96 @@
+{% extends "lyrizz/base.html" %}
+{% load quizz_extras %}
+
+{% block nav-history %}<li class="active"><a href="{% url 'lyrizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+{% block nav-history2 %}<li class="active"><a href="{% url 'lyrizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+
+$(document).ready ( function () {
+
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+<h5 class="color-title-button">Partie {{ game.name }}</h5>
+
+<!--<h6 style="color:#C3073F">Scores</h6>-->
+{% comment %} {% for key, value in dict_score.items %}
+    {{dict_name|keyvalue:key}} : {{ value }} <br />
+{% endfor %} {% endcomment %}
+
+
+<div>
+<table class="centered" style="margin-left:auto; margin-right:auto; width:50%;">
+  <thead>
+    <tr>
+        <th></th>
+        {% for _ in list_answer %}
+          <th>{{ forloop.counter }}</th>
+        {% endfor %}
+        <th>Score</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for u_id in dict_answer %}
+    <tr>
+        {% if u_id == request.session.user_id %}
+          <td><span class="color-title-button"><b>{{dict_name|keyvalue:u_id}}</b></span></td>
+        {% else %}
+          <td>{{dict_name|keyvalue:u_id}}</td>
+        {% endif%}
+
+        {% for answer in dict_answer|keyvalue:u_id %}
+          {% if answer == 1 %}
+            <td><i class="material-icons" style="color: #96d800;">check</i></td>
+          {% else %}
+            <td><i class="material-icons" style="color: #b7241b;">clear</i></td>
+          {% endif%}
+        {% endfor%}
+
+        <td>{{ dict_score|keyvalue:u_id }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<br />
+
+<!--<h5 style="color:#C3073F">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>-->
+  <div style="margin: 0 auto; display: inline-block;">
+  <ul class="collection">
+{% for question in questions %}
+<!--      <li class="collection-item" style="background-color: #1A1A1D;"><a href="{% url 'quizz:history' game.name %}">{{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }})<br />Par {{game.host}}</li>-->
+      <li class="collection-item" style="background-color: #1A1A1D;">
+      <span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>
+          {% if question.song1 == question.song_guessed %}
+            <span style="color: #96d800;"><b>{{ question.song1 }}</b></span><br />
+          {% else %}
+            <span style="color: #b7241b;"><b>{{ question.song1 }}</b></span><br />
+          {% endif%}
+          {% if question.song2 == question.song_guessed %}
+            <span style="color: #96d800;"><b>{{ question.song2 }}</b></span><br />
+          {% else %}
+            <span style="color: #b7241b;"><b>{{ question.song2 }}</b></span><br />
+          {% endif%}
+          {% if question.song3 == question.song_guessed %}
+            <span style="color: #96d800;"><b>{{ question.song3 }}</b></span><br />
+          {% else %}
+            <span style="color: #b7241b;"><b>{{ question.song3 }}</b></span><br />
+          {% endif%}
+      </li>
+{% endfor %}
+  </ul>
+</div>
+<br /><br />
+    <a href="{% url 'lyrizz:history_index' %}" class="btn-large waves-effect btn-color">Retour</a><br>
+</div>
+<br />
+
+{% endblock %}

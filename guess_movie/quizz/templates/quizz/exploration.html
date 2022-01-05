@@ -1,0 +1,122 @@
+{% extends "quizz/base.html" %}
+
+{% block nav-exploration %}<li class="active"><a href="{% url 'quizz:exploration' %}"><b>Exploration</b></a></li>{% endblock %}
+{% block nav-exploration2 %}<li class="active"><a href="{% url 'quizz:exploration' %}"><b>Exploration</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function(){
+  dict_data = {}
+  {% for movie in list_movie %} dict_data['{{ movie }}'] = null; {% endfor %}
+
+  function sendItem(val) {
+    console.log(val);
+  }
+
+  function update_movie(data) {
+    console.log(data)
+
+    // Infos
+    $('#exp-movie-name').text(data['name'])
+    $('#exp-movie-year').text(data['year'])
+    $('#exp-movie-director').text(data['director'])
+    $('#exp-movie-image').attr("src", '{{ MEDIA_URL }}/' + data['image_url']);
+    // random 10 quotes
+    quotes = data['quotes'].values()
+    str_q = '<ul class="collection">'
+    for (const quote of quotes) {
+      str_q += '<li class="collection-item" style="background-color: #1A1A1D;">' + quote + '</li>'
+    }
+    str_q += '</ul>'
+    $('#exp-movie-quotes').html(str_q)
+
+    str_imp = ''
+    for (const w of data['words_sign']) {
+      str_imp += '<div class="chip">' + w + '</div>'
+    }
+    
+    $('#exp-movie-imp').html(str_imp)
+
+    $("#exp-movie-info").css('visibility', 'visible')
+
+  }
+
+  $('input.autocomplete').autocomplete({
+    data: dict_data,
+    onAutocomplete: function(movie_name) {
+      // sendItem(txt);
+      // AJAX requete
+      $.ajax({
+          url: '/get_movie_info/',
+          data: {
+            'movie_name':movie_name
+          },
+          dataType: 'json',
+          success: function (data) {
+            update_movie(data)
+          }
+      });
+
+      // update_movie(data)
+    },
+  });
+});
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+<br />
+<div class="center">
+
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <i class="material-icons prefix">textsms</i>
+          <input type="text" id="name-input" class="autocomplete">
+          <label for="name-input">Nom du film</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="exp-movie-info" style="visibility:hidden;">
+  
+    
+    <h4 style="color:#C3073F"><span id='exp-movie-name'></span> (<span id='exp-movie-year'></span>)</h4>
+    <h6><div id="exp-movie-director"></div></h6><br />
+    <img class="movie-img" id="exp-movie-image" src="" /><br /><br />
+
+    
+    <div id="exp-movie-nat"></div>
+    <div id="exp-movie-genre"></div>
+
+    <h5>Mots importants</h5>
+    <div id="exp-movie-imp"></div>
+    
+    <h5>Citations aléatoires</h5>
+    <div style="margin: 0 auto; display: inline-block;"><div id="exp-movie-quotes"></div></div>
+  </div>
+{% comment %} 
+    
+{% if games.count != 0%}
+      <ul class="collection">
+    {% for game in games %}
+          <li class="collection-item" style="background-color: #1A1A1D;"><a href="{% url 'quizz:history' game.name %}">{{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }}) par <b>{{dict_name|keyvalue:game.host}}</b> ({{ game.nb_q}} questions)</li>
+    {% endfor %}
+      </ul>
+{% else %}
+    Vous n'avez joué aucune partie
+{% endif %}
+
+{% endcomment %}
+
+
+  
+
+</div>
+
+
+{% endblock %}

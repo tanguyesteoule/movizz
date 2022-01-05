@@ -1,0 +1,53 @@
+{% extends "lyrizz/base.html" %}
+
+{% block nav-home %}<li class="active"><a href="{% url 'lyrizz:home' %}"><b>Accueil</b></a></li>{% endblock %}
+{% block nav-home2 %}<li class="active"><a href="{% url 'lyrizz:home' %}"><b>Accueil</b></a></li>{% endblock %}
+
+{% block content %}
+<div class="container">
+<!--{{ request.session.list_movie_sel }}-->
+
+{% comment %}
+  {% if user.is_authenticated %}
+<!--    <a id="nav-account" href="{% url 'quizz:profile'%}">{{ user.get_username }}</a>-->
+  {% else %}
+<!--    <a id="nav-account" href="{% url 'login'%}?next={{request.path}}">Login</a>-->
+  {% endif %}
+
+{% endcomment %}
+<div style="height:15vh;"></div>
+<div class="row">
+  <div class="col s12 m6">
+      <h4 class="center color-title-button">Principe de Lyrizz</h4>
+    <p>Deviner <span class="imp-word">la chanson</span> dont les paroles sont tirées.</p>
+      <p>Attention, pour plus de difficultés, les chansons anglaises sont traduites en français !</p>
+  </div>
+  <!--  <div style="width: 10%;"></div>-->
+    <div class="col s12 m6">
+      <h4 class="center color-title-button">Comment jouer ?</h4>
+    <p>Crée une salle puis joue en <span class="imp-word">solo</span> ou <span class="imp-word">avec tes amis</span> en leur partageant le lien.</p>
+  </div>
+</div>
+
+  <div style="text-align: center;">
+    <a href="{% url 'lyrizz:room_index' %}" class="btn-large waves-effect btn-color">Jouer</a><br>
+  </div>
+
+{% endblock %}
+<!--  <div id="home-img-container">-->
+<!--<div style="text-align:center; width:40%">-->
+<!--    <h4 style="color:#C3073F">Principe de Movizz</h4>-->
+<!--  <p>Deviner <span class="imp-word">le film</span> dont est tirée <span class="imp-word">une réplique</span> parmi trois choix</p>-->
+<!--&lt;!&ndash;    <p class="flow-text">&ndash;&gt;-->
+<!--&lt;!&ndash;  <p class="light">&ndash;&gt;-->
+<!--  <p>Mais attention tout est <span class="imp-word">aléatoire</span> ! Il ne faut pas s'attendre à n'avoir que les citations les plus célèbres.-->
+<!--    C'est votre connaissance globale des films qui vous permettra de gagner !</p>-->
+<!--</div>-->
+<!--  <div style="width: 10%;"></div>-->
+<!--  <div style="text-align:center; width:40%">-->
+<!--    <h4 style="color:#C3073F">Comment jouer ?</h4>-->
+<!--  <p>Crée une salle puis joue en <span class="imp-word">solo</span> ou <span class="imp-word">avec tes amis</span> en leur partageant le lien.</p>-->
+<!--    <p>Tu es fan de Science-Fiction des années 80 ou de Western spaghetti ? <span class="imp-word">Personnalise par genre et année</span> la liste des films proposés.-->
+<!--      Si trop de films te semblent inconnus tu peux même <span class="imp-word">filtrer par popularité</span> pour y aller en douceur.</p>-->
+<!--</div>-->
+<!--</div>-->

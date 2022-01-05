@@ -1,0 +1,39 @@
+{% extends "quizz/base.html" %}
+
+{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready ( function () {
+    $("#button-join").click(function () {
+      var room_name = $("#room_name").val()
+      if (room_name != ''){
+        window.location.replace(window.location.protocol +'//' + window.location.host + '/room/' + room_name + '/')
+      }
+
+    });
+
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div style="height:15vh;"></div>
+<div class="row center">
+    <div class="col s12 m2"></div>
+    <div class="col s12 m4">
+        <h4 style="color:#C3073F">Rejoindre une salle existante</h4><br />
+        <div class="input-field"><input class="update" placeholder="Exemple : eDseYNw0Zd" type="text" id="room_name" name="room_name">
+        <label for="room_name">ID de la salle</label></div>
+        <a id="button-join" class="btn-large waves-effect btn-color">Rejoindre</a><br>
+    </div>
+    <div class="col s12 m4">
+        <h4 style="color:#C3073F">Créer une nouvelle salle</h4>
+      <a href="{% url 'quizz:create_room' %}" class="btn-large waves-effect btn-color">Créer</a><br>
+    </div>
+    <div class="col s12 m2"></div>
+</div>
+
+{% endblock %}

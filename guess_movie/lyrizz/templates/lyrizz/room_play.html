@@ -1,0 +1,417 @@
+{% extends "lyrizz/base.html" %}
+
+{% block nav-current-game %}<li class="active"><a href="{% url 'lyrizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+{% block nav-current-game2 %}<li class="active"><a href="{% url 'lyrizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+ALREADY_ANSWERED = {{ already_answer }}
+Q_ID = {{ question.id }}
+M_ID = -1
+REVEALED = 0
+countdown = false
+countdown2 = false
+
+
+$(document).ready ( function () {
+
+function update_data(data) {
+  flush_timer('debrief');
+  Q_ID = data['q_id']
+  M_ID = -1
+  REVEALED = 0
+  $(".overlay").removeClass('bad-answer-ovl').removeClass('good-answer-ovl').removeClass('answer-ovl');
+
+  $(".song-img").removeClass('good-answer');
+
+  $("#img-container").attr("question_id", data['q_id']);
+
+  $("div.image1").attr("song_id", data['song1_id']);
+  $("div.image2").attr("song_id", data['song2_id']);
+  $("div.image3").attr("song_id", data['song3_id']);
+
+  var img1 = $("div.image1").find('img');
+  img1.attr("id", 'img'+ data['song1_id']);
+  img1.attr("src", '{{ MEDIA_URL }}/' + data['song1_url']);
+  $("div.image1").find('.overlay').attr("id",'ovl'+data['song1_id']);
+  $("div.image1").find('.text').text(data['song1_name']);
+
+  var img2 = $("div.image2").find('img');
+  img2.attr("id", 'img'+ data['song2_id']);
+  img2.attr("src", '{{ MEDIA_URL }}/' + data['song2_url']);
+  $("div.image2").find('.overlay').attr("id",'ovl'+data['song2_id']);
+  $("div.image2").find('.text').text(data['song2_name']);
+
+  var img3 = $("div.image3").find('img');
+  img3.attr("id", 'img'+ data['song3_id']);
+  img3.attr("src", '{{ MEDIA_URL }}/' + data['song3_url']);
+  $("div.image3").find('.overlay').attr("id",'ovl'+data['song3_id']);
+  $("div.image3").find('.text').text(data['song3_name']);
+
+  var lyrics_text = JSON.parse(data['lyrics_text'])
+  lyrics_text = lyrics_text.join("<br />")
+  console.log(lyrics_text);
+  $("#lyrics-text").html(lyrics_text);
+
+  $('#nb-question').text(parseInt($('#nb-question').text()) + 1)
+  ALREADY_ANSWERED = 0
+
+  {% if game.game_mode != 'chill'%}
+      {% if request.session.game_master == room_name %}
+          gameSocket.send(JSON.stringify({
+              'message': 'sleep_reveal'
+          }));
+      {% endif %}
+      $('#timer').text('{{game.game_mode}}')
+      timer_func()
+  {% endif %}
+
+
+}
+
+
+
+
+
+    $('.collapsible').collapsible();
+
+
+if (window.location.protocol == 'https:') {
+  wsProtocol = 'wss://'
+} else {
+  wsProtocol = 'ws://'
+}
+
+timer_func = function() {
+    countdown = setInterval(function() {
+      var old_timer = parseInt($('#timer').text())
+      if (old_timer == 0){
+        $('#timer').text('')
+
+        if (countdown != false) {
+            clearInterval(countdown);
+            countdown = false
+        }
+      } else {
+        $('#timer').text(old_timer - 1)
+      }
+    }, 1000);
+}
+
+{% if game.game_mode != 'chill' %}
+    timer_func()
+{% endif %}
+
+timer_func_debrief = function() {
+    countdown2 = setInterval(function() {
+      var old_timer = parseInt($('#timer-debrief').text())
+      if (old_timer == 0){
+        $('#timer-debrief').text('')
+        if (countdown2 != false) {
+            clearInterval(countdown2);
+            countdown2 = false
+        }
+      } else {
+        $('#timer-debrief').text(old_timer - 1)
+      }
+    }, 1000);
+}
+
+flush_timer = function(id_timer) {
+    if (id_timer == 'waiting') {
+        $('#timer').text('')
+        if (countdown != false) {
+            clearInterval(countdown);
+            countdown = false
+        }
+
+    } else if (id_timer == 'debrief') {
+        $('#timer-debrief').text('')
+        if (countdown2 != false) {
+            clearInterval(countdown2);
+            countdown2 = false
+        }
+    }
+}
+
+update_user_list = function(data) {
+  if ('dict_score_current' in data){
+    dict_score_current = JSON.parse(data['dict_score_current'])
+    mode = 'reveal'
+  }
+  if ('current_answer' in data){
+    current_answer = JSON.parse(data['current_answer'])
+    mode = 'update'
+  }
+  dict_user = JSON.parse(data['dict_user'])
+  dict_score = JSON.parse(data['dict_score'])
+
+  var list_user_html = '<ul>'
+  for (i=0; i < data['list_user_id'].length; i++) {
+    list_user_html += '<li>'
+    u_id = Object.keys(dict_score)[i]
+
+    if(mode == 'update'){
+      if (current_answer[u_id] == 1) {
+          list_user_html += '<span class="answer-color"><b>'
+      }
+    }
+    else if (mode == 'reveal') {
+      if (dict_score_current[u_id] == 1) {
+        list_user_html += '<span class="good-answer-color"><b>'
+      } else {
+        list_user_html += '<span class="bad-answer-color"><b>'
+      }
+    }
+
+    list_user_html += dict_user[u_id] + ' ' + dict_score[u_id]
+
+    if(u_id == '{{request.session.user_id}}'){
+        list_user_html += ' (vous)'
+    }
+
+    if(mode == 'update'){
+      if (current_answer[u_id] == 1) {
+          list_user_html += '</b></span>'
+      }
+    }
+    else if (mode == 'reveal') {
+      list_user_html += '</b></span>'
+    }
+    list_user_html += '</li>'
+
+  }
+  list_user_html += '</ul>'
+  $("#list-user").html(list_user_html)
+  $("#nb-user").text(data['list_user_id'].length)
+}
+
+
+event_end = false;
+
+{% if request.session.game_master == room_name%}
+  const url_socket_game = wsProtocol + window.location.host + '/ws/lyrizz/room/play/m/' + '{{room_name}}' + '/' + '{{game_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const gameSocket = new WebSocket(url_socket_game);
+
+  <!--  gameSocket.onmessage = pas d'usage a priori-->
+  <!--  gameSocket.onclose = changer le game_master -->
+  <!--  gameSocket.send = Changer de question (sans attendre le sleep) ? -->
+
+{% endif %}
+
+  const url_socket_user = wsProtocol + window.location.host + '/ws/lyrizz/room/play/' + '{{room_name}}' + '/' + '{{game_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const userSocket = new WebSocket(url_socket_user);
+
+  userSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+
+      if(data['code'] == 'reveal'){
+        dict_score_current = JSON.parse(data['dict_score_current'])
+        flush_timer('waiting');
+        reveal_func()
+        update_user_list(data)
+        {% if game.game_mode_debrief != 'chill' %}
+            $('#timer-debrief').text({{ game.game_mode_debrief }})
+            var debrieftime = parseInt({{ game.game_mode_debrief }}) * 1000
+            timer_func_debrief()
+<!--            setTimeout(timer_func_debrief(), 500);-->
+<!--            countdown = setTimeout(update_data(data), debrieftime);-->
+        {% endif %}
+      }
+
+
+      if(data['code'] == 'end'){
+      event_end = true;
+        location.replace(window.location.protocol +'//'+window.location.host + '/lyrizz/room/results/' + '{{room_name}}' + '/' + '{{game_name}}' + '/')
+      }
+
+      if(data['code'] == 'interruption'){
+        console.log('interruption')
+            {% comment %} 
+            if(data['is_new_host'] == '1'){
+                new_dict_user = data['new_dict_user']
+                console.log(new_dict_user)
+                $.ajax({
+                    url: '/lyrizz/update_session_interruption/',
+                    data: {
+                        'new_dict_user': JSON.stringify(new_dict_user),
+                        'room_name': '{{room_name}}',
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        location.replace(window.location.protocol +'//'+window.location.host + '/lyrizz/room/' + '{{room_name}}' + '/')
+                    }
+                });
+
+            } else {
+                setTimeout(() => {
+                    location.replace(window.location.protocol +'//'+window.location.host + '/lyrizz/room/' + '{{room_name}}' + '/')
+                }, 2000);
+            } {% endcomment %}
+
+        $('#error-host').css('visibility','visible');
+        setTimeout(() => {
+                  location.replace(window.location.protocol +'//'+window.location.host + '/lyrizz/room/')
+        }, 2000);
+
+      }
+
+
+
+      if ('list_user_id' in data){
+          update_user_list(data)
+      }
+
+      <!--  New question   -->
+      if ('song1_id' in data) {
+        flush_timer('waiting');
+        flush_timer('debrief');
+        update_data(data)
+      }
+  };
+
+reveal_func = function() {
+    REVEALED = 1
+    flush_timer('waiting');
+    $.ajax({
+        url: '/lyrizz/guess_room/',
+        data: {
+            'question_id': Q_ID,
+            'song_prop_id': M_ID,
+        },
+        dataType: 'json',
+        success: function (data) {
+            $(".overlay").addClass('bad-answer-ovl').removeClass('answer-ovl');
+            $("#img"+data['song_guessed']).addClass('good-answer');
+            $("#ovl"+data['song_guessed']).removeClass('bad-answer-ovl');
+            $("#ovl"+data['song_guessed']).addClass('good-answer-ovl');
+
+        }
+    });
+}
+
+    $(".click-img").click(function () {
+        if (ALREADY_ANSWERED == 0 && REVEALED == 0) {
+            M_ID = $(this).attr("song_id");
+            Q_ID = $(this).parent().attr("question_id");
+
+            <!--     Envoie socket           -->
+            userSocket.send(JSON.stringify({
+                'message': 'new_answer',
+                'song_id': M_ID
+            }));
+
+            ALREADY_ANSWERED = 1
+            $("#ovl"+M_ID).addClass('answer-ovl');
+        }
+
+    });
+
+  {% if request.session.game_master == room_name %}
+  window.onbeforeunload = function(e) {
+    if(event_end === false){
+        return "Êtes vous sûr de vouloir quitter cette page ? La partie en cours sera interrompue et vous ne serez plus l'hôte de la salle.";
+    }
+  };
+
+  $('#next_question').click(function () {
+    gameSocket.send(JSON.stringify({
+          'message': 'next'
+    }));
+  });
+
+  {% endif%}
+
+
+});
+</script>
+
+{% endblock%}
+
+{% block content%}
+<br />
+{% if game.game_mode != 'chill' %}
+<div id="timer">{{ game.game_mode }}</div>
+{% endif %}
+{% if game.game_mode_debrief != 'chill' %}
+<div id="timer-debrief"></div>
+{% endif %}
+
+<div id="counter-question"><span id="nb-question">{{ current_question }}</span> / {{ game.nb_q }}</div>
+
+<div id="img-container" question_id="{{ question.id }}">
+{% for song in songs %}
+<div class="click-img image{{ forloop.counter }}" song_id="{{ song.id }}">
+
+    <div class="container-div">
+        <img class="song-img image responsive-img" id="img{{ song.id }}" src="{{ MEDIA_URL }}{{ song.image }}"/><br />
+        <div class="overlay" id="ovl{{ song.id }}"><div class="text">{{ song.artists }} - {{ song.name }}</div></div>
+    </div>
+
+</div>
+{% endfor %}
+</div>
+
+<div id="container-lyrics">
+<!--<div id="lyrics">-->
+    <div style="width:85%">
+        <span class="guillemet">“ </span>
+        <span id="lyrics-text">
+        {% for lyrics in lyrics_text %}
+            <span>{{ lyrics }}</span>
+            {% if not forloop.last %}<br />{% endif %}
+        {% endfor %}
+        </span>
+        <span class="guillemet"> ”</span>
+    </div>
+</div>
+
+{% if request.session.game_mode_debrief == 'chill' and request.session.game_master == room_name %}
+
+<div id="container-button-next">
+<!--    style="left:0; right:0; margin: auto; position:absolute; bottom:10%; width: 190px;">-->
+    <a id="next_question" class="btn-large waves-effect btn-color">Suivant</a>
+</div><br />
+{% endif%}
+
+<div id="display-user">
+  <ul class="collapsible">
+    <li class="active">
+      <div class="collapsible-header collapsible-user">Liste des joueurs (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
+      <div class="collapsible-body">
+          <div id="list-user">
+            <ul>
+            {% for user_n in user_list %}
+                {% if user_n == request.session.user_name%}
+                    <li>{{user_n}} 0 (vous)</li>
+                {% else %}
+                    <li>{{user_n}} 0</li>
+                {% endif %}
+
+            {% endfor %}
+            </ul>
+          </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div id="error-host">
+  <div class='error-host-text'>
+    L'hôte a été déconnecté, la partie est terminée.<br /><br />
+      <div class="preloader-wrapper active">
+    <div class="spinner-layer spinner-red-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</div>
+
+{% endblock %}

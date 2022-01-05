@@ -1,0 +1,4 @@
+requirepass YOUR_PASSWORD
+bind 0.0.0.0
+port 6379
+stop-writes-on-bgsave-error no

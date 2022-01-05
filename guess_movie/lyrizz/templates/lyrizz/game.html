@@ -1,0 +1,73 @@
+{% load static %}
+{% include "quizz/header.html" %}
+
+<div class="topnav">
+  <a href="{% url 'lyrizz:home' %}">Home</a>
+  <a class="active" href="{% url 'lyrizz:game' %}">Game</a>
+  <a href="{% url 'lyrizz:about' %}">About</a>
+</div>
+
+{% block javascript %}
+  <script>
+$(document).ready ( function () {
+    console.log( {{ question.id }})
+    $(".click-img").click(function () {
+
+        var m_id = $(this).attr("movie_id");
+        $.ajax({
+            url: '/quizz/guess/',
+            data: {
+                'movie_prop_id': m_id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                $(".overlay").addClass('bad-answer-ovl')
+
+                $("#img"+data['movie_guessed']).addClass('good-answer');
+                $("#ovl"+data['movie_guessed']).removeClass('bad-answer-ovl').addClass('good-answer-ovl');
+                console.log(data)
+
+                setTimeout(function(){window.location.reload(1);}, 2000);
+            }
+        });
+
+    });
+
+    $('#eraser').click(function() {
+        $.ajax({
+            url: '/quizz/reset_score/',
+            data: {},
+            dataType: 'json',
+            success: function (data) {
+                $("#score1").text(0);
+                $("#score2").text(0);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+<br />
+{% if 'score' in request.session %}
+<div id="score">
+    <span id="score1">{{ request.session.score }}</span> <span id="score-slash">/</span> <span id="score2">{{ request.session.score_total }}</span>
+    <img id="eraser" src="{% static 'quizz/eraser.png' %}" alt="Reset" />
+</div>
+{% endif %}
+
+<div id="img-container">
+{% for movie in movies %}
+<div class="click-img image{{ forloop.counter }}" movie_id="{{ movie.id }}">
+
+    <div class="container-div">
+        <img class="movie-img image" id="img{{ movie.id }}" height="300px" src="{{ MEDIA_URL }}/{{ movie.image }}"/><br />
+        <div class="overlay" id="ovl{{ movie.id }}"><div class="text">{{ movie.name }}</div></div>
+    </div>
+
+</div>
+{% endfor %}
+</div>
+
+<div id="quote">
+    <span class='guillemet'>“ </span>{{ question.quote.quote_text }}<span class='guillemet'> ”</span>
+</div>

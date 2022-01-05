@@ -1,0 +1,274 @@
+{% extends "lyrizz/base.html" %}
+{% load quizz_extras %}
+
+{% block nav-play %}<li class="active"><a href="{% url 'lyrizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+{% block nav-play2 %}<li class="active"><a href="{% url 'lyrizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+
+{% block javascript %}
+
+<script>
+$(document).ready ( function () {
+
+const toNumbers = arr => arr.map(Number);
+
+{% if 'mode' in request.session %}
+  MODE = '{{ mode }}'
+{% else %}
+  MODE = 'start'
+{% endif %}
+
+ALREADY_CREATED = 0
+
+setTimeout(() => {
+    $('#start-link').removeClass('disabled');
+}, 2000);
+
+/*
+var webSocketFactory = {
+  connectionTries: 1,
+  connect: function(url) {
+    var ws = new WebSocket(url);
+    ws.addEventListener("error", e => {
+      // readyState === 3 is CLOSED
+      if (e.target.readyState === 3) {
+        this.connectionTries--;
+
+        if (this.connectionTries > 0) {
+          setTimeout(() => this.connect(url), 5000);
+        } else {
+
+          
+          $('#bug-text').html("Un problème est en cours avec le serveur<br />Veuillez réessayer ultérieurement, désolé !")
+          $('#bug').css('visibility','visible');
+          throw "Maximum number of connection trials has been reached";
+        }
+
+      }
+    });
+  }
+};*/
+
+connect_socket = function(url) {
+  var connectionTries = 1;
+  var ws = new WebSocket(url);
+  ws.addEventListener("error", e => {
+  // readyState === 3 is CLOSED
+  if (e.target.readyState === 3) {
+    this.connectionTries--;
+
+    if (this.connectionTries > 0) {
+      setTimeout(() => this.connect(url), 5000);
+    } else {
+
+      
+      $('#bug-text').html("Un problème est en cours avec le serveur<br />Veuillez réessayer ultérieurement, désolé !")
+      $('#bug').css('visibility','visible');
+      throw "Maximum number of connection trials has been reached";
+    }
+
+  }
+  });
+
+  return ws;
+
+}
+
+
+if (window.location.protocol == 'https:') {
+  wsProtocol = 'wss://'
+} else {
+  wsProtocol = 'ws://'
+}
+
+{% if request.session.game_master == room_name%}
+  const url_socket_game = wsProtocol + window.location.host + '/ws/lyrizz/room/m/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const gameSocket = new WebSocket(url_socket_game);
+
+  <!--  gameSocket.onclose = changer le game_master -->
+  <!--  gameSocket.send = Démarrer la partie -->
+
+{% endif %}
+  const url_socket_user = wsProtocol + window.location.host + '/ws/lyrizz/room/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  // const userSocket = new WebSocket(url_socket_user);
+  const userSocket = connect_socket(url_socket_user);
+
+  var dict_user = {};
+
+  userSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      dict_user = data['dict_user'];
+
+      if(data['code'] == 'refresh'){
+        
+        setTimeout(() => location.reload(), 1000);
+      }
+      
+      if(data['code'] == 'event_start'){
+      
+      list_user = data['list_user']
+        $.ajax({
+            type: "POST",
+            url: '/lyrizz/save_info_game/',
+            data: {
+              'list_user': JSON.stringify(list_user),
+              'game_name': data['game_name'],
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data2) {
+
+              url_redir = window.location.protocol +'//'+window.location.host + '/lyrizz/room/play/' + '{{room_name}}' + '/' + data['game_name'] + '/'
+
+              /* TODO : comprendre le bug
+                  if (data['mode'] == 'start') {
+                    url_redir = window.location.protocol +'//'+window.location.host + '/lyrizz/room/play/' + '{{room_name}}' + '/' + data['game_name'] + '/'
+                  } else {
+                    url_redir = window.location.protocol +'//'+window.location.host + '/lyrizz/room/play_image/' + '{{room_name}}' + '/' + data['game_name'] + '/'
+                  }
+              */
+              location.replace(url_redir)
+            }
+        });
+
+
+
+
+      }
+      if ('list_user_id' in data){
+          var list_user_html = '<ul>'
+          for (i=0; i < data['list_user_id'].length; i++) {
+            u_id = data['list_user_id'][i]
+            if(u_id == '{{request.session.user_id}}'){
+                list_user_html += '<b><li>' + dict_user[u_id] +'</li></b>'
+            } else {
+                list_user_html += '<li>' + dict_user[u_id] +'</li>'
+            }
+          }
+          list_user_html += '</ul>'
+
+          $("#list-user").html(list_user_html)
+          $("#nb-user").text(data['list_user_id'].length)
+      }
+
+  };
+  <!--  userSocket.onclose = pas d'usage ? -->
+  <!--  userSocket.send = pas d'usage ? -->
+
+
+
+    $("#start-link").click(function () {
+      if (ALREADY_CREATED == 0) {
+        console.log('click')
+        ALREADY_CREATED = 1
+        /* var nb_question = $("#nb-question").val() */
+        var nb_question = 10
+        
+        $.ajax({
+            type: "POST",
+            url: '/lyrizz/create_game/',
+            data: {
+              'room_name':'{{ room_name }}',
+              'nb_question': nb_question,
+              'dict_user': JSON.stringify(dict_user),
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+              game_name = data['game_name']
+              gameSocket.send(JSON.stringify({
+                'game_name': game_name,
+                'nb_question': nb_question,
+                'message': 'go',
+                'mode': MODE
+              }));
+
+            }
+        });
+      }
+    });
+
+var changeTimerName = false;
+
+$("#user-name").keyup(function(){
+        if(changeTimerName !== false) clearTimeout(changeTimerName);
+        changeTimerName = setTimeout(function(){
+          var user_name = $("#user-name").val()
+          $.ajax({
+              url: '/lyrizz/change_user_name/',
+              data: {
+                'user_name':user_name
+              },
+              dataType: 'json',
+              success: function (data) {
+                context = {'user_name': user_name}
+                userSocket.send(JSON.stringify(context));
+
+              }
+          });
+
+            changeTimerName = false;
+        },300);
+});
+
+function copyStringToClipboard (str) {
+   // Create new element
+   var el = document.createElement('textarea');
+   // Set value (string to be copied)
+   el.value = str;
+   // Set non-editable to avoid focus and move outside of view
+   el.setAttribute('readonly', '');
+   el.style = {position: 'absolute', left: '-9999px'};
+   document.body.appendChild(el);
+   // Select text inside element
+   el.select();
+   // Copy text to clipboard
+   document.execCommand('copy');
+   // Remove temporary element
+   document.body.removeChild(el);
+}
+
+$("#link-share").click(function () {
+  $("#status-copy").css('visibility','visible');
+  url_copy = window.location.protocol +'//'+window.location.host + '/lyrizz/room/' + '{{room_name}}' + '/'
+  copyStringToClipboard(url_copy)
+});
+
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div id="room-img-container">
+<div style="text-align:center">
+    <div class="input-field"><input type="text" id="user-name" name="user-name" value="{{request.session.user_name}}" maxlength="25">
+    <label for="user-name">Pseudo</label></div>
+<!--    <a id="button-change-name" class="btn waves-effect btn-color">Renommer</a><br /><br />-->
+    <a id="link-share" class="btn waves-effect btn-color">Copier le lien d'invitation</a><br />
+    <span style="visibility:hidden" id="status-copy"> Copié !</span><br />
+</div>
+  <div style="text-align:center">
+    <h6 class="color-title-button" style="font-weight:bold;">Liste des joueurs (<span id="nb-user"></span>)</h6>
+    <div id="list-user"></div>
+
+</div>
+</div>
+
+
+{% if request.session.game_master == room_name%}
+
+<br />
+<div style="text-align:center;">
+    <a id="start-link" class="btn waves-effect btn-color disabled">Commencer la partie</a>
+</div>
+<br />
+
+{% else %}
+<div class="center">L'hôte est en train de choisir les paramètres de la partie<br />
+Veuillez patienter</div>
+
+{% endif %}
+
+<div id='bug'><span id="bug-text"></span></div>
+
+{% endblock %}

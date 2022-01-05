@@ -1,0 +1,5 @@
+[client]
+database = "quizz_db"
+user = "django2"
+password = "password"
+default-character-set = utf8mb4

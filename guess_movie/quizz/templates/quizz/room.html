@@ -1,0 +1,820 @@
+{% extends "quizz/base.html" %}
+{% load quizz_extras %}
+
+{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+
+{% block javascript %}
+
+<script>
+$(document).ready ( function () {
+
+const toNumbers = arr => arr.map(Number);
+
+{% if 'mode' in request.session %}
+  MODE = '{{ mode }}'
+{% else %}
+  MODE = 'quote'
+{% endif %}
+
+ALREADY_CREATED = 0
+
+setTimeout(() => {
+    $('#start-link').removeClass('disabled');
+}, 2000);
+
+/*
+var webSocketFactory = {
+  connectionTries: 1,
+  connect: function(url) {
+    var ws = new WebSocket(url);
+    ws.addEventListener("error", e => {
+      // readyState === 3 is CLOSED
+      if (e.target.readyState === 3) {
+        this.connectionTries--;
+
+        if (this.connectionTries > 0) {
+          setTimeout(() => this.connect(url), 5000);
+        } else {
+
+          
+          $('#bug-text').html("Un problème est en cours avec le serveur<br />Veuillez réessayer ultérieurement, désolé !")
+          $('#bug').css('visibility','visible');
+          throw "Maximum number of connection trials has been reached";
+        }
+
+      }
+    });
+  }
+};*/
+
+connect_socket = function(url) {
+  var connectionTries = 1;
+  var ws = new WebSocket(url);
+  ws.addEventListener("error", e => {
+  // readyState === 3 is CLOSED
+  if (e.target.readyState === 3) {
+    this.connectionTries--;
+
+    if (this.connectionTries > 0) {
+      setTimeout(() => this.connect(url), 5000);
+    } else {
+
+      
+      $('#bug-text').html("Un problème est en cours avec le serveur<br />Veuillez réessayer ultérieurement, désolé !")
+      $('#bug').css('visibility','visible');
+      throw "Maximum number of connection trials has been reached";
+    }
+
+  }
+  });
+
+  return ws;
+
+}
+
+
+if (window.location.protocol == 'https:') {
+  wsProtocol = 'wss://'
+} else {
+  wsProtocol = 'ws://'
+}
+
+{% if request.session.game_master == room_name%}
+  const url_socket_game = wsProtocol + window.location.host + '/ws/room/m/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const gameSocket = new WebSocket(url_socket_game);
+
+  <!--  gameSocket.onclose = changer le game_master -->
+  <!--  gameSocket.send = Démarrer la partie -->
+
+{% endif %}
+  const url_socket_user = wsProtocol + window.location.host + '/ws/room/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  // const userSocket = new WebSocket(url_socket_user);
+  const userSocket = connect_socket(url_socket_user);
+
+  var dict_user = {};
+
+  userSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      dict_user = data['dict_user'];
+
+      if(data['code'] == 'refresh'){
+        
+        setTimeout(() => location.reload(), 1000);
+      }
+      
+      if(data['code'] == 'event_start'){
+      
+      list_user = data['list_user']
+        $.ajax({
+            type: "POST",
+            url: '/save_info_game/',
+            data: {
+              'list_user': JSON.stringify(list_user),
+              'game_name': data['game_name'],
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data2) {
+              
+              if (data['mode'] == 'quote') {
+                url_redir = window.location.protocol +'//'+window.location.host + '/room/play/' + '{{room_name}}' + '/' + data['game_name'] + '/'
+              } else {
+                url_redir = window.location.protocol +'//'+window.location.host + '/room/play_image/' + '{{room_name}}' + '/' + data['game_name'] + '/'
+              }
+              location.replace(url_redir)
+            }
+        });
+
+
+
+
+      }
+      if ('list_user_id' in data){
+          var list_user_html = '<ul>'
+          for (i=0; i < data['list_user_id'].length; i++) {
+            u_id = data['list_user_id'][i]
+            if(u_id == '{{request.session.user_id}}'){
+                list_user_html += '<b><li>' + dict_user[u_id] +'</li></b>'
+            } else {
+                list_user_html += '<li>' + dict_user[u_id] +'</li>'
+            }
+          }
+          list_user_html += '</ul>'
+
+          $("#list-user").html(list_user_html)
+          $("#nb-user").text(data['list_user_id'].length)
+      }
+
+  };
+  <!--  userSocket.onclose = pas d'usage ? -->
+  <!--  userSocket.send = pas d'usage ? -->
+
+
+
+    $("#start-link").click(function () {
+      if (ALREADY_CREATED == 0) {
+        console.log('click')
+        ALREADY_CREATED = 1
+        if (MODE == 'quote') {
+          var nb_question = $("#nb-question").val()
+        } else {
+          var nb_question = $("#nb-question-img").val()
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: '/create_game/',
+            data: {
+              'room_name':'{{ room_name }}',
+              'nb_question': nb_question,
+              'dict_user': JSON.stringify(dict_user),
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+              game_name = data['game_name']
+              gameSocket.send(JSON.stringify({
+                'game_name': game_name,
+                'nb_question': nb_question,
+                'message': 'go',
+                'mode': MODE
+              }));
+
+            }
+        });
+      }
+    });
+
+var changeTimerName = false;
+
+$("#user-name").keyup(function(){
+        if(changeTimerName !== false) clearTimeout(changeTimerName);
+        changeTimerName = setTimeout(function(){
+          var user_name = $("#user-name").val()
+          $.ajax({
+              url: '/change_user_name/',
+              data: {
+                'user_name':user_name
+              },
+              dataType: 'json',
+              success: function (data) {
+                context = {'user_name': user_name}
+                userSocket.send(JSON.stringify(context));
+
+              }
+          });
+
+            changeTimerName = false;
+        },300);
+});
+
+function copyStringToClipboard (str) {
+   // Create new element
+   var el = document.createElement('textarea');
+   // Set value (string to be copied)
+   el.value = str;
+   // Set non-editable to avoid focus and move outside of view
+   el.setAttribute('readonly', '');
+   el.style = {position: 'absolute', left: '-9999px'};
+   document.body.appendChild(el);
+   // Select text inside element
+   el.select();
+   // Copy text to clipboard
+   document.execCommand('copy');
+   // Remove temporary element
+   document.body.removeChild(el);
+}
+
+$("#link-share").click(function () {
+  $("#status-copy").css('visibility','visible');
+  url_copy = window.location.protocol +'//'+window.location.host + '/room/' + '{{room_name}}' + '/'
+  copyStringToClipboard(url_copy)
+});
+
+<!--  Selection -->
+{% if request.session.game_master == room_name%}
+
+    update_data = function(reset_selected) {
+        $('#nb_movies').removeClass('normal-selection').addClass('waiting-selection');
+        var list_m = $("input.genrecbx:checked").map(function(){return $(this).attr("name");}).get();
+        //console.log(list_m)
+        data_g = {'select':1}
+        for (i=0; i < list_m.length; i++) {
+            data_g[list_m[i]] = 1
+        }
+        data_g['selected_movies'] = JSON.stringify(toNumbers($('#selected-movies').val()))
+
+        presel = $('#preselect-sel').val()
+        data_g['presel'] = presel
+
+        data_g['nb_question'] = $('#nb-question').val()
+        data_g['nb_question_img'] = $('#nb-question-img').val()
+        data_g['year1'] = $('#year1').val()
+        data_g['year2'] = $('#year2').val()
+        data_g['popularity'] = $('#popularity').val()
+        data_g['popularity_img'] = $('#popularity_img').val()
+        data_g['country'] = $('#country-sel').val()
+
+        if ($('#mode_image').is(':checked')) {
+            MODE = 'image'
+            data_g['mode'] = 'image'
+            $('#ul-image').css('display','block');
+            $('#ul-quote').css('display','none');
+            {% comment %} $('#ul-image').open();
+            $('#ul-quote').close(); {% endcomment %}
+
+        } else {
+            MODE = 'quote'
+            data_g['mode'] = 'quote'
+            $('#ul-quote').css('display','block');
+            $('#ul-image').css('display','none');
+            {% comment %} $('#ul-image').close();
+            $('#ul-quote').open(); {% endcomment %}
+        }
+
+        if ($('#game_mode_chill').is(':checked')) {
+            data_g['game_mode'] = 'chill'
+        } else {
+            data_g['game_mode'] = $('#timer_nb').val()
+        }
+
+        if ($('#game_mode_debrief_chill').is(':checked')) {
+            data_g['game_mode_debrief'] = 'chill'
+        } else {
+            data_g['game_mode_debrief'] = $('#timer_nb_debrief').val()
+        }
+        data_g['csrfmiddlewaretoken'] = '{{ csrf_token }}'
+        if (reset_selected) {
+          data_g['reset'] = 1
+        } else {
+          data_g['reset'] = 0
+        }
+
+         
+        //console.log(data_g)
+        $.ajax({
+            type: "POST",
+            url: '/update_selection/',
+            data: data_g,
+            dataType: 'json',
+            success: function (data) {
+                $("#nb_movies").text(data['nb_movies_sel'])
+                $('#nb_movies').removeClass('waiting-selection').addClass('normal-selection');
+
+                if (reset_selected) {
+                  console.log('reset')
+                  list_movie_sel_name = data['list_movie_sel_name']
+                  list_movie_sel = data['list_movie_sel']
+                  str_html = "<select id='selected-movies' class='update-without-reset' multiple>"
+                  if (list_movie_sel.length <= 200 ) {
+                    for (var i = 0; i < list_movie_sel.length; i++) {
+                        str_html += "<option value='" + list_movie_sel[i] + "' selected>" + list_movie_sel_name[i] + "</option>"
+                    }
+                  } else {
+                    str_html += "<option value='' disabled>Trop de films pour personnalisation</option>"
+                  }
+                  str_html += "</select>"
+                  $('#div-selected-movies').html(str_html)
+                  $('select').formSelect();
+
+                }
+                
+
+                //console.log(data)
+            }
+        });
+    }
+    //$(".update").change(function () {
+    //  update_data(reset_selected=false)
+    //});
+
+    //$(".update-reset").change(function() {
+    $(document.body).on('change','.update-reset', function() {
+     // Requete ajax et mettre à jour liste (avec reset)
+      update_data(reset_selected=true)
+      //$('#selected-movies').change()
+    });
+
+    $(document.body).on('change','.update-without-reset', function() {
+    //$(".update-without-reset").change(function() {
+     // Requete ajax et mettre à jour liste (sans reset selected)
+      update_data(reset_selected=false)
+    });
+
+    $("#select_all_cbx").click(function () {
+        $('input.genrecbx:checkbox').prop( "checked", true ).first().change();
+
+    });
+
+    $("#reset_all_cbx").click(function () {
+        $('input.genrecbx:checkbox').prop( "checked", false ).first().change();
+    });
+
+    $("#reset_all_year").click(function () {
+        //console.log('reset')
+        $('#year1').val(1900).change()
+        $('#year2').val(2020).change()
+    });
+
+    $("#reset_all_popularity").click(function () {
+        //console.log('reset')
+        $('#popularity').val('').change()
+
+    });
+
+    $('#popularity').trigger('change');
+
+
+    $(document).ready(function(){
+        $('.collapsible').collapsible();
+        $('select').formSelect();
+<!--        $('input#user-name').characterCounter();-->
+    });
+
+
+    $('#preset-default').click(function() {
+        $('#game_mode_chill').prop( "checked", true ).first();
+        $('#game_mode_timer').prop( "checked", false ).first();
+        $('#game_mode_debrief_chill').prop( "checked", false ).first();
+        $('#game_mode_debrief_timer').prop( "checked", true ).first();
+
+        $('#nb-question').val(10)
+        $('#timer_nb_debrief').val(3)
+        $('input.genrecbx:checkbox').prop( "checked", true ).first()
+        $('#year1').val(1970)
+        $('#year2').val(2021)
+        $('#country-sel').val("c-1");
+        $('#preselect-sel').val("-1");
+        $('#popularity').val(200).change()
+    });
+
+    $('#preset-all').click(function() {
+        $('input.genrecbx:checkbox').prop( "checked", true ).first()
+        $('#year1').val(1900)
+        $('#year2').val(2021)
+        $('#country-sel').val("c-1");
+        $('#preselect-sel').val("-1");
+        $('#popularity').val('').change()
+
+    });
+
+
+
+
+{% endif %}
+
+
+
+
+});
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div id="room-img-container">
+<div style="text-align:center">
+    <div class="input-field"><input type="text" id="user-name" name="user-name" value="{{request.session.user_name}}" maxlength="25">
+    <label for="user-name">Pseudo</label></div>
+<!--    <a id="button-change-name" class="btn waves-effect btn-color">Renommer</a><br /><br />-->
+    <a id="link-share" class="btn waves-effect btn-color">Copier le lien d'invitation</a><br />
+    <span style="visibility:hidden" id="status-copy"> Copié !</span><br />
+</div>
+  <div style="text-align:center">
+    <h6 style="color:#C3073F; font-weight:bold;">Liste des joueurs (<span id="nb-user"></span>)</h6>
+    <div id="list-user"></div>
+
+</div>
+</div>
+
+
+{% if request.session.game_master == room_name%}
+
+<br />
+  <div class="center">
+    {% if request.session.mode == 'image'%}
+      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" checked /><span>Mode Image</span></label>
+      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote"/><span>Mode Citation</span></label>
+    {% else %}
+      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" /><span>Mode Image</span></label>
+      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote" checked/><span>Mode Citation</span></label>
+    {% endif %}
+  </div>
+  <br />
+
+  <ul id="ul-quote" class="collapsible" style="width:90%;margin: 0 auto;">
+    <li>
+      <div class="collapsible-header">Paramètres de la partie (Mode Citation)<i class="material-icons">expand_more</i></div>
+      <div class="collapsible-body">
+        <h5 class="title-about">Configuration basique</h5>
+      <fieldset>
+          <legend><b>Présélections</b> </legend>
+          <div id="preset-container" style="text-align:center;">
+            <a id="preset-default" title="Par défaut" class="btn waves-effect btn-color">Par défaut (simple)</a>
+            <a id="preset-all" title="Tous les films" class="btn waves-effect btn-color">Tous les films</a>
+          </div>
+      </fieldset>
+    <br />
+    <fieldset>
+          <legend><b>Présélections de la communauté</b> </legend>
+       <div class="input-field col m6">
+    <select class="update-reset" name="preselect-sel" id="preselect-sel">
+
+    {% if not request.session.presel or request.session.presel == -1 %}
+      <option value="-1" selected>Pas de présélection</option>
+    {% else %}
+      <option value="-1">Pas de présélection</option>
+    {% endif %}
+
+    {% for p in preselect %}
+      {% if request.session.presel == p.id %}
+        <option value="{{ p.id }}" selected>{{ p.name }}</option>
+      {% else %}
+        <option value="{{ p.id }}">{{ p.name }}</option>
+      {% endif %}
+    {% endfor %}
+
+    </select>
+    <span class="helper-text" data-error="wrong" data-success="right">Les présélections sont proposées par les utilisateurs dans le mode Editeur
+    <br />(ce champ est prioritaire par rapport aux autres paramètres).</span>
+
+  </div>
+
+      </fieldset>
+      <h5 class="title-about">Configuration avancée</h5>
+    <br />
+    <fieldset>
+      <legend><b>Temps de réflexion</b> </legend>
+          <div class="mode-img-container">
+     <div>
+        <label>
+            {% if 'game_mode' not in request.session or request.session.game_mode == 'chill' %}
+            <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" checked />
+            {% else %}
+            <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" />
+            {% endif %}
+            <span>Illimité (par l'hôte)</span>
+        </label>
+     </div>
+     <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
+     <div>
+        <label>
+            {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
+            <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" checked />
+            {% else %}
+            <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" />
+            {% endif %}
+
+            <span>Automatique</span>
+        </label>
+     </div>
+     <div class="input-field" style="width:20%;">
+        <label for="timer_nb">Temps de reflexion</label>
+         {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
+            <input class='update-without-reset' type="number" min="5" max="15" id="timer_nb" name="timer_nb" value="{{ request.session.game_mode }}"><br />
+        {% else %}
+            <input class='update-without-reset' type="number" min="5" max="15" id="timer_nb" name="timer_nb" value="10"><br />
+        {% endif %}
+
+        <span class="helper-text" data-error="wrong" data-success="right">Doit être entre 5 et 15s</span>
+    </div>
+      </div>
+  </fieldset>
+<br />
+    <fieldset>
+      <legend><b>Changement de question</b> </legend>
+          <div class="mode-img-container">
+     <div>
+        <label>
+            {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief == 'chill' %}
+            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" checked />
+            {% else %}
+            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" />
+            {% endif %}
+            <span>Manuel (par l'hôte)</span>
+        </label>
+     </div>
+     <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
+     <div>
+        <label>
+            {% if 'game_mode_debrief' not in request.session or request.session.game_mode_debrief != 'chill' %}
+            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" checked />
+            {% else %}
+            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" />
+            {% endif %}
+
+            <span>Automatique</span>
+        </label>
+     </div>
+     <div class="input-field" style="width:20%;">
+        <label for="timer_nb_debrief">Temps d'attente</label>
+         {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief != 'chill' %}
+            <input class='update-without-reset' type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief" value="{{ request.session.game_mode_debrief }}"><br />
+        {% else %}
+            <input class='update-without-reset' type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief" value="3"><br />
+        {% endif %}
+
+        <span class="helper-text" data-error="wrong" data-success="right">Doit être entre 2 et 10s</span>
+    </div>
+      </div>
+  </fieldset>
+
+<br />
+  <fieldset>
+      <legend><b>Nombre de questions</b> </legend>
+      <div class="input-field">
+    <label for="nb-question">Nombre de questions posées</label>
+    {% if request.session.nb_question %}
+      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="{{ request.session.nb_question }}"><br />
+    {% else %}
+      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="10"><br />
+    {% endif %}
+      </div>
+  </fieldset>
+    <p>Si vous trouvez le jeu trop difficile ou que vous avez des goûts spécifiques, vous pouvez filtrer
+  les films par genre, année et par popularité.</p>
+
+  <b>Nombre de films sélectionnés : </b>
+  <div style="color:#C3073F; font-weight: bold; display: inline;">
+  {% if request.session.list_movie_sel %}
+  <span class="normal-selection" id="nb_movies">{{ request.session.list_movie_sel|length }}</span> films
+  {% else %}
+  <span class="normal-selection" id="nb_movies">{{ nb_movies_tot }}</span> films
+  {% endif %}
+  </div>
+    <br /><br />
+  <fieldset>
+      <input id="select" name="select" type="hidden" value="1">
+      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx">Tout cocher</span> / <span class="clickable-link" id="reset_all_cbx">Tout décocher</span>)</legend>
+
+
+      <ul class="checkbox">
+      {% for genre in genres %}
+      {% if request.session.list_genre %}
+          {% if genre.id in request.session.list_genre %}
+
+      <li><label class="label-for-check" for='idcbx{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
+          {% else %}
+          <li><label class="label-for-check" for='idcbx{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1"><span>{{ genre.name }}</span></label></li>
+          {% endif %}
+      {% else %}
+          <li><label class="label-for-check" for='idcbx{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
+      {% endif %}
+      {% endfor %}
+      </ul>
+
+  </fieldset>
+  <br />
+
+  <fieldset>
+  <legend><b>Pays</b></legend>
+  <div class="input-field col m6">
+    <select class="update-reset" name="country-sel" id="country-sel">
+<!--      <option value="" disabled selected>Choose your option</option>-->
+      {% if not request.session.country_selected or request.session.country_selected == -1 %}
+        <option value="c-1" selected="selected">Tous les pays</option>
+      {% else %}
+        <option value="c-1">Tous les pays</option>
+      {% endif%}
+
+      {% for country in countries %}
+        {% if request.session.country_selected == country.id%}
+            <option value="c{{ country.id }}" selected="selected">{{ country.name }}</option>
+        {% else %}
+            <option value="c{{ country.id }}">{{ country.name }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+<!--    <label>Materialize Select</label>-->
+  </div>
+
+  </fieldset>
+
+  <br />
+  <fieldset>
+      <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year">Réinitialiser</span>)</legend>
+      {% if request.session.year1 or request.session.year2 %}
+      <div class="input-field">
+          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2021" size="5" value="{{ request.session.year1 }}">
+      </div>
+      <div class="input-field">
+          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2021" size="5" value="{{ request.session.year2 }}">
+          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+      </div>
+      <br />
+      {% else %}
+      <div class="input-field">
+          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2021" size="5" value="1970">
+      </div>
+      <div class="input-field">
+          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2021" size="5" value="2021">
+          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+      </div>
+      <br />
+      {% endif %}
+
+
+  </fieldset>
+
+      <br />
+  <fieldset>
+      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
+      {% if request.session.popularity != None %}
+      <div class="input-field">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="2000" maxlength="10" size="5" value="{{ request.session.popularity }}">
+          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+      </div>
+      {% else %}
+      <div class="input-field">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="2000" maxlength="10" size="5" value="200">
+          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+      </div>
+      {% endif %}
+    <br />
+  </fieldset>
+  <br />
+
+  <fieldset>
+      <legend><b>Films sélectionnés</b></legend>
+
+      <div class="input-field col s12">
+        <div id="div-selected-movies">
+          <select id="selected-movies" class="update-without-reset" multiple>
+            {% comment %} <option value="" disabled>Filtrer les films</option> {% endcomment %}
+
+            <!-- request.session['list_movie_sel_real'] -->
+
+            
+
+            {% if request.session.list_movie_sel|length <= 200 %}
+              {% for m_name in request.session.list_movie_sel_name %}
+                {% if request.session.list_movie_sel|index:forloop.counter0 in request.session.list_movie_sel_real %}
+                  <option value="{{ request.session.list_movie_sel|index:forloop.counter0 }}" selected>{{ m_name }}</option>
+                {% else %}
+                  <option value="{{ request.session.list_movie_sel|index:forloop.counter0 }}">{{ m_name }}</option>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <option value="" disabled>Trop de films pour personnalisation</option>
+            {% endif %}
+
+          </select>
+        </div>
+
+        <!-- <label>Liste des films sélectionnés</label> -->
+        <span class="helper-text" data-error="wrong" data-success="right">Vous pouvez retirer des films de la liste (si moins de 200 films). Toute action sur les autres paramètres réinitialisera la liste.</span>
+      </div>
+
+    <br />
+  </fieldset>
+
+
+  <br />
+  <i>Note : Si le nombre de films est inférieur à 3, tous les films sont selectionnés.</i>
+
+      </div>
+    </li>
+  </ul>
+
+  <!-- IMAGE PARAMETERS -->
+
+  <ul id="ul-image" class="collapsible" style="width:90%;margin: 0 auto;">
+    <li>
+      <div class="collapsible-header">Paramètres de la partie (Mode Image)<i class="material-icons">expand_more</i></div>
+      <div class="collapsible-body">
+      <br />
+{% comment %}     
+    <fieldset>
+      <legend><b>Temps de réflexion</b> </legend>
+          <div class="mode-img-container">
+     <div>
+        <label>
+            {% if 'game_mode_img' not in request.session or request.session.game_mode_img == 'chill' %}
+            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_chill" type="radio" value="chill" checked />
+            {% else %}
+            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_chill" type="radio" value="chill" />
+            {% endif %}
+            <span>Illimité (par l'hôte)</span>
+        </label>
+     </div>
+     <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
+     <div>
+        <label>
+            {% if 'game_mode_img' in request.session and request.session.game_mode_img != 'chill' %}
+            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_timer" type="radio" value="timer" checked />
+            {% else %}
+            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_timer" type="radio" value="timer" />
+            {% endif %}
+
+            <span>Automatique</span>
+        </label>
+     </div>
+     <div class="input-field" style="width:20%;">
+        <label for="timer_nb">Temps de reflexion</label>
+         {% if 'game_mode_img' in request.session and request.session.game_mode_img != 'chill' %}
+            <input class='update-without-reset' type="number" min="5" max="20" id="timer_nb_img" name="timer_nb" value="{{ request.session.game_mode_img }}"><br />
+        {% else %}
+            <input class='update-without-reset' type="number" min="5" max="20" id="timer_nb_img" name="timer_nb" value="10"><br />
+        {% endif %}
+
+        <span class="helper-text" data-error="wrong" data-success="right">Doit être entre 5 et 20s</span>
+    </div>
+      </div>
+  </fieldset>
+  <br />
+  {% endcomment %}
+
+
+  <fieldset>
+      <legend><b>Nombre de questions</b> </legend>
+      <div class="input-field">
+    <label for="nb-question">Nombre de questions posées</label>
+    {% if request.session.nb_question_img %}
+      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question-img" name="nb-question" value="{{ request.session.nb_question_img }}"><br />
+    {% else %}
+      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question-img" name="nb-question" value="10"><br />
+    {% endif %}
+      </div>
+  </fieldset>
+
+    <br />
+
+  <fieldset>
+      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
+      {% if request.session.popularity_img != None %}
+      <div class="input-field">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="2000" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
+          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+      </div>
+      {% else %}
+      <div class="input-field">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="2000" maxlength="10" size="5" value="500">
+          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+      </div>
+      {% endif %}
+  </fieldset>
+  <br />
+  <i>Note : Si le nombre de films est inférieur à 3, tous les films sont selectionnés.</i>
+
+      </div>
+    </li>
+  </ul>
+
+
+<br /><br />
+<div style="text-align:center;">
+    <a id="start-link" class="btn waves-effect btn-color disabled">Commencer la partie</a>
+
+</div>
+<br />
+
+{% else %}
+<div class="center">L'hôte est en train de choisir les paramètres de la partie<br />
+Veuillez patienter</div>
+
+{% endif %}
+
+<div id='bug'><span id="bug-text"></span></div>
+
+{% endblock %}

@@ -1,0 +1,349 @@
+{% extends "quizz/base.html" %}
+{% load quizz_extras %}
+
+{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+
+$(document).ready ( function () {
+  ALREADY_ANSWERED = 0
+  REVEALED = 0
+  countdown = false
+  countdown2 = false
+  Q_ID = {{ question.id }}
+  event_end = false;
+
+  dict_data = {}
+  {% for movie in list_movie %} dict_data["{{ movie|safe }}"] = null; {% endfor %}
+
+  if (window.location.protocol == 'https:') {
+    wsProtocol = 'wss://'
+  } else {
+    wsProtocol = 'ws://'
+  }
+
+{% if request.session.game_master == room_name%}
+  const url_socket_game = wsProtocol + window.location.host + '/ws/room/play_image/m/' + '{{room_name}}' + '/' + '{{game_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const gameSocket = new WebSocket(url_socket_game);
+
+{% endif %}
+
+  const url_socket_user = wsProtocol + window.location.host + '/ws/room/play_image/' + '{{room_name}}' + '/' + '{{game_name}}' + '/' + '{{request.session.user_id}}' + '/';
+  const userSocket = new WebSocket(url_socket_user);
+
+  userSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      console.log(data)
+
+      if(data['code'] == 'newimage'){
+        image_url = data['image_url']
+        n_image = data['n_image']
+        // $('#screenshot-img').attr('src', '{{ MEDIA_URL }}/screenshot/' + image_url)
+        update_img(image_url, n_image)
+      } else if (data['code'] == 'reveal') {
+        REVEALED = 1
+        flush_timer('waiting');
+        $.ajax({
+          type: "POST",
+          url: '/reveal_image/',
+          data: {
+              'question_id': Q_ID,
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          dataType: 'json',
+          success: function (data) {
+              str_html = "<h5>" + data['movie_name'] + "</h5>"
+              $('#right-answer-div').html(str_html)
+              $('#right-answer-div').css('display','block');
+              $('#timer-debrief').text(5)
+              timer_func_debrief()
+          }
+        });
+
+      } else if (data['code'] == 'nextquestion') {
+        $('#right-answer-div').css('display','none');
+        flush_timer('debrief')
+        update_user_list(data)
+        Q_ID = data['question_id']
+        $('#reveal-div').html('')
+        $('#result').html('')
+
+        img_path = '{{ MEDIA_URL }}/screenshot/' + data['image_url']
+        $('img#screenshot-img').attr('src', img_path)
+        $('#thumb1').attr('src', img_path)
+        $('#thumb2').css('visibility','hidden');
+        $('#thumb3').css('visibility','hidden');
+        $('#nb-question').text(parseInt($('#nb-question').text()) + 1)
+
+        $('#timer').text(30)
+        timer_func()
+        REVEALED = 0
+        ALREADY_ANSWERED = 0
+
+      } else if(data['code'] == 'newanswer'){
+        update_user_list(data)
+
+      } else if (data['code'] == 'end'){
+        event_end = true;
+        location.replace(window.location.protocol +'//'+window.location.host + '/room/results_image/' + '{{room_name}}' + '/' + '{{game_name}}' + '/')
+      }
+
+  }
+
+  update_img = function(img, n) {
+    img_path = "{{ MEDIA_URL }}/screenshot/" + img;
+    $('img#screenshot-img').attr('src', img_path)
+    $('#thumb'+parseInt(n)).attr('src', img_path).css('visibility','visible');
+  }
+
+    $('.screenshot-thumb').click(function() {
+      $('img#screenshot-img').attr('src', $(this).attr('src'))
+    })
+
+
+  $('input.autocomplete').autocomplete({
+    data: dict_data,
+    limit: 10,
+    onAutocomplete: function(movie_name) {
+      $('#name-input').val('').focus();
+
+      if (ALREADY_ANSWERED == 0 && REVEALED == 0) {
+        $.ajax({
+            type: "POST",
+            url: '/guess_image/',
+            data: {
+                'question_id': Q_ID,
+                'movie_name': movie_name,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data['res'] == 1) {
+                  str_html = "<span style='color:green'>" +  movie_name + " est la bonne réponse !</span>"
+                  userSocket.send(JSON.stringify({
+                    'message': 'new_answer',
+                    'movie_id': data['movie_id'],
+                    'ok':1
+                  }));
+                  ALREADY_ANSWERED = 1
+
+                } else {
+                  str_html = "<span style='color:red'>" +  movie_name + " n'est pas la bonne réponse.</span>"
+                  userSocket.send(JSON.stringify({
+                    'message': 'new_answer',
+                    'movie_id': data['movie_id'],
+                    'ok':0
+                  }));
+
+                }
+                $('#result').html(str_html)
+            }
+        });
+      }
+    },
+  });
+
+
+  update_user_list = function(data) {
+    if ('dict_score_current' in data){
+      dict_score_current = JSON.parse(data['dict_score_current'])
+      mode = 'reveal'
+    }
+    if ('current_answer' in data){
+      current_answer = JSON.parse(data['current_answer'])
+      mode = 'update'
+    }
+    dict_user = JSON.parse(data['dict_user'])
+    dict_score = JSON.parse(data['dict_score'])
+
+    var list_user_html = '<ul>'
+    for (i=0; i < data['list_user_id'].length; i++) {
+      list_user_html += '<li>'
+      u_id = Object.keys(dict_score)[i]
+
+      if(mode == 'update'){
+        if (current_answer[u_id] == 1) {
+            list_user_html += '<span style="color:#96d800"><b>'
+        }
+      }
+      else if (mode == 'reveal') {
+        if (dict_score_current[u_id] == 1) {
+          list_user_html += '<span style="color:#96d800"><b>'
+        } else {
+          list_user_html += '<span style="color:#b7241b"><b>'
+        }
+      }
+
+      list_user_html += dict_user[u_id] + ' ' + dict_score[u_id]
+
+      if(u_id == '{{request.session.user_id}}'){
+          list_user_html += ' (vous)'
+      }
+
+      if(mode == 'update'){
+        if (current_answer[u_id] == 1) {
+            list_user_html += '</b></span>'
+        }
+      }
+      else if (mode == 'reveal') {
+        list_user_html += '</b></span>'
+      }
+      list_user_html += '</li>'
+
+    }
+    list_user_html += '</ul>'
+    $("#list-user").html(list_user_html)
+    $("#nb-user").text(data['list_user_id'].length)
+  }
+
+  $('.collapsible').collapsible();
+
+  timer_func = function() {
+    countdown = setInterval(function() {
+      var old_timer = parseInt($('#timer').text())
+      if (old_timer == 0){
+        $('#timer').text('')
+
+        if (countdown != false) {
+            clearInterval(countdown);
+            countdown = false
+        }
+      } else {
+        $('#timer').text(old_timer - 1)
+      }
+    }, 1000);
+  }
+
+  timer_func_debrief = function() {
+    countdown2 = setInterval(function() {
+      var old_timer = parseInt($('#timer-debrief').text())
+      if (old_timer == 0){
+        $('#timer-debrief').text('')
+        if (countdown2 != false) {
+            clearInterval(countdown2);
+            countdown2 = false
+        }
+      } else {
+        $('#timer-debrief').text(old_timer - 1)
+      }
+    }, 1000);
+  }
+
+  flush_timer = function(id_timer) {
+    if (id_timer == 'waiting') {
+        $('#timer').text('')
+        if (countdown != false) {
+            clearInterval(countdown);
+            countdown = false
+        }
+
+    } else if (id_timer == 'debrief') {
+        $('#timer-debrief').text('')
+        if (countdown2 != false) {
+            clearInterval(countdown2);
+            countdown2 = false
+        }
+    }
+  }
+
+  timer_func();
+
+  {% if request.session.game_master == room_name %}
+  window.onbeforeunload = function(e) {
+    if(event_end === false){
+        return "Êtes vous sûr de vouloir quitter cette page ? La partie en cours sera interrompue et vous ne serez plus l'hôte de la salle.";
+    }
+  };
+
+  $('#next_question').click(function () {
+    if(REVEALED == 0) {
+      gameSocket.send(JSON.stringify({
+            'message': 'next'
+      }));
+    }
+  });
+
+  {% endif %}
+
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center;">
+
+<div id="timer">30</div>
+<div id="timer-debrief"></div>
+
+<div id="counter-question"><span id="nb-question">{{ current_question }}</span> / {{ game.nb_q }}</div>
+
+<br /><br />
+
+  <div id="cont-screenshot">
+  <img id="screenshot-img" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ image }}" /><br />
+
+  <div id="cont-right-answer-div"><div id="right-answer-div"></div></div>
+
+      <div class="row">
+        <div class="col s4"><img id="thumb1" class="screenshot-thumb" src="{{ MEDIA_URL }}/screenshot/{{ image }}" /></div>
+        <div class="col s4"><img id="thumb2" style="visibility: hidden;" class="screenshot-thumb" /></div>
+        <div class="col s4"><img id="thumb3" style="visibility: hidden;" class="screenshot-thumb" /></div>
+      </div>
+  </div>
+
+</div> 
+<br />
+
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="text" id="name-input" class="autocomplete" value="">
+          <label for="name-input">Nom du film</label>
+        </div>
+      </div>
+    </div>
+  </div>
+<br />
+
+<div id="result" class="center"></div>
+<div id="reveal-div" class="center"></div>
+</div>
+<br />
+
+
+{% if request.session.game_master == room_name %}
+  <div id="container-button-next">
+  <!--    style="left:0; right:0; margin: auto; position:absolute; bottom:10%; width: 190px;">-->
+      <a id="next_question" class="btn-large waves-effect btn-color">Question suivante</a>
+  </div><br />
+{% endif %}
+
+
+
+<div id="display-user">
+  <ul class="collapsible">
+    <li class="active">
+      <div class="collapsible-header collapsible-user">Liste des joueurs (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
+      <div class="collapsible-body">
+          <div id="list-user">
+            <ul>
+            {% for user_n in user_list %}
+                {% if user_n == request.session.user_name%}
+                    <li>{{user_n}} 0 (vous)</li>
+                {% else %}
+                    <li>{{user_n}} 0</li>
+                {% endif %}
+
+            {% endfor %}
+            </ul>
+          </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+{% endblock %}

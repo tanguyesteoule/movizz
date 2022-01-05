@@ -1,0 +1,101 @@
+{% extends "quizz/base.html" %}
+
+{% block nav-editor %}<li class="active"><a href="{% url 'quizz:editor' %}"><b>Editeur</b></a></li>{% endblock %}
+{% block nav-editor2 %}<li class="active"><a href="{% url 'quizz:editor' %}"><b>Editeur</b></a></li>{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function(){
+  dict_data = {}
+
+
+  {% for movie in list_movie %} dict_data["{{ movie|safe }}"] = null; {% endfor %}
+
+  list_m = [];
+
+  $("#save-link").click(function () {
+    var name = $('#list-name').val()
+    console.log(name)
+    if (name != '' && list_m.length >= 3) {
+      $.ajax({
+          type: "POST",
+          url: '/save_preset/',
+          data: {
+            'name': name,
+            'list_movie': JSON.stringify(list_m),
+            'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          dataType: 'json',
+          success: function (data) {
+            $('#message-save').html('La liste "<b>' + name + '</b>" a bien été créée.')
+            console.log('OK')
+          }
+      });
+    }
+  });
+  
+
+
+
+
+  $('input.autocomplete').autocomplete({
+    data: dict_data,
+    onAutocomplete: function(movie_name) {
+      $('#list-movie').append(movie_name + '<br />')
+      $('#name-input').val('').focus();
+      list_m.push(movie_name);
+      delete dict_data[movie_name];
+
+    },
+  });
+});
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+<br />
+<div class="center">
+<h5 style="color:#C3073F">Editeur de préselection</h5>
+Personnalisez votre propre liste de film et partagez la avec la communauté !
+
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <div class="input-field col s12">
+          <input type="text" id="name-input" class="autocomplete" value="">
+          <label for="name-input">Nom du film</label>
+          <span class="helper-text" data-error="wrong" data-success="right">(Au moins 3 films)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="list-movie"></div> 
+
+  <br />
+
+ <div class="container">
+      <div class="row">
+          <form class="col s12">
+              <div class="input-field col s12 l3"></div>
+              <div class="input-field col s12 l6">
+                <input type="text" id="list-name" name="list-name" maxlength="50">
+                <label for="list-name">Nom de la liste</label>
+              </div>
+              <div class="input-field col s12 l3"></div>
+          </form>
+        </div>
+       </div>
+
+  <a id="save-link" class="btn waves-effect btn-color">Sauvegarder</a>
+  <br /><br />
+  <div id="message-save"></div>
+
+
+</div>
+
+
+{% endblock %}
