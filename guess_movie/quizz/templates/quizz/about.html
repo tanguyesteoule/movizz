@@ -1,4 +1,5 @@
 {% extends "quizz/base.html" %}
+{% load static %}
 
 {% block nav-about %}<li class="active"><a href="{% url 'quizz:about' %}"><b>A propos</b></a></li>{% endblock %}
 {% block nav-about2 %}<li class="active"><a href="{% url 'quizz:about' %}"><b>A propos</b></a></li>{% endblock %}
@@ -89,6 +90,14 @@ Movizz est un mini-jeu consistant à deviner de quel film est tirée une répliq
     Vous pouvez me contacter à l'adresse suivante : moviz<!-- abc@def -->z@proton<!-- @abc.de -->mail.com<br />
     Suivez le développement du jeu sur notre compte <a href="https://twitter.com/MovizzGame">twitter</a>
 </p>
+
+<br />
+
+<h5 class="title-about">Où trouver le code source ?</h5>
+<a href="https://github.com/tanguyesteoule/movizz">
+    <img style="width:200px" src="{% static 'lyrizz/github.png' %}" />
+</a>
+<br />
 </div>
 
 {% endblock %}

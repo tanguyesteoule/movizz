@@ -1,5 +1,5 @@
 {% extends "lyrizz/base.html" %}
-
+{% load static %}
 {% block nav-about %}<li class="active"><a href="{% url 'lyrizz:about' %}"><b>A propos</b></a></li>{% endblock %}
 {% block nav-about2 %}<li class="active"><a href="{% url 'lyrizz:about' %}"><b>A propos</b></a></li>{% endblock %}
 
@@ -31,6 +31,11 @@ Lyrizz est un mini-jeu consistant à deviner de quelle musique sont tirées des 
 </p>
 <br />
 
+<h5 class="title-about">Où trouver le code source ?</h5>
+<a href="https://github.com/tanguyesteoule/movizz">
+    <img style="width:200px" src="{% static 'lyrizz/github.png' %}" />
+</a>
+<br />
 </div>
 
 {% endblock %}
