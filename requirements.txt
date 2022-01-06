@@ -8,3 +8,5 @@ mysqlclient
 numpy
 pandas
 Pillow
+gunicorn
+uvicorn
