@@ -36,19 +36,28 @@ The project is divided into two applications: quizz (for movizz) and lyrizz. Her
 
 
 ## Movizz
-TODO Screenshot
+There are two game modes for movizz: 
+- **Quote mode** where you have to find a movie among the three proposals from a quote
+
+![Movizz screenshot](assets/images/movizz_screenshot.png)
+
+- **Image mode** where you have to find a film without proposals from three images (the faster you find it, the more points you get)
+
+![Movizz image screenshot](assets/images/movizz_image_screenshot.png)
+
+
 ### Data
-- IMDb, Sens Critique : Listes de films
-- IMDb : Informations sur les films (Scrappé mais il existe une API)
-- OpenSubtitle : Dialogues sous formes de subtitles français (API)
-- FilmGrab : Screenshot de films pour le mode image (Scrappé à partir du bouton download)
+- [IMDb](https://www.imdb.com/), [Sens Critique](https://www.senscritique.com/): List of movies
+- [IMDb](https://www.imdb.com/): Information about movies (Scrapped but there is an API)
+- [OpenSubtitle](https://www.opensubtitles.org/fr): Dialogues in the form of French subtitles (API)
+- [FilmGrab](https://film-grab.com/): Screenshot of movies for image mode (Scraped from the download button)
 
 ## Lyrizz
-TODO Screenshot
+![Lyrizz screenshot](assets/images/lyrizz_screenshot.png)
 ### Data
-- Spotify : Liste de chansons (playlists rentrées manuellement), API
-- Spotify : Information sur les chansons
-- Genius : Lyrics, API
+- [Spotify](https://www.spotify.com/): List of songs (manually entered playlists), API
+- [Spotify](https://www.spotify.com/): Information about songs
+- [Genius](https://genius.com/): Lyrics, API
 
 ## Important notice
 Although the code is available, this project was not designed to be directly reusable.
