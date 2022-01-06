@@ -1,0 +1,16 @@
+# /etc/systemd/system/guessmovie-daphne.service
+[Unit]
+Description=Movizz
+After=network.target
+[Service]
+Type=simple 
+User=tanguy
+WorkingDirectory=/home/tanguy/movizz/guess_movie  
+EnvironmentFile=/home/tanguy/movizz/.env
+ExecStart=/home/tanguy/movizz/venv/bin/daphne -b 0.0.0.0 -u /home/tanguy/movizz/venv/run/daphne.sock -p 9001 guess_movie.asgi:application 
+#edit myproject
+#If your daphne is not installed globally and is inside your #environment, enter the complete path to daphne
+#ExecStart=/home/ubuntu/myproject/env/bin/daphne -p 9001     
+#          myproject.asgi:application
+[Install]
+WantedBy=multi-user.target

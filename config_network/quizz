@@ -1,0 +1,93 @@
+# /etc/nginx/sites-enabled/quizz
+
+#added this block
+#upstream channels-backend {
+# server localhost:9001;
+#}
+#server {
+# listen 80;
+# server_name 51.68.225.98;
+#location = /favicon.ico { access_log off; log_not_found off; }
+# location /static/ {
+# root /home/tanguy/guess_movie/guess_movie/quizz/static;
+#" }
+
+# location / {
+# include proxy_params;
+# proxy_pass http://unix:/run/myproject.sock;
+# }
+#path to proxy my WebSocket requests
+#location /ws/ {
+ 
+# proxy_pass http://channels-backend;
+# proxy_http_version 1.1;
+# proxy_set_header Upgrade $http_upgrade;
+# proxy_set_header Connection “upgrade”;
+# proxy_redirect off;
+# proxy_set_header Host $host;
+# proxy_set_header X-Real-IP $remote_addr;
+# proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# proxy_set_header X-Forwarded-Host $server_name;
+# }
+#}
+
+upstream ws_server {
+  server unix:/home/tanguy/movizz/venv/run/daphne.sock fail_timeout=120;
+}
+
+upstream gunicorn_server {
+  server unix:/home/tanguy/movizz/venv/run/gunicorn.sock fail_timeout=120;
+}
+
+#server {
+#    listen 80 default_server;
+#    server_name _;
+#    return 301 https://$host$request_uri;
+#}
+
+server {
+  #listen 443 ssl;
+  #ssl_certificate /etc/nginx/certs/default.crt;
+  #ssl_certificate_key /etc/nginx/certs/default.key;
+
+  listen 80;
+  server_name movizz.fr;
+
+   access_log /home/tanguy/logs/nginx-access.log;
+   error_log /home/tanguy/logs/nginx-error.log;
+
+  location /static {
+    alias /home/tanguy/movizz/guess_movie/staticfiles;
+  }
+
+#  location /static/quizz {
+#    alias /home/tanguy/guess_movie/guess_movie/quizz/static/quizz;
+#  }
+
+  location /media/covers {
+    alias /home/tanguy/movizz/guess_movie/media/covers;
+  }
+
+  location /media/screenshot {
+    alias /home/tanguy/movizz/guess_movie/media/screenshot;
+  }
+
+  location /ws/ {
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_redirect off;
+    proxy_pass http://ws_server;
+  }
+
+  location / {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+
+    if (!-f $request_filename) {
+        proxy_pass http://gunicorn_server;
+        break;
+    }
+  }
+}
