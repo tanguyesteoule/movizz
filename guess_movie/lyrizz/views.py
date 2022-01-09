@@ -45,6 +45,20 @@ def change_user_name(request):
         request.session['user_name'] = user_name
         return JsonResponse({})
 
+#
+# def room(request, room_name):
+#     context = {'room_name': room_name}
+#     if 'user_id' not in request.session:
+#         user_id, user_name = create_user(request)
+#         time.sleep(0.5)
+#     elif Player.objects.filter(user_id=request.session['user_id']).count() == 0:
+#         user_id, user_name = create_user(request)
+#         time.sleep(0.5)
+#
+#     if 'game_master' in request.session and request.session['game_master'] == room_name:
+#         context['nb_songs_tot'] = 200
+#
+#     return render(request, 'lyrizz/room.html', context)
 
 def room(request, room_name):
     context = {'room_name': room_name}
@@ -56,18 +70,17 @@ def room(request, room_name):
         time.sleep(0.5)
 
     if 'game_master' in request.session and request.session['game_master'] == room_name:
+        langs = [{'id': 'en', 'name': 'Anglais'}, {'id': 'fr', 'name': 'Français'}]
         context['nb_songs_tot'] = 200
+        context['langs'] = langs
 
     return render(request, 'lyrizz/room.html', context)
 
-def get_n_random_songs(n=3, list_song_sel=False, quote=True, image=False):
-    # if list_movie_sel:
-    #     if quote:
-    #         movies = list(Movie.objects.filter(pk__in=list_movie_sel, has_quote=1))
-    #     elif image:
-    #         movies = list(Movie.objects.filter(pk__in=list_movie_sel, has_image=1))
-    # else:
-    songs = list(Song.objects.all())
+def get_n_random_songs(n=3, list_song_sel=False):
+    if list_song_sel:
+        songs = list(Song.objects.filter(pk__in=list_song_sel, has_quote=1))
+    else:
+        songs = list(Song.objects.all())
 
     return random.sample(songs, n)
 
@@ -86,21 +99,20 @@ def create_game(request):
     # Création de la Game en base
     if 'game_master' in request.session and request.session['game_master'] == room_name:
 
-        # Selection movies
-        # if 'list_movie_sel_real' in request.session and len(request.session['list_movie_sel_real']) >= 3:
-        #     list_movie_sel = request.session['list_movie_sel_real']
+        # Selection songs
+        # if 'list_song_sel_real' in request.session and len(request.session['list_song_sel_real']) >= 3:
+        #     list_song_sel = request.session['list_song_sel_real']
         # else:
-        #     list_movie_sel = False
+        #     list_song_sel = False
 
         dict_user = json.loads(request.POST.get('dict_user'))
-        # nb_question = max(2, min(50, int(request.POST.get('nb_question'))))
-        nb_question = 10
+        nb_question = max(2, min(50, int(request.POST.get('nb_question'))))
         request.session['dict_user'] = dict_user
         data = {}
 
         game_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
         game = Game(name=game_name, current_q=0, nb_q=nb_question, host=request.session['user_id'], mode=mode,
-                    size=5, game_mode=game_mode, game_mode_debrief=game_mode_debrief)
+                    size=3, game_mode=game_mode, game_mode_debrief=game_mode_debrief)
         game.save()
 
         for u_id in dict_user.keys():
@@ -111,13 +123,18 @@ def create_game(request):
         if mode == 'start':  ### Mode quote
             # Création des questions, puis insertion en base
             for i in range(nb_question):
-                sample_songs = get_n_random_songs(3, False, quote=True, image=False)
+                # If there is a constraint on songs
+                if 'list_song_sel_real' in request.session and len(request.session['list_song_sel_real']) >= 3:
+                    sample_songs = get_n_random_songs(3, request.session['list_song_sel_real'])
+                else:
+                    sample_songs = get_n_random_songs(3)
 
-                # Select a random movie among them
+                # Select a random song among them
                 song_guessed = random.choice(sample_songs)
 
-                # Get random lyrics
-                all_lyrics_text = Lyrics.objects.filter(song__pk=song_guessed.id).all()
+                # Get random lyrics, filter chorus section
+                all_lyrics_text = Lyrics.objects.filter(song__pk=song_guessed.id).exclude(section='chorus')
+
                 i_max = len(all_lyrics_text) - game.size
                 i_lyrics = random.randint(0, i_max)
 
@@ -187,7 +204,7 @@ def guess_room(request):
 
             # Remplace by answer
             # request.session['score_total'] += 1
-            # if movie_prop_id == question.movie_guessed.id:
+            # if song_prop_id == question.song_guessed.id:
             #     request.session['score'] += 1
 
             # try:
@@ -323,3 +340,60 @@ def about(request):
 
     context = {'nb_song': nb_song, 'nb_lyrics': nb_lyrics, 'nb_question': nb_question}
     return render(request, 'lyrizz/about.html', context)
+
+
+def update_selection(request):
+    data = {}
+    if request.POST.get('select'):
+        year1 = int(request.POST.get('year1'))
+        year2 = int(request.POST.get('year2'))
+        nb_question = int(request.POST.get('nb_question'))
+        popularity = request.POST.get('popularity')
+        # mode = request.POST.get('mode')
+        # game_mode = request.POST.get('game_mode')
+        # game_mode_debrief = request.POST.get('game_mode_debrief')
+        lang = request.POST.get('lang')[1:]
+        list_song_sel_real = json.loads(request.POST.get('selected_songs'))
+        reset = int(request.POST.get('reset'))
+
+        if lang != '-1':
+            list_song_id = list(Song.objects.filter(lang=lang).order_by('name').values_list('id', flat=True))
+        else:
+            list_song_id = list(Song.objects.all().order_by('name').values_list('id', flat=True))
+
+        if year1 != 1900 or year2 != 2021:
+            list_song = Song.objects.filter(year__gte=year1, year__lte=year2, id__in=list_song_id).order_by('name')
+        else:
+            list_song = Song.objects.filter(id__in=list_song_id).order_by('name')
+
+
+    if popularity != '':
+        l1 = list(list_song.order_by('-popularity')[:int(popularity)].values_list('id', flat=True))
+        list_song = Song.objects.filter(id__in=l1).order_by('name')
+
+    list_song_sel = list(dict.fromkeys([m.id for m in list_song]))
+    list_song_sel_name = [f'{m.artists} - {m.name}' for m in list_song]
+
+    if reset:
+        list_song_sel_real = list_song_sel
+
+
+    request.session['list_song_sel'] = list_song_sel
+    request.session['list_song_sel_name'] = list_song_sel_name
+    request.session['list_song_sel_real'] = list_song_sel_real
+
+    request.session['year1'] = year1
+    request.session['year2'] = year2
+    request.session['popularity'] = popularity
+    request.session['nb_question'] = nb_question
+    # request.session['mode'] = mode
+    # request.session['game_mode'] = game_mode
+    # request.session['game_mode_debrief'] = game_mode_debrief
+    request.session['lang_selected'] = lang
+
+    data['nb_songs_sel'] = len(list_song_sel_real)
+    data['list_song_sel'] = list_song_sel
+    data['list_song_sel_name'] = list_song_sel_name
+    data['list_song_sel_real'] = list_song_sel_real
+
+    return JsonResponse(data)

@@ -10,6 +10,7 @@ urlpatterns = [
     path('create_game/', views.create_game, name='create_game'),
     path('create_room/', views.create_room, name='create_room'),
     path('create_game/', views.create_game, name='create_game'),
+    path('update_selection/', views.update_selection, name='update_selection'),
 
     path('change_user_name/', views.change_user_name, name='change_user_name'),
     path('save_info_game/', views.save_info_game, name='save_info_game'),
@@ -18,8 +19,8 @@ urlpatterns = [
     path('history/', views.history_index, name='history_index'),
     path('about/', views.about, name='about'),
 
+
     # path('update_session_interruption/', views.update_session_interruption, name='update_session_interruption'),
-    # path('update_selection/', views.update_selection, name='update_selection'),
 
     # path('room/results_image/<str:room_name>/<str:game_name>/', views.room_results_image, name='room_results_image'),
     # path('room/play_image/<str:room_name>/<str:game_name>/', views.room_play_image, name='room_play_image'),

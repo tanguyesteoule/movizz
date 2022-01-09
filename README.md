@@ -1,7 +1,7 @@
 # Movizz and Lyrizz
 This project consists of two online multiplayer games:
-- **Movizz** where you have to find out from which film dialogues (or screenshots) come
-- **Lyrizz** where you have to find out from which song lyrics come
+- **[Movizz](https://movizz.fr)** where you have to find out from which film dialogues (or screenshots) come
+- **[Lyrizz](https://movizz.fr/lyrizz/)** where you have to find out from which song lyrics come
 
 
 ## Common parts

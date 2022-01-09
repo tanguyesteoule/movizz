@@ -160,8 +160,7 @@ if (window.location.protocol == 'https:') {
       if (ALREADY_CREATED == 0) {
         console.log('click')
         ALREADY_CREATED = 1
-        /* var nb_question = $("#nb-question").val() */
-        var nb_question = 10
+        var nb_question = $("#nb-question").val()
         
         $.ajax({
             type: "POST",
@@ -233,6 +232,105 @@ $("#link-share").click(function () {
   copyStringToClipboard(url_copy)
 });
 
+
+<!--  Selection -->
+{% if request.session.game_master == room_name%}
+
+    update_data = function(reset_selected) {
+        $('#nb_songs').removeClass('normal-selection').addClass('waiting-selection');
+
+        data_g = {'select':1}
+        data_g['selected_songs'] = JSON.stringify(toNumbers($('#selected-songs').val()))
+
+        data_g['nb_question'] = $('#nb-question').val()
+        data_g['year1'] = $('#year1').val()
+        data_g['year2'] = $('#year2').val()
+        data_g['popularity'] = $('#popularity').val()
+        data_g['lang'] = $('#lang-sel').val()
+
+        data_g['csrfmiddlewaretoken'] = '{{ csrf_token }}'
+        if (reset_selected) {
+          data_g['reset'] = 1
+        } else {
+          data_g['reset'] = 0
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/lyrizz/update_selection/',
+            data: data_g,
+            dataType: 'json',
+            success: function (data) {
+                $("#nb_songs").text(data['nb_songs_sel'])
+                $('#nb_songs').removeClass('waiting-selection').addClass('normal-selection');
+
+                if (reset_selected) {
+                  console.log('reset')
+                  list_song_sel_name = data['list_song_sel_name']
+                  list_song_sel = data['list_song_sel']
+                  str_html = "<select id='selected-songs' class='update-without-reset' multiple>"
+                  if (list_song_sel.length <= 200 ) {
+                    for (var i = 0; i < list_song_sel.length; i++) {
+                        str_html += "<option value='" + list_song_sel[i] + "' selected>" + list_song_sel_name[i] + "</option>"
+                    }
+                  } else {
+                    str_html += "<option value='' disabled>Trop de chansons pour personnalisation</option>"
+                  }
+                  str_html += "</select>"
+                  $('#div-selected-songs').html(str_html)
+                  $('select').formSelect();
+
+                }
+
+            }
+        });
+    }
+
+    $(document.body).on('change','.update-reset', function() {
+      update_data(reset_selected=true)
+    });
+
+    $(document.body).on('change','.update-without-reset', function() {
+      update_data(reset_selected=false)
+    });
+
+
+    $("#reset_all_year").click(function () {
+        $('#year1').val(1900).change()
+        $('#year2').val(2020).change()
+    });
+
+    $("#reset_all_popularity").click(function () {
+        $('#popularity').val('').change()
+
+    });
+
+    $('#popularity').trigger('change');
+
+
+    $(document).ready(function(){
+        $('.collapsible').collapsible();
+        $('select').formSelect();
+    });
+
+
+    $('#preset-default').click(function() {
+        $('#year1').val(1970)
+        $('#year2').val(2021)
+        $('#lang-sel').val("c-1");
+        $('#popularity').val(500).change()
+    });
+
+    $('#preset-all').click(function() {
+        $('#year1').val(1900)
+        $('#year2').val(2021)
+        $('#lang-sel').val("c-1");
+        $('#popularity').val('').change()
+
+    });
+
+{% endif %}
+
 });
 </script>
 {% endblock %}
@@ -254,12 +352,157 @@ $("#link-share").click(function () {
 </div>
 </div>
 
-
 {% if request.session.game_master == room_name%}
 
+  <ul id="ul-quote" class="collapsible" style="width:90%;margin: 0 auto;">
+    <li>
+      <div class="collapsible-header">Paramètres de la partie<i class="material-icons">expand_more</i></div>
+      <div class="collapsible-body">
+        <h5 class="title-about">Configuration basique</h5>
+      <fieldset>
+          <legend><b>Présélections</b> </legend>
+          <div id="preset-container" style="text-align:center;">
+            <a id="preset-default" title="Par défaut" class="btn waves-effect btn-color">Par défaut (simple)</a>
+            <a id="preset-all" title="Tous les films" class="btn waves-effect btn-color">Toutes les chansons</a>
+          </div>
+      </fieldset>
+    <br />
+
+      <h5 class="title-about">Configuration avancée</h5>
+
 <br />
+  <fieldset>
+      <legend><b>Nombre de questions</b> </legend>
+      <div class="input-field">
+    <label for="nb-question">Nombre de questions posées</label>
+    {% if request.session.nb_question %}
+      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="{{ request.session.nb_question }}"><br />
+    {% else %}
+      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="10"><br />
+    {% endif %}
+      </div>
+  </fieldset>
+    <p>Si vous trouvez le jeu trop difficile ou que vous avez des goûts spécifiques, vous pouvez filtrer
+  les chansons par langue et popularité.</p>
+
+  <b>Nombre de chansons sélectionnées : </b>
+  <div class="color-title-button" style="font-weight: bold; display: inline;">
+  {% if request.session.list_song_sel %}
+  <span class="normal-selection" id="nb_songs">{{ request.session.list_song_sel|length }}</span> chansons
+  {% else %}
+  <span class="normal-selection" id="nb_songs">{{ nb_songs_tot }}</span> chansons
+  {% endif %}
+  </div>
+    <br /><br />
+
+  <fieldset>
+  <legend><b>Langue</b></legend>
+  <div class="input-field col m6">
+    <select class="update-reset" name="lang-sel" id="lang-sel">
+<!--      <option value="" disabled selected>Choose your option</option>-->
+      {% if not request.session.lang_selected or request.session.lang_selected == -1 %}
+        <option value="c-1" selected="selected">Toutes les langues</option>
+      {% else %}
+        <option value="c-1">Toutes les langues</option>
+      {% endif%}
+
+      {% for lang in langs %}
+        {% if request.session.lang_selected == lang.id%}
+            <option value="c{{ lang.id }}" selected="selected">{{ lang.name }}</option>
+        {% else %}
+            <option value="c{{ lang.id }}">{{ lang.name }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+<!--    <label>Materialize Select</label>-->
+  </div>
+
+  </fieldset>
+
+  <br />
+  <fieldset>
+      <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year">Réinitialiser</span>)</legend>
+      {% if request.session.year1 or request.session.year2 %}
+      <div class="input-field">
+          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2021" size="5" value="{{ request.session.year1 }}">
+      </div>
+      <div class="input-field">
+          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2021" size="5" value="{{ request.session.year2 }}">
+          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+      </div>
+      <br />
+      {% else %}
+      <div class="input-field">
+          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2021" size="5" value="1970">
+      </div>
+      <div class="input-field">
+          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2021" size="5" value="2021">
+          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+      </div>
+      <br />
+      {% endif %}
+
+
+  </fieldset>
+
+      <br />
+  <fieldset>
+      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
+      {% if request.session.popularity != None %}
+      <div class="input-field">
+          <label for="popularity">Nombre de chansons filtrées par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="2000" maxlength="10" size="5" value="{{ request.session.popularity }}">
+          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+      </div>
+      {% else %}
+      <div class="input-field">
+          <label for="popularity">Nombre de chansons filtrées par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="2000" maxlength="10" size="5" value="200">
+          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+      </div>
+      {% endif %}
+    <br />
+  </fieldset>
+  <br />
+
+  <fieldset>
+      <legend><b>Chansons sélectionnées</b></legend>
+
+      <div class="input-field col s12">
+        <div id="div-selected-songs">
+          <select id="selected-songs" class="update-without-reset" multiple>
+
+            {% if request.session.list_song_sel|length <= 200 %}
+              {% for m_name in request.session.list_song_sel_name %}
+                {% if request.session.list_song_sel|index:forloop.counter0 in request.session.list_song_sel_real %}
+                  <option value="{{ request.session.list_song_sel|index:forloop.counter0 }}" selected>{{ m_name }}</option>
+                {% else %}
+                  <option value="{{ request.session.list_song_sel|index:forloop.counter0 }}">{{ m_name }}</option>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <option value="" disabled>Trop de chansons pour personnalisation</option>
+            {% endif %}
+
+          </select>
+        </div>
+
+        <span class="helper-text" data-error="wrong" data-success="right">Vous pouvez retirer des chansons de la liste (si moins de 200 chansons). Toute action sur les autres paramètres réinitialisera la liste.</span>
+      </div>
+
+    <br />
+  </fieldset>
+
+
+  <br />
+  <i>Note : Si le nombre de chansons est inférieur à 3, toutes les chansons sont selectionnés.</i>
+
+      </div>
+    </li>
+  </ul>
+
+<br /><br />
 <div style="text-align:center;">
     <a id="start-link" class="btn waves-effect btn-color disabled">Commencer la partie</a>
+
 </div>
 <br />
 
@@ -268,6 +511,10 @@ $("#link-share").click(function () {
 Veuillez patienter</div>
 
 {% endif %}
+
+
+
+
 
 <div id='bug'><span id="bug-text"></span></div>
 
