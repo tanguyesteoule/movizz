@@ -271,15 +271,16 @@ def room_results_image(request, room_name, game_name):
         for q in questions:
             answers = AnswerImage.objects.filter(questionimage=q)
             for a in answers:
-                # if a.user_id not in dict_score.keys():
-                #     dict_score[a.user_id] = 0
-                # Bonne réponse
                 if a.movie_prop == q.movie_guessed:
                     if a.score == None:
                         score_tmp = 0
                     else:
                         score_tmp = a.score
-                    dict_score[a.user_id] += score_tmp
+
+                    if a.user_id in dict_score.keys():
+                        dict_score[a.user_id] += score_tmp
+                    else:
+                        dict_score[a.user_id] = score_tmp
 
         dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
         dict_name = {}
