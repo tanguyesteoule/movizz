@@ -54,6 +54,8 @@ $(document).ready ( function () {
           },
           dataType: 'json',
           success: function (data) {
+              $('#name-input').val('')
+              $('#timer-debrief').click()
               str_html = "<h5>" + data['movie_name'] + "</h5>"
               $('#right-answer-div').html(str_html)
               $('#right-answer-div').css('display','block');
