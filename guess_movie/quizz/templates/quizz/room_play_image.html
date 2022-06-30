@@ -326,7 +326,11 @@ $(document).ready ( function () {
 
 <div id="display-user">
   <ul class="collapsible">
-    <li class="active">
+    {% if user_list|length <= 10 %}
+        <li class="active">
+    {% else %}
+        <li>
+    {% endif%}
       <div class="collapsible-header collapsible-user">Liste des joueurs (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
       <div class="collapsible-body">
           <div id="list-user">
