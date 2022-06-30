@@ -132,13 +132,16 @@ if (window.location.protocol == 'https:') {
       }
       if ('list_user_id' in data){
           var list_user_html = '<ul>'
-          for (i=0; i < data['list_user_id'].length; i++) {
+          for (i=0; i < Math.min(data['list_user_id'].length, 7); i++) {
             u_id = data['list_user_id'][i]
             if(u_id == '{{request.session.user_id}}'){
                 list_user_html += '<b><li>' + dict_user[u_id] +'</li></b>'
             } else {
                 list_user_html += '<li>' + dict_user[u_id] +'</li>'
             }
+          }
+          if(data['list_user_id'].length > 7){
+            list_user_html += '<li>...</li>'
           }
           list_user_html += '</ul>'
 
