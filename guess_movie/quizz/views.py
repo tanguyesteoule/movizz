@@ -348,12 +348,11 @@ def history(request, game_name):
     context['dict_name'] = dict_name
     context['questions'] = questions
     context['dict_answer'] = dict_answer
-    if 'user_id' in request.session:
+    if 'user_id' in request.session and request.session['user_id'] in dict_answer.keys():
         context['list_answer'] = dict_answer[request.session['user_id']]
     else:
         context['list_answer'] = dict_answer[list(dict_answer.keys())[0]]
 
-    # context['score_user'] = np.sum(dict_answer[user_id])
     context['nb_question'] = game.nb_q
 
     return render(request, 'quizz/history.html', context)
@@ -402,12 +401,11 @@ def history_image(request, game_name):
     context['questions'] = questions
     context['dict_answer'] = dict_answer
 
-    if 'user_id' in request.session:
+    if 'user_id' in request.session and request.session['user_id'] in dict_answer.keys():
         context['list_answer'] = dict_answer[request.session['user_id']]
     else:
         context['list_answer'] = dict_answer[list(dict_answer.keys())[0]]
 
-    # context['score_user'] = np.sum(dict_answer[user_id])
     context['nb_question'] = game.nb_q
 
     return render(request, 'quizz/history_image.html', context)
