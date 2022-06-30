@@ -5,7 +5,8 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.views.generic import TemplateView
-from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, Country, MovieCountry, GamePlayer, Preselect, Screenshot, QuestionImage, AnswerImage
+from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, Country, MovieCountry, GamePlayer, \
+    Preselect, Screenshot, QuestionImage, AnswerImage
 import random
 import numpy as np
 from django.db.models import Max, Min
@@ -32,6 +33,7 @@ with open(filename_sw) as f:
 STOP_WORDS2 = [x.strip() for x in content]
 DF_FREQ = round(pd.read_csv('/home/tanguy/workspace/git/guess_movie/data_process/Fre.Freq.2.txt', delim_whitespace=True, index_col=0).mean(axis=1),1)
 """
+
 
 def room_index(request):
     return render(request, 'quizz/room_index.html', {})
@@ -116,7 +118,8 @@ def create_game(request):
         data = {}
 
         game_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        game = Game(name=game_name, current_q=0, nb_q=nb_question, host=request.session['user_id'], mode=mode, game_mode=game_mode,
+        game = Game(name=game_name, current_q=0, nb_q=nb_question, host=request.session['user_id'], mode=mode,
+                    game_mode=game_mode,
                     game_mode_debrief=game_mode_debrief)
         game.save()
 
@@ -124,9 +127,8 @@ def create_game(request):
             p = Player.objects.get(user_id=u_id)
             gp = GamePlayer(game=game, player=p)
             gp.save()
-        
-        
-        if mode == 'quote':     ### Mode quote
+
+        if mode == 'quote':  ### Mode quote
             # Création des questions, puis insertion en base
             for i in range(nb_question):
                 sample_movies = get_n_random_movies(3, list_movie_sel, quote=True, image=False)
@@ -146,10 +148,12 @@ def create_game(request):
                                     quote=quote,
                                     game=game)
                 question.save()
-        else:       ### Mode Image
+        else:  ### Mode Image
             for i in range(nb_question):
                 popularity = request.session['popularity_img']
-                list_movie_sel = list(Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))[:int(popularity)]
+                list_movie_sel = list(
+                    Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))[
+                                 :int(popularity)]
                 sample_movies = get_n_random_movies(3, list_movie_sel, quote=False, image=True)
 
                 # Select a random movie among them
@@ -160,15 +164,14 @@ def create_game(request):
                 all_screenshot = list(Screenshot.objects.filter(movie_id=movie_guessed.id).values_list('id', flat=True))
                 screenshots = random.sample(all_screenshot, 3)
                 list_image_id = ",".join(list(map(str, screenshots)))
-                
-                
+
                 # Create a Question object
                 question = QuestionImage(movie1=Movie.objects.get(pk=sample_movies[0].id),
-                                    movie2=Movie.objects.get(pk=sample_movies[1].id),
-                                    movie3=Movie.objects.get(pk=sample_movies[2].id),
-                                    movie_guessed=Movie.objects.get(pk=movie_guessed.id),
-                                    list_image_id=list_image_id,
-                                    game=game)
+                                         movie2=Movie.objects.get(pk=sample_movies[1].id),
+                                         movie3=Movie.objects.get(pk=sample_movies[2].id),
+                                         movie_guessed=Movie.objects.get(pk=movie_guessed.id),
+                                         list_image_id=list_image_id,
+                                         game=game)
                 question.save()
 
         return JsonResponse({'game_name': game_name})
@@ -215,7 +218,7 @@ def room_results(request, room_name, game_name):
         game = Game.objects.get(name=game_name)
         list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
         list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-        dict_score = {u_id:0 for u_id in list_user}
+        dict_score = {u_id: 0 for u_id in list_user}
 
         questions = Question.objects.filter(game=game)
         list_answer = []
@@ -234,15 +237,13 @@ def room_results(request, room_name, game_name):
             user_name = Player.objects.get(user_id=u_id).user_name
             dict_name[u_id] = user_name
 
-        dict_answer = {u_id:[] for u_id in dict_score.keys()}
+        dict_answer = {u_id: [] for u_id in dict_score.keys()}
         for q in questions:
             for u_id in dict_score.keys():
                 if Answer.objects.filter(question=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
                     dict_answer[u_id].append(1)
                 else:
                     dict_answer[u_id].append(0)
-
-
 
         context['dict_score'] = dict_score
         context['dict_name'] = dict_name
@@ -256,6 +257,7 @@ def room_results(request, room_name, game_name):
     else:
         return HttpResponseRedirect(reverse('quizz:room_index'))
 
+
 def room_results_image(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
         # On refait le calcul pour être sûr des résultats
@@ -264,7 +266,7 @@ def room_results_image(request, room_name, game_name):
         game = Game.objects.get(name=game_name)
         list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
         list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-        dict_score = {u_id:0 for u_id in list_user}
+        dict_score = {u_id: 0 for u_id in list_user}
 
         questions = QuestionImage.objects.filter(game=game)
         list_answer = []
@@ -277,9 +279,9 @@ def room_results_image(request, room_name, game_name):
                     else:
                         score_tmp = a.score
 
-                    if a.user_id in dict_score.keys():
+                    try:
                         dict_score[a.user_id] += score_tmp
-                    else:
+                    except KeyError:
                         dict_score[a.user_id] = score_tmp
 
         dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
@@ -288,15 +290,13 @@ def room_results_image(request, room_name, game_name):
             user_name = Player.objects.get(user_id=u_id).user_name
             dict_name[u_id] = user_name
 
-        dict_answer = {u_id:[] for u_id in dict_score.keys()}
+        dict_answer = {u_id: [] for u_id in dict_score.keys()}
         for q in questions:
             for u_id in dict_score.keys():
                 if AnswerImage.objects.filter(questionimage=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
                     dict_answer[u_id].append(1)
                 else:
                     dict_answer[u_id].append(0)
-
-
 
         context['dict_score'] = dict_score
         context['dict_name'] = dict_name
@@ -313,12 +313,11 @@ def room_results_image(request, room_name, game_name):
 
 def history(request, game_name):
     # game = Game.objects.get(name=game_name)
-    user_id = request.session['user_id']
     game = get_object_or_404(Game, name=game_name, current_q=-1)
     questions = Question.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
     list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-    dict_score = {u_id:0 for u_id in list_user}
+    dict_score = {u_id: 0 for u_id in list_user}
 
     for q in questions:
         answers = Answer.objects.filter(question=q)
@@ -335,7 +334,7 @@ def history(request, game_name):
         user_name = Player.objects.get(user_id=u_id).user_name
         dict_name[u_id] = user_name
 
-    dict_answer = {u_id:[] for u_id in dict_score.keys()}
+    dict_answer = {u_id: [] for u_id in dict_score.keys()}
     for q in questions:
         for u_id in dict_score.keys():
             if Answer.objects.filter(question=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
@@ -349,27 +348,31 @@ def history(request, game_name):
     context['dict_name'] = dict_name
     context['questions'] = questions
     context['dict_answer'] = dict_answer
-    context['list_answer'] = dict_answer[user_id]
+    if 'user_id' in request.session:
+        context['list_answer'] = dict_answer[request.session['user_id']]
+    else:
+        context['list_answer'] = dict_answer[list(dict_answer.keys())[0]]
+
     # context['score_user'] = np.sum(dict_answer[user_id])
     context['nb_question'] = game.nb_q
 
     return render(request, 'quizz/history.html', context)
 
+
 def history_image(request, game_name):
     # game = Game.objects.get(name=game_name)
-    user_id = request.session['user_id']
     game = get_object_or_404(Game, name=game_name, current_q=-1)
     questions = QuestionImage.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
     list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-    dict_score = {u_id:0 for u_id in list_user}
+    dict_score = {u_id: 0 for u_id in list_user}
 
     for q in questions:
         answers = AnswerImage.objects.filter(questionimage=q)
         for a in answers:
             if a.movie_prop == q.movie_guessed:
                 if a.score == None:
-                        score_tmp = 0
+                    score_tmp = 0
                 else:
                     score_tmp = a.score
 
@@ -377,7 +380,6 @@ def history_image(request, game_name):
                     dict_score[a.user_id] += score_tmp
                 except KeyError:
                     dict_score[a.user_id] = score_tmp
-                
 
     dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
     dict_name = {}
@@ -385,7 +387,7 @@ def history_image(request, game_name):
         user_name = Player.objects.get(user_id=u_id).user_name
         dict_name[u_id] = user_name
 
-    dict_answer = {u_id:[] for u_id in dict_score.keys()}
+    dict_answer = {u_id: [] for u_id in dict_score.keys()}
     for q in questions:
         for u_id in dict_score.keys():
             if AnswerImage.objects.filter(questionimage=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
@@ -399,11 +401,17 @@ def history_image(request, game_name):
     context['dict_name'] = dict_name
     context['questions'] = questions
     context['dict_answer'] = dict_answer
-    context['list_answer'] = dict_answer[user_id]
+
+    if 'user_id' in request.session:
+        context['list_answer'] = dict_answer[request.session['user_id']]
+    else:
+        context['list_answer'] = dict_answer[list(dict_answer.keys())[0]]
+
     # context['score_user'] = np.sum(dict_answer[user_id])
     context['nb_question'] = game.nb_q
 
     return render(request, 'quizz/history_image.html', context)
+
 
 def history_index(request):
     context = {}
@@ -427,12 +435,13 @@ def history_index(request):
 
     dict_name = {}
     players = Player.objects.all()
-    dict_name = {p.user_id:p.user_name for p in players}
+    dict_name = {p.user_id: p.user_name for p in players}
 
     context['games'] = games
     context['dict_name'] = dict_name
 
     return render(request, 'quizz/history_index.html', context)
+
 
 def room_play_image(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
@@ -448,8 +457,8 @@ def room_play_image(request, room_name, game_name):
         # already_answer = Answer.objects.filter(question=question, user_id=user_id).count()
         already_answer = AnswerImage.objects.filter(questionimage=question, user_id=user_id).count()
 
-        all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))#[:int(500)]
-        
+        all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
+
         list_movie = [m.name + f' ({m.year})' for m in all_movies]
         context['list_movie'] = list_movie
 
@@ -470,7 +479,7 @@ def game_image(request):
     context = {}
 
     all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))[:int(300)]
-    
+
     movie = random.sample(all_movies, 1)[0]
 
     screenshots = list(Screenshot.objects.filter(movie_id=movie.id))
@@ -494,7 +503,7 @@ def guess_room(request):
             if movie_prop_id != -1:
                 movie_prop = Movie.objects.get(pk=movie_prop_id)
                 answer = Answer(user_id=request.session['user_id'], question=question, movie_prop=movie_prop)
-            # else:
+                # else:
                 # answer = Answer(user_id=request.session['user_id'], question=question)
 
                 answer.save()
@@ -512,23 +521,26 @@ def guess_room(request):
 
             return JsonResponse(data)
 
+
 def guess_image(request):
     movie_name = request.POST.get('movie_name')
     question_id = request.POST.get('question_id')
     question = QuestionImage.objects.get(id=question_id)
-    
+
     movie_id = get_object_or_404(Movie, name=movie_name[:-7], year=int(movie_name[-5:-1])).id
     data = {}
     data['movie_id'] = movie_id
     if movie_id == question.movie_guessed.id:
         data['res'] = 1
         # Only if right answer
-        answer = AnswerImage(user_id=request.session['user_id'], questionimage=question, movie_prop=question.movie_guessed)
+        answer = AnswerImage(user_id=request.session['user_id'], questionimage=question,
+                             movie_prop=question.movie_guessed)
         answer.save()
     else:
         data['res'] = 0
 
     return JsonResponse(data)
+
 
 def reveal_image(request):
     question_id = request.POST.get('question_id')
@@ -572,16 +584,18 @@ def editor(request):
     context = {}
     movies = Movie.objects.filter(has_quote=1)
     list_movie = [m.name + f' ({m.year})' for m in movies]
-    dict_m = {(m.name + f' ({m.year})'):'null' for m in movies}
+    dict_m = {(m.name + f' ({m.year})'): 'null' for m in movies}
     context['list_movie'] = list_movie
     context['dict_m'] = mark_safe(json.dumps(dict_m))
     return render(request, 'quizz/editor.html', context)
 
+
 def save_preset(request):
     name = request.POST.get('name')
     list_movie_str = json.loads(request.POST.get('list_movie'))
-    list_movie = [get_object_or_404(Movie, name=movie_str[:-7], year=int(movie_str[-5:-1])).id for movie_str in list_movie_str]
- 
+    list_movie = [get_object_or_404(Movie, name=movie_str[:-7], year=int(movie_str[-5:-1])).id for movie_str in
+                  list_movie_str]
+
     list_movie_str = ",".join(list(map(str, list_movie)))
 
     if 'user_id' not in request.session:
@@ -593,6 +607,7 @@ def save_preset(request):
 
     resp = {}
     return JsonResponse(resp)
+
 
 """
 def exploration(request):
@@ -677,7 +692,6 @@ def get_movie_info(request):
 """
 
 
-
 def home(request):
     context = {}
     return render(request, 'quizz/home.html', context)
@@ -733,7 +747,8 @@ def update_selection(request):
                 list_movie_id = list(set(list_movie_id_genre).intersection(list_movie_id_country))
 
                 if (year1 != 1900 or year2 != 2021):
-                    list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id, has_quote=1).order_by('name')
+                    list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
+                                                      has_quote=1).order_by('name')
                 else:
                     list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote=1).order_by('name')
             else:
@@ -751,7 +766,6 @@ def update_selection(request):
             presel = presel.split(',')
             list_movie = Movie.objects.filter(id__in=presel).order_by('name')
 
-
         list_movie_sel = list(dict.fromkeys([m.id for m in list_movie]))
         # list_movie_sel = list(set(list_movie_sel))
 
@@ -759,7 +773,6 @@ def update_selection(request):
 
         if reset:
             list_movie_sel_real = list_movie_sel
-
 
         request.session['list_movie_sel'] = list_movie_sel
         request.session['list_movie_sel_name'] = list_movie_sel_name
@@ -803,6 +816,7 @@ def get_n_random_movies(n=3, list_movie_sel=False, quote=True, image=False):
         movies = list(Movie.objects.all())
 
     return random.sample(movies, n)
+
 
 def game(request):
     # template_name = 'quizz/game.html'
