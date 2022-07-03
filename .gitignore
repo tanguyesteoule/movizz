@@ -1,5 +1,5 @@
 # Specific to this project
-data/
+#data/
 media/
 .idea/
 staticfiles/
