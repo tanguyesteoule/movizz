@@ -1,14 +1,6 @@
 from django.db import models
 
 
-# class Game(models.Model):
-#     name = models.CharField(max_length=200)
-#
-#     def __str__(self):
-#         return self.name
-
-
-
 class Movie(models.Model):
     imdb_id = models.CharField(max_length=200, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
@@ -35,8 +27,7 @@ class Quote(models.Model):
 class Screenshot(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='screenshot', null=True, blank=True)
-    # quote_text = models.TextField(null=True, blank=True)
-
+    sfw = models.BooleanField(default=1, null=True, blank=True)
 
 
 class Game(models.Model):
@@ -50,6 +41,7 @@ class Game(models.Model):
     game_mode = models.CharField(max_length=200, null=True, blank=True)
     # 'chill' ou int
     game_mode_debrief = models.CharField(max_length=200, null=True, blank=True)
+
     # 'chill' ou int
 
     def __str__(self):
@@ -67,6 +59,7 @@ class Question(models.Model):
     def __str__(self):
         return f'{self.movie1.id}_{self.movie2.id}_{self.movie3.id}_{self.quote.id}_{self.movie_guessed.id}'
 
+
 class QuestionImage(models.Model):
     movie1 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='mi1')
     movie2 = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='mi2')
@@ -78,6 +71,7 @@ class QuestionImage(models.Model):
     def __str__(self):
         return f'{self.game}_{self.movie_guessed.id}'
 
+
 class Answer(models.Model):
     user_id = models.CharField(max_length=200, null=True, blank=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -85,6 +79,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return f'{self.user_id}_{self.question}_{self.movie_prop}'
+
 
 class AnswerImage(models.Model):
     user_id = models.CharField(max_length=200, null=True, blank=True)
@@ -95,17 +90,20 @@ class AnswerImage(models.Model):
     def __str__(self):
         return f'{self.user_id}_{self.questionimage}_{self.movie_prop}'
 
+
 class Genre(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
+
 class Country(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.name
+
 
 class Player(models.Model):
     user_id = models.CharField(max_length=200, null=True, blank=True)
@@ -131,6 +129,7 @@ class MovieGenre(models.Model):
 
     def __str__(self):
         return f'{self.movie.id}_{self.genre.id}'
+
 
 class GamePlayer(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

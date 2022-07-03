@@ -160,8 +160,8 @@ def create_game(request):
                 movie_guessed = random.choice(sample_movies)
 
                 # Select N random screenshot
-                nb_screenshot = 3
-                all_screenshot = list(Screenshot.objects.filter(movie_id=movie_guessed.id).values_list('id', flat=True))
+                all_screenshot = list(
+                    Screenshot.objects.filter(movie_id=movie_guessed.id, sfw=1).values_list('id', flat=True))
                 screenshots = random.sample(all_screenshot, 3)
                 list_image_id = ",".join(list(map(str, screenshots)))
 
@@ -473,24 +473,23 @@ def room_play_image(request, room_name, game_name):
         return HttpResponseRedirect(reverse('quizz:room_index'))
 
 
-def game_image(request):
-    context = {}
-
-    all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))[:int(300)]
-
-    movie = random.sample(all_movies, 1)[0]
-
-    screenshots = list(Screenshot.objects.filter(movie_id=movie.id))
-    screenshot_sample = random.sample(screenshots, 5)
-
-    list_movie = [m.name + f' ({m.year})' for m in all_movies]
-    # dict_m = {(m.name + f' ({m.year})'):'null' for m in movies}
-    context['list_movie'] = list_movie
-
-    context['movie'] = movie
-    context['screenshot_sample'] = screenshot_sample
-
-    return render(request, 'quizz/game_image.html', context)
+# def game_image(request):
+#     context = {}
+#
+#     all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))[:int(300)]
+#
+#     movie = random.sample(all_movies, 1)[0]
+#
+#     screenshots = list(Screenshot.objects.filter(movie_id=movie.id, sfw=1))
+#     screenshot_sample = random.sample(screenshots, 5)
+#
+#     list_movie = [m.name + f' ({m.year})' for m in all_movies]
+#     context['list_movie'] = list_movie
+#
+#     context['movie'] = movie
+#     context['screenshot_sample'] = screenshot_sample
+#
+#     return render(request, 'quizz/game_image.html', context)
 
 
 def guess_room(request):
