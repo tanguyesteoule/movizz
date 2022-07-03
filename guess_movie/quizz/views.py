@@ -290,23 +290,35 @@ def room_results_image(request, room_name, game_name):
             user_name = Player.objects.get(user_id=u_id).user_name
             dict_name[u_id] = user_name
 
-        dict_answer = {u_id: [] for u_id in dict_score.keys()}
-        for q in questions:
-            for u_id in dict_score.keys():
-                if AnswerImage.objects.filter(questionimage=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
-                    dict_answer[u_id].append(1)
-                else:
-                    dict_answer[u_id].append(0)
+        if len(list_user) <= 10 or ('game_master' in request.session and request.session['game_master'] == room_name):
+            dict_answer = {u_id: [] for u_id in dict_score.keys()}
+            for q in questions:
+                for u_id in dict_score.keys():
+                    if AnswerImage.objects.filter(questionimage=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
+                        dict_answer[u_id].append(1)
+                    else:
+                        dict_answer[u_id].append(0)
 
-        context['dict_score'] = dict_score
-        context['dict_name'] = dict_name
-        context['questions'] = questions
-        context['dict_answer'] = dict_answer
-        context['list_answer'] = dict_answer[user_id]
-        context['score_user'] = np.sum(dict_answer[user_id])
-        context['nb_question'] = game.nb_q
+            context['dict_score'] = dict_score
+            context['dict_name'] = dict_name
+            context['questions'] = questions
+            context['dict_answer'] = dict_answer
+            context['list_answer'] = dict_answer[user_id]
+            context['score_user'] = np.sum(dict_answer[user_id])
+            context['nb_question'] = game.nb_q
 
-        return render(request, 'quizz/room_results_image.html', context)
+            return render(request, 'quizz/room_results_image.html', context)
+
+        else:
+            context['dict_score'] = dict_score
+            context['dict_name'] = dict_name
+            context['questions'] = questions
+            context['nb_question'] = game.nb_q
+
+            return render(request, 'quizz/room_results_image_light.html', context)
+
+
+
     else:
         return HttpResponseRedirect(reverse('quizz:room_index'))
 
