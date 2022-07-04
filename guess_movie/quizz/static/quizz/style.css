@@ -655,3 +655,7 @@ img.screenshot-thumb {
 #ul-image, #ul-quote {
   display: none;
 }
+
+.switch label input[type=checkbox][disabled]+.lever:after {
+   background-color: var(--guillemet-color);
+}

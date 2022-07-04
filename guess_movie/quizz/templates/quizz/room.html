@@ -665,12 +665,12 @@ $("#link-share").click(function () {
       <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
       {% if request.session.popularity != None %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="2000" maxlength="10" size="5" value="{{ request.session.popularity }}">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="{{ request.session.popularity }}">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% else %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="2000" maxlength="10" size="5" value="200">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="200">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% endif %}
@@ -727,46 +727,6 @@ $("#link-share").click(function () {
       <div class="collapsible-header">Paramètres de la partie (Mode Image)<i class="material-icons">expand_more</i></div>
       <div class="collapsible-body">
       <br />
-{% comment %}     
-    <fieldset>
-      <legend><b>Temps de réflexion</b> </legend>
-          <div class="mode-img-container">
-     <div>
-        <label>
-            {% if 'game_mode_img' not in request.session or request.session.game_mode_img == 'chill' %}
-            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_chill" type="radio" value="chill" checked />
-            {% else %}
-            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_chill" type="radio" value="chill" />
-            {% endif %}
-            <span>Illimité (par l'hôte)</span>
-        </label>
-     </div>
-     <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
-     <div>
-        <label>
-            {% if 'game_mode_img' in request.session and request.session.game_mode_img != 'chill' %}
-            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_timer" type="radio" value="timer" checked />
-            {% else %}
-            <input class="update-without-reset" name="game_mode_img" id="game_mode_img_timer" type="radio" value="timer" />
-            {% endif %}
-
-            <span>Automatique</span>
-        </label>
-     </div>
-     <div class="input-field" style="width:20%;">
-        <label for="timer_nb">Temps de reflexion</label>
-         {% if 'game_mode_img' in request.session and request.session.game_mode_img != 'chill' %}
-            <input class='update-without-reset' type="number" min="5" max="20" id="timer_nb_img" name="timer_nb" value="{{ request.session.game_mode_img }}"><br />
-        {% else %}
-            <input class='update-without-reset' type="number" min="5" max="20" id="timer_nb_img" name="timer_nb" value="10"><br />
-        {% endif %}
-
-        <span class="helper-text" data-error="wrong" data-success="right">Doit être entre 5 et 20s</span>
-    </div>
-      </div>
-  </fieldset>
-  <br />
-  {% endcomment %}
 
 
   <fieldset>
@@ -787,12 +747,12 @@ $("#link-share").click(function () {
       <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
       {% if request.session.popularity_img != None %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="2000" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="1300" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% else %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="2000" maxlength="10" size="5" value="500">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="1300" maxlength="10" size="5" value="500">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% endif %}
@@ -800,6 +760,20 @@ $("#link-share").click(function () {
   <br />
   <i>Note : Si le nombre de films est inférieur à 3, tous les films sont selectionnés.</i>
 
+  <br /><br />
+  <fieldset>
+      <legend><b>Filtre des images NSFW</b></legend>
+
+      <div class="switch center">
+        <label>
+          On
+          <input disabled type="checkbox">
+          <span class="lever" style="background-color: #545454d4"></span>
+          Off
+        </label>
+      </div>
+
+  </fieldset>
       </div>
     </li>
   </ul>
