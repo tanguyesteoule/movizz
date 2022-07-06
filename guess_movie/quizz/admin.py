@@ -1,9 +1,11 @@
 from django.contrib import admin
-from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, QuestionImage, AnswerImage
+from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, \
+    QuestionImage, AnswerImage, Screenshot
 from django.http import HttpResponse
 from django.urls import path
 from django.db import models
 from django.shortcuts import get_object_or_404, render
+
 
 class QuoteAdmin(admin.ModelAdmin):
     list_display = ('movie', 'quote_text')
@@ -15,11 +17,23 @@ class QuoteAdmin(admin.ModelAdmin):
     # ]
     # inlines = [ChoiceInline]
 
-class AView(models.Model):
 
+class MovieAdmin(admin.ModelAdmin):
+    list_display = ('name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
+    search_fields = ['name', 'imdb_id']
+
+
+class ScreenshotAdmin(admin.ModelAdmin):
+    list_display = ('movie', 'image', 'sfw')
+    list_filter = ['movie']
+    search_fields = ['movie']
+
+
+class AView(models.Model):
     class Meta:
         verbose_name_plural = 'HistoryIndexView'
         app_label = 'quizz'
+
 
 class AViewAdmin(admin.ModelAdmin):
     model = AView
@@ -33,18 +47,20 @@ class AViewAdmin(admin.ModelAdmin):
             path('history_image/<str:game_name>/', self.admin_site.admin_view(history_image_view)),
         ]
 
+
 def history_index_view(request):
     context = {}
     games = Game.objects.all().order_by('-id')
 
     dict_name = {}
     players = Player.objects.all()
-    dict_name = {p.user_id:p.user_name for p in players}
+    dict_name = {p.user_id: p.user_name for p in players}
 
     context['games'] = games
     context['dict_name'] = dict_name
 
     return render(request, 'quizz/admin/history_index_admin.html', context)
+
 
 def history_view(request, game_name):
     # game = Game.objects.get(name=game_name)
@@ -52,7 +68,7 @@ def history_view(request, game_name):
     questions = Question.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
     list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-    dict_score = {u_id:0 for u_id in list_user}
+    dict_score = {u_id: 0 for u_id in list_user}
 
     for q in questions:
         answers = Answer.objects.filter(question=q)
@@ -69,7 +85,7 @@ def history_view(request, game_name):
         user_name = Player.objects.get(user_id=u_id).user_name
         dict_name[u_id] = user_name
 
-    dict_answer = {u_id:[] for u_id in dict_score.keys()}
+    dict_answer = {u_id: [] for u_id in dict_score.keys()}
     for q in questions:
         for u_id in dict_score.keys():
             if Answer.objects.filter(question=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
@@ -89,6 +105,7 @@ def history_view(request, game_name):
 
     return render(request, 'quizz/admin/history_admin.html', context)
 
+
 def history_image_view(request, game_name):
     # game = Game.objects.get(name=game_name)
     # user_id = request.session['user_id']
@@ -96,7 +113,7 @@ def history_image_view(request, game_name):
     questions = QuestionImage.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
     list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-    dict_score = {u_id:0 for u_id in list_user}
+    dict_score = {u_id: 0 for u_id in list_user}
 
     for q in questions:
         answers = AnswerImage.objects.filter(questionimage=q)
@@ -118,7 +135,7 @@ def history_image_view(request, game_name):
         user_name = Player.objects.get(user_id=u_id).user_name
         dict_name[u_id] = user_name
 
-    dict_answer = {u_id:[] for u_id in dict_score.keys()}
+    dict_answer = {u_id: [] for u_id in dict_score.keys()}
     for q in questions:
         for u_id in dict_score.keys():
             if AnswerImage.objects.filter(questionimage=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
@@ -138,14 +155,16 @@ def history_image_view(request, game_name):
 
     return render(request, 'quizz/admin/history_image_admin.html', context)
 
+
 # Register your models here.
 admin.site.register(Game)
 admin.site.register(Answer)
 admin.site.register(Player)
-admin.site.register(Movie)
+admin.site.register(Movie, MovieAdmin)
 admin.site.register(Quote, QuoteAdmin)
 admin.site.register(Question)
 admin.site.register(Genre)
 admin.site.register(MovieGenre)
 admin.site.register(AView, AViewAdmin)
 admin.site.register(Preselect)
+admin.site.register(Screenshot, ScreenshotAdmin)
