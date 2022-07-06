@@ -26,7 +26,7 @@ class MovieAdmin(admin.ModelAdmin):
 class ScreenshotAdmin(admin.ModelAdmin):
     list_display = ('movie', 'image', 'sfw')
     list_filter = ['movie']
-    search_fields = ['movie']
+    search_fields = ['movie__name']
 
 
 class AView(models.Model):
