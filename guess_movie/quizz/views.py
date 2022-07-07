@@ -149,6 +149,11 @@ def create_game(request):
                                     game=game)
                 question.save()
         else:  ### Mode Image
+            if 'nsfw_filter' in request.session:
+                sfw = int(request.session['nsfw_filter'])
+            else:
+                sfw = 1  # Default: Filter NSFW images
+
             for i in range(nb_question):
                 popularity = request.session['popularity_img']
                 list_movie_sel = list(
@@ -160,8 +165,13 @@ def create_game(request):
                 movie_guessed = random.choice(sample_movies)
 
                 # Select N random screenshot
-                all_screenshot = list(
-                    Screenshot.objects.filter(movie_id=movie_guessed.id, sfw=1).values_list('id', flat=True))
+                if sfw == 1:
+                    all_screenshot = list(
+                        Screenshot.objects.filter(movie_id=movie_guessed.id, sfw=1).values_list('id', flat=True))
+                else:
+                    all_screenshot = list(
+                        Screenshot.objects.filter(movie_id=movie_guessed.id).values_list('id', flat=True))
+
                 screenshots = random.sample(all_screenshot, 3)
                 list_image_id = ",".join(list(map(str, screenshots)))
 
@@ -294,7 +304,8 @@ def room_results_image(request, room_name, game_name):
             dict_answer = {u_id: [] for u_id in dict_score.keys()}
             for q in questions:
                 for u_id in dict_score.keys():
-                    if AnswerImage.objects.filter(questionimage=q, user_id=u_id, movie_prop=q.movie_guessed).count() != 0:
+                    if AnswerImage.objects.filter(questionimage=q, user_id=u_id,
+                                                  movie_prop=q.movie_guessed).count() != 0:
                         dict_answer[u_id].append(1)
                     else:
                         dict_answer[u_id].append(0)
@@ -722,6 +733,7 @@ def update_selection(request):
         year2 = int(request.POST.get('year2'))
         nb_question = int(request.POST.get('nb_question'))
         nb_question_img = int(request.POST.get('nb_question_img'))
+        nsfw_filter = int(request.POST.get('nsfw_filter'))
         popularity = request.POST.get('popularity')
         popularity_img = request.POST.get('popularity_img')
         mode = request.POST.get('mode')
@@ -794,6 +806,7 @@ def update_selection(request):
         request.session['popularity_img'] = popularity_img
         request.session['nb_question'] = nb_question
         request.session['nb_question_img'] = nb_question_img
+        request.session['nsfw_filter'] = nsfw_filter
         request.session['mode'] = mode
         request.session['game_mode'] = game_mode
         request.session['game_mode_debrief'] = game_mode_debrief

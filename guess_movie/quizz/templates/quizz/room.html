@@ -258,6 +258,11 @@ $("#link-share").click(function () {
         data_g['popularity'] = $('#popularity').val()
         data_g['popularity_img'] = $('#popularity_img').val()
         data_g['country'] = $('#country-sel').val()
+        if ($("input#nsfw").is(":checked")) {
+            data_g['nsfw_filter'] = 1
+        } else {
+           data_g['nsfw_filter'] = 0
+        }
 
         if ($('#mode_image').is(':checked')) {
             MODE = 'image'
@@ -401,8 +406,6 @@ $("#link-share").click(function () {
         $('#popularity').val('').change()
 
     });
-
-
 
 
 {% endif %}
@@ -766,12 +769,15 @@ $("#link-share").click(function () {
 
       <div class="switch center">
         <label>
-          On
-          <input disabled type="checkbox">
+          <b>Off</b>
+          <input {% if request.session.nsfw_filter == 1 or 'nsfw_filter' not in request.session %} checked {% endif %} type="checkbox" id="nsfw" class="update-reset">
           <span class="lever" style="background-color: #545454d4"></span>
-          Off
+          <b>On</b>
         </label>
       </div>
+      <span class="helper-text" style="position: relative; min-height:18px;, display: block; font-size: 12px">
+          *Compatible avec la politique de Twitch (seulement sur les 750 films les plus populaires actuellement)
+      </span>
 
   </fieldset>
       </div>

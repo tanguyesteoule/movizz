@@ -656,6 +656,10 @@ img.screenshot-thumb {
   display: none;
 }
 
-.switch label input[type=checkbox][disabled]+.lever:after {
+.switch label input[type=checkbox]+.lever:after {
+   background-color: #999999;
+}
+
+.switch label input[type=checkbox]:checked+.lever:after {
    background-color: var(--guillemet-color);
 }
