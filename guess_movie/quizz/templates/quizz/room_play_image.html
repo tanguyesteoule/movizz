@@ -35,7 +35,6 @@ $(document).ready ( function () {
 
   userSocket.onmessage = function(e) {
       const data = JSON.parse(e.data);
-      console.log(data)
 
       if(data['code'] == 'newimage'){
         image_url = data['image_url']

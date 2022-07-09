@@ -157,7 +157,6 @@ if (window.location.protocol == 'https:') {
 
     $("#start-link").click(function () {
       if (ALREADY_CREATED == 0) {
-        console.log('click')
         ALREADY_CREATED = 1
         if (MODE == 'quote') {
           var nb_question = $("#nb-question").val()
@@ -241,7 +240,7 @@ $("#link-share").click(function () {
     update_data = function(reset_selected) {
         $('#nb_movies').removeClass('normal-selection').addClass('waiting-selection');
         var list_m = $("input.genrecbx:checked").map(function(){return $(this).attr("name");}).get();
-        //console.log(list_m)
+
         data_g = {'select':1}
         for (i=0; i < list_m.length; i++) {
             data_g[list_m[i]] = 1
@@ -311,7 +310,6 @@ $("#link-share").click(function () {
                 $('#nb_movies').removeClass('waiting-selection').addClass('normal-selection');
 
                 if (reset_selected) {
-                  console.log('reset')
                   list_movie_sel_name = data['list_movie_sel_name']
                   list_movie_sel = data['list_movie_sel']
                   str_html = "<select id='selected-movies' class='update-without-reset' multiple>"

@@ -9,12 +9,15 @@ from .models import Player, Game, GamePlayer, Lyrics, Song, Question, Answer
 import json
 import numpy as np
 
+
 def home(request):
     context = {}
     return render(request, 'lyrizz/home.html', context)
 
+
 def room_index(request):
     return render(request, 'lyrizz/room_index.html', {})
+
 
 def create_room(request):
     room_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
@@ -24,6 +27,7 @@ def create_room(request):
         request.session['mode'] = 'start'
 
     return HttpResponseRedirect(reverse('lyrizz:room', args=(room_name,)))
+
 
 def create_user(request):
     user_id = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
@@ -36,6 +40,7 @@ def create_user(request):
 
     return user_id, user_name
 
+
 def change_user_name(request):
     if 'user_id' in request.session:
         user_name = request.GET.get('user_name')
@@ -44,6 +49,7 @@ def change_user_name(request):
         player.save()
         request.session['user_name'] = user_name
         return JsonResponse({})
+
 
 #
 # def room(request, room_name):
@@ -76,6 +82,7 @@ def room(request, room_name):
 
     return render(request, 'lyrizz/room.html', context)
 
+
 def get_n_random_songs(n=3, list_song_sel=False):
     if list_song_sel:
         songs = list(Song.objects.filter(pk__in=list_song_sel, has_quote=1))
@@ -83,6 +90,7 @@ def get_n_random_songs(n=3, list_song_sel=False):
         songs = list(Song.objects.all())
 
     return random.sample(songs, n)
+
 
 def create_game(request):
     # game_mode = request.session['game_mode']
@@ -196,7 +204,7 @@ def guess_room(request):
             if song_prop_id != -1:
                 song_prop = Song.objects.get(pk=song_prop_id)
                 answer = Answer(user_id=request.session['user_id'], question=question, song_prop=song_prop)
-            # else:
+                # else:
                 # answer = Answer(user_id=request.session['user_id'], question=question)
 
                 answer.save()
@@ -223,18 +231,18 @@ def room_results(request, room_name, game_name):
         game = Game.objects.get(name=game_name)
         list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
         list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-        dict_score = {u_id:0 for u_id in list_user}
+        dict_score = {u_id: 0 for u_id in list_user}
 
         questions = Question.objects.filter(game=game)
         list_answer = []
         for q in questions:
             answers = Answer.objects.filter(question=q)
             for a in answers:
-                # if a.user_id not in dict_score.keys():
-                #     dict_score[a.user_id] = 0
-                # Bonne réponse
                 if a.song_prop == q.song_guessed:
-                    dict_score[a.user_id] += 1
+                    try:
+                        dict_score[a.user_id] += 1
+                    except KeyError:
+                        dict_score[a.user_id] = 1
 
         dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
         dict_name = {}
@@ -242,15 +250,13 @@ def room_results(request, room_name, game_name):
             user_name = Player.objects.get(user_id=u_id).user_name
             dict_name[u_id] = user_name
 
-        dict_answer = {u_id:[] for u_id in dict_score.keys()}
+        dict_answer = {u_id: [] for u_id in dict_score.keys()}
         for q in questions:
             for u_id in dict_score.keys():
                 if Answer.objects.filter(question=q, user_id=u_id, song_prop=q.song_guessed).count() != 0:
                     dict_answer[u_id].append(1)
                 else:
                     dict_answer[u_id].append(0)
-
-
 
         context['dict_score'] = dict_score
         context['dict_name'] = dict_name
@@ -281,12 +287,13 @@ def history_index(request):
 
     dict_name = {}
     players = Player.objects.all()
-    dict_name = {p.user_id:p.user_name for p in players}
+    dict_name = {p.user_id: p.user_name for p in players}
 
     context['games'] = games
     context['dict_name'] = dict_name
 
     return render(request, 'lyrizz/history_index.html', context)
+
 
 def history(request, game_name):
     # game = Game.objects.get(name=game_name)
@@ -295,7 +302,7 @@ def history(request, game_name):
     questions = Question.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
     list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
-    dict_score = {u_id:0 for u_id in list_user}
+    dict_score = {u_id: 0 for u_id in list_user}
 
     for q in questions:
         answers = Answer.objects.filter(question=q)
@@ -312,7 +319,7 @@ def history(request, game_name):
         user_name = Player.objects.get(user_id=u_id).user_name
         dict_name[u_id] = user_name
 
-    dict_answer = {u_id:[] for u_id in dict_score.keys()}
+    dict_answer = {u_id: [] for u_id in dict_score.keys()}
     for q in questions:
         for u_id in dict_score.keys():
             if Answer.objects.filter(question=q, user_id=u_id, song_prop=q.song_guessed).count() != 0:
@@ -366,7 +373,6 @@ def update_selection(request):
         else:
             list_song = Song.objects.filter(id__in=list_song_id).order_by('name')
 
-
     if popularity != '':
         l1 = list(list_song.order_by('-popularity')[:int(popularity)].values_list('id', flat=True))
         list_song = Song.objects.filter(id__in=l1).order_by('name')
@@ -376,7 +382,6 @@ def update_selection(request):
 
     if reset:
         list_song_sel_real = list_song_sel
-
 
     request.session['list_song_sel'] = list_song_sel
     request.session['list_song_sel_name'] = list_song_sel_name

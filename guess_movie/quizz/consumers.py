@@ -3,9 +3,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import asyncio
 from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
+
+from .models import GamePlayer, Player
 from .views import Game, Question, Movie, Answer, QuestionImage, Screenshot, AnswerImage
 from django.db.models import F
 import numpy as np
+
 
 #######################
 # Room play
@@ -23,9 +26,9 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
         # self.mode = 'chill' 'timer'
         self.list_id = list(self.dict_user.keys())
         # self.current_q = 0
-        self.dict_score = {user_id:0 for user_id in self.list_id}
-        self.dict_score_current = {user_id:0 for user_id in self.list_id}
-        self.dict_current_answer = {user_id:0 for user_id in self.list_id}
+        self.dict_score = {user_id: 0 for user_id in self.list_id}
+        self.dict_score_current = {user_id: 0 for user_id in self.list_id}
+        self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
         self.task_sleep_reveal = False
 
         # Join room group
@@ -59,8 +62,8 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
         q = self.questions[current_q]
 
         context = {
-            'q_id':q.id,
-            'movie1_id':q.movie1.id,
+            'q_id': q.id,
+            'movie1_id': q.movie1.id,
             'movie2_id': q.movie2.id,
             'movie3_id': q.movie3.id,
             'movie1_name': q.movie1.name,
@@ -130,13 +133,12 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
 
         if self.current_q < self.nb_questions - 1:
             self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
-            self.dict_score_current = {u_id:0 for u_id in self.dict_score.keys()}
-            context = await self.get_data(self.current_q+1)
+            self.dict_score_current = {u_id: 0 for u_id in self.dict_score.keys()}
+            context = await self.get_data(self.current_q + 1)
             await self.compute_score(self.current_q)
             context['type'] = 'user_message'
             context['code'] = 'idle'
             context['dict_score'] = json.dumps(self.dict_score)
-
 
             await self.incr_current_q()
             self.current_q += 1
@@ -157,7 +159,6 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
         elif message == 'sleep_reveal':
             # await self.next_reveal()
             self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
-
 
     @database_sync_to_async
     def change_host(self, new_host):
@@ -180,7 +181,7 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
             # if len(list_new_host) != 0:
             #     new_host = list_new_host[0]
             #     new_dict_user = {key: self.dict_user[key] for key in list_new_host}
-        
+
             #     await self.change_host(new_host)
 
             # Envoie un message pour dire d'arrêter la partie
@@ -188,7 +189,7 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
                 'type': 'interruption',
                 'code': 'interruption',
             }
-            
+
             await self.channel_layer.group_send(self.room_group_name, context)
 
         # Leave room group
@@ -196,6 +197,7 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
     @database_sync_to_async
     def is_correct(self, i, movie_id):
         q = self.questions[i]
@@ -206,7 +208,7 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
 
     async def newanswer(self, event):
         if event['code'] == 'new_answer':
-            
+
             ans = await self.is_correct(self.current_q, event['movie_id'])
             self.dict_score_current[event['user_id']] = ans
             self.dict_current_answer[event['user_id']] = 1
@@ -228,12 +230,11 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
                         self.task_sleep_reveal.cancel()
 
                     await self.send_reveal()
-                    
+
                     if self.game_mode_debrief != 'chill':
                         time_step_debrief = int(self.game_mode_debrief) + 0.5
                         await asyncio.sleep(time_step_debrief)
                         await self.next_question_chill()
-
 
     async def send_reveal(self):
         context = {
@@ -279,7 +280,6 @@ class UserConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def interruption(self, data):
-
         message = {'code': 'interruption'}
         # if data['new_host_id'] == self.user_id:
         #     message['is_new_host'] = '1'
@@ -304,7 +304,6 @@ class UserConsumer(AsyncWebsocketConsumer):
             }
             await self.channel_layer.group_send(self.room_group_name, context)
 
-
     async def user_message(self, data):
         # Send message to WebSocket
         await self.send(text_data=json.dumps(data))
@@ -325,7 +324,7 @@ class UserConsumer(AsyncWebsocketConsumer):
                    'dict_user': data['dict_user'],
                    'dict_score': data['dict_score'],
                    }
-         
+
         await self.send(text_data=json.dumps(context))
 
     async def user_connection(self, event):
@@ -351,9 +350,9 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         # self.mode = 'chill' 'timer'
         self.list_id = list(self.dict_user.keys())
         # self.current_q = 0
-        self.dict_score = {user_id:0 for user_id in self.list_id}
-        self.dict_score_current = {user_id:0 for user_id in self.list_id}
-        self.dict_current_answer = {user_id:0 for user_id in self.list_id}
+        self.dict_score = {user_id: 0 for user_id in self.list_id}
+        self.dict_score_current = {user_id: 0 for user_id in self.list_id}
+        self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
         self.task_sleep_reveal = False
         self.task_sleep_image = False
         self.current_q_image = 0
@@ -370,10 +369,9 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         await self.accept()
         await self.init_game()
         # if self.game_mode != 'chill':
-            # self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
-            # TODO
+        # self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
+        # TODO
         self.task_sleep_image = asyncio.ensure_future(self.next_image())
-
 
     async def init_game(self):
         self.game, self.questions, self.nb_questions, self.current_q = await self.data_init()
@@ -392,8 +390,8 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         q = self.questions[current_q]
 
         context = {
-            'q_id':q.id,
-            'movie1_id':q.movie1.id,
+            'q_id': q.id,
+            'movie1_id': q.movie1.id,
             'movie2_id': q.movie2.id,
             'movie3_id': q.movie3.id,
             'movie1_name': q.movie1.name,
@@ -415,7 +413,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         q = self.questions[current_q]
         i = list(Screenshot.objects.filter(pk__in=q.list_image_id.split(',')))[current_q_image]
         context = {
-            'q_id':q.id,
+            'q_id': q.id,
             'image_url': str(i.image),
             'list_user_id': self.list_id,
             'current_answer': json.dumps(self.dict_current_answer),
@@ -436,8 +434,10 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
     def compute_score(self, i):
         q = self.questions[i]
         for user_id in self.list_id:
-            count = list(AnswerImage.objects.filter(questionimage=q, movie_prop=q.movie_guessed, user_id=user_id).values_list('score', flat=True))
-            count = [i if i else 0 for i in count] # Remove None
+            count = list(
+                AnswerImage.objects.filter(questionimage=q, movie_prop=q.movie_guessed, user_id=user_id).values_list(
+                    'score', flat=True))
+            count = [i if i else 0 for i in count]  # Remove None
             if len(count) != 0:
                 count = np.sum(count)
             else:
@@ -455,7 +455,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
 
         # Si mode debrief timer, on attend et envoie la prochaine question
         # if self.game_mode_debrief != 'chill':
-            # time_step_debrief = int(self.game_mode_debrief) + 0.5
+        # time_step_debrief = int(self.game_mode_debrief) + 0.5
         time_step_debrief = int(self.TIME_NEXT_QUESTION) + 0.5
         await asyncio.sleep(time_step_debrief)
         await self.next_question_chill()
@@ -482,35 +482,32 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
     async def next_image(self):
         while self.current_q_image < 2:
             # time_step = int(self.game_mode) + 0.5
-            
+
             time_step = int(self.TIME_NEXT_IMAGE) + 0.5
             await asyncio.sleep(time_step)
 
             # self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
             # self.dict_score_current = {u_id:0 for u_id in self.dict_score.keys()}
-            context = await self.get_data_image(self.current_q, self.current_q_image+1)
+            context = await self.get_data_image(self.current_q, self.current_q_image + 1)
             # await self.compute_score(self.current_q)
             context['type'] = 'newimage'
             context['code'] = 'newimage'
-            context['n_image'] = self.current_q_image+2
+            context['n_image'] = self.current_q_image + 2
             # context['dict_score'] = json.dumps(self.dict_score)
-
 
             # await self.incr_current_q()
             self.current_q_image += 1
             await self.channel_layer.group_send(self.room_group_name, context)
 
-
         # else:
         #     pass
-            # await self.end_current_q()
-            # await self.disconnect('normal')
-            # TODO Afficher les 3 choix
+        # await self.end_current_q()
+        # await self.disconnect('normal')
+        # TODO Afficher les 3 choix
         time_step = int(self.TIME_REVEAL) + 0.5
         await asyncio.sleep(time_step)
 
         self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
-        
 
     @database_sync_to_async
     def get_question_id(self):
@@ -520,12 +517,12 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
 
         if self.current_q < self.nb_questions - 1:
             self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
-            self.dict_score_current = {u_id:0 for u_id in self.dict_score.keys()}
+            self.dict_score_current = {u_id: 0 for u_id in self.dict_score.keys()}
             # context = await self.get_data(self.current_q+1)
             # context = {}
             self.current_q_image = 0
 
-            context = await self.get_data_image(self.current_q+1, self.current_q_image)
+            context = await self.get_data_image(self.current_q + 1, self.current_q_image)
             await self.compute_score(self.current_q)
             self.current_q += 1
             context['type'] = 'user_message'
@@ -534,15 +531,12 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
             context['dict_score'] = json.dumps(self.dict_score)
             context['list_user_id'] = self.list_id
 
-            
             await self.incr_current_q()
-            
-            
+
             await self.channel_layer.group_send(self.room_group_name, context)
 
-
             self.task_sleep_image = asyncio.ensure_future(self.next_image())
-            
+
         else:
             await self.end_current_q()
             await self.disconnect('normal')
@@ -561,7 +555,6 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         elif message == 'sleep_reveal':
             # await self.next_reveal()
             self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
-
 
     @database_sync_to_async
     def change_host(self, new_host):
@@ -584,7 +577,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
             # if len(list_new_host) != 0:
             #     new_host = list_new_host[0]
             #     new_dict_user = {key: self.dict_user[key] for key in list_new_host}
-        
+
             #     await self.change_host(new_host)
 
             # Envoie un message pour dire d'arrêter la partie
@@ -592,7 +585,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
                 'type': 'interruption',
                 'code': 'interruption',
             }
-            
+
             await self.channel_layer.group_send(self.room_group_name, context)
 
         # Leave room group
@@ -600,6 +593,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+
     @database_sync_to_async
     def is_correct(self, i, movie_id):
         q = self.questions[i]
@@ -617,7 +611,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
 
     async def newanswer(self, event):
         if event['code'] == 'new_answer':
-            
+
             ans = await self.is_correct(self.current_q, event['movie_id'])
             if ans == 1:
                 if self.current_q_image == 0:
@@ -642,7 +636,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
 
                 # TODO : Pour eviter les problèmes de concurrence entre next_reveal et ici
                 # if self.game_mode == 'chill' or self.game_mode_debrief == 'chill':
-                
+
                 # If everybody answered
                 if sum(self.dict_current_answer.values()) == len(self.list_id):
                     if self.task_sleep_image != False:
@@ -651,7 +645,6 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
                         self.task_sleep_reveal.cancel()
 
                     self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
-
 
     async def send_reveal(self):
         context = {
@@ -700,7 +693,6 @@ class UserConsumerImage(AsyncWebsocketConsumer):
         await self.accept()
 
     async def interruption(self, data):
-
         message = {'code': 'interruption'}
         # if data['new_host_id'] == self.user_id:
         #     message['is_new_host'] = '1'
@@ -725,7 +717,6 @@ class UserConsumerImage(AsyncWebsocketConsumer):
                 'ok': text_data_json['ok']
             }
             await self.channel_layer.group_send(self.room_group_name, context)
-
 
     async def user_message(self, data):
         # Send message to WebSocket
@@ -752,7 +743,7 @@ class UserConsumerImage(AsyncWebsocketConsumer):
                    'dict_user': data['dict_user'],
                    'dict_score': data['dict_score'],
                    }
-         
+
         await self.send(text_data=json.dumps(context))
 
     async def user_connection(self, event):
@@ -786,15 +777,14 @@ class GameMasterConsumerHome(AsyncWebsocketConsumer):
         await self.accept()
 
         await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'user_refresh',
-                    'code': 'event_refresh',
-                    'host_id': self.user_id,
-                }
-            )
+            self.room_group_name,
+            {
+                'type': 'user_refresh',
+                'code': 'event_refresh',
+                'host_id': self.user_id,
+            }
+        )
 
-        
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
@@ -814,7 +804,6 @@ class GameMasterConsumerHome(AsyncWebsocketConsumer):
                     'mode': mode
                 }
             )
-
 
     async def disconnect(self, close_code):
         # Leave room group
@@ -845,8 +834,8 @@ class GameMasterConsumerHome(AsyncWebsocketConsumer):
             {
                 'type': 'user.updateuser',
                 'list_user_id': self.list_id,
-                'dict_user':  self.dict_user,
-                'code':'idle'
+                'dict_user': self.dict_user,
+                'code': 'idle'
             }
         )
 
@@ -863,8 +852,8 @@ class GameMasterConsumerHome(AsyncWebsocketConsumer):
                 {
                     'type': 'user.updateuser',
                     'list_user_id': self.list_id,
-                    'dict_user':  self.dict_user,
-                    'code':'idle'
+                    'dict_user': self.dict_user,
+                    'code': 'idle'
                 }
             )
 
@@ -888,7 +877,6 @@ class UserConsumerHome(AsyncWebsocketConsumer):
         await self.accept()
         await self.hello()
 
-
     async def hello(self):
         # Send message to room group
         await self.channel_layer.group_send(
@@ -906,8 +894,6 @@ class UserConsumerHome(AsyncWebsocketConsumer):
         self.user_name = user_name
 
         await self.hello()
-
-
 
     async def user_start(self, event):
         code = event['code']
@@ -949,7 +935,7 @@ class UserConsumerHome(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(
             {
                 'code': code,
-                'list_user_id':list_user_id,
+                'list_user_id': list_user_id,
                 'dict_user': dict_user
             }
         ))
@@ -976,12 +962,12 @@ class UserConsumerHome(AsyncWebsocketConsumer):
 #######################
 
 
-
 class GameMasterConsumerResults(AsyncWebsocketConsumer):
     async def connect(self):
         # self.user_id = self.scope['url_route']['kwargs']['user_id']
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'results_%s' % self.room_name
+        self.game_name = self.scope["session"]['current_game']
         # self.list_id = [self.user_id]
 
         # Pour chaque id correspond le nom d'user
@@ -995,6 +981,69 @@ class GameMasterConsumerResults(AsyncWebsocketConsumer):
 
         await self.accept()
 
+        nb_user = await self.get_nb_user()
+        if nb_user > 10:  # Waiting for users
+            await asyncio.sleep(5)
+
+        # Send results
+        results = await self.compute_results()
+        message_results = {
+            'type': 'user_results',
+            'results': json.dumps(results),
+            'code': 'new_results'
+        }
+        await self.channel_layer.group_send(self.room_group_name, message_results)
+
+    @database_sync_to_async
+    def get_nb_user(self):
+        return GamePlayer.objects.filter(game__name=self.game_name).count()
+
+    @database_sync_to_async
+    def compute_results(self):
+        game = Game.objects.get(name=self.game_name)
+        list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
+        list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
+        dict_score = {u_id: 0 for u_id in list_user}
+
+        questions = QuestionImage.objects.filter(game=game)
+        for q in questions:
+            answers = AnswerImage.objects.filter(questionimage=q)
+            for a in answers:
+                if a.movie_prop == q.movie_guessed:
+                    if a.score == None:
+                        score_tmp = 0
+                    else:
+                        score_tmp = a.score
+
+                    try:
+                        dict_score[a.user_id] += score_tmp
+                    except KeyError:
+                        dict_score[a.user_id] = score_tmp
+
+        dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
+        dict_name = {}
+        for u_id in dict_score.keys():
+            user_name = Player.objects.get(user_id=u_id).user_name
+            dict_name[u_id] = user_name
+
+        dict_answer = {u_id: [] for u_id in dict_score.keys()}
+        for q in questions:
+            for u_id in dict_score.keys():
+                if AnswerImage.objects.filter(questionimage=q, user_id=u_id,
+                                              movie_prop=q.movie_guessed).count() != 0:
+                    dict_answer[u_id].append(1)
+                else:
+                    dict_answer[u_id].append(0)
+
+        context = {}
+        context['dict_score'] = dict_score
+        context['dict_name'] = dict_name
+        context['questions'] = list(questions.values_list('movie_guessed__name', flat=True))
+        context['dict_answer'] = dict_answer
+        # context['list_answer'] = dict_answer[user_id]
+        # context['score_user'] = np.sum(dict_answer[user_id])
+        context['nb_question'] = game.nb_q
+        return context
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -1021,6 +1070,8 @@ class GameMasterConsumerResults(AsyncWebsocketConsumer):
     async def user_message(self, event):
         pass
 
+    async def user_results(self, data):
+        await self.send(text_data=json.dumps(data))
 
 
 class UserConsumerResults(AsyncWebsocketConsumer):
@@ -1035,10 +1086,11 @@ class UserConsumerResults(AsyncWebsocketConsumer):
 
         await self.accept()
 
-
     async def user_message(self, data):
         await self.send(text_data=json.dumps(data))
 
+    async def user_results(self, data):
+        await self.send(text_data=json.dumps(data))
 
     async def disconnect(self, close_code):
         # Leave room group

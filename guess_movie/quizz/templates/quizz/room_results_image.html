@@ -6,7 +6,72 @@
 {% block javascript %}
 <script>
 
-$(document).ready ( function () {
+$(document).ready(function () {
+    AVAILABLE_RESULTS = 0
+    update_table = function(results) {
+        s = '<table class="centered" style="margin-left:auto; margin-right:auto; width:50%;">'
+        s += '<thead>'
+        s += '<tr>'
+        s += '<th></th>'
+        for (let i = 1; i < results['nb_question']+1; i++) {
+          s += "<th>" + i + "</th>";
+        }
+        s += '<th>Score</th>'
+        s += '</tr>'
+        s += '</thead>'
+        s += '<tbody>'
+
+        for (let u_id in results['dict_answer']) {
+            user_name = results['dict_name'][u_id]
+            s += '<tr>'
+            if (u_id == "{{request.session.user_id}}") {
+                s += '<td><span style="color:#C3073F"><b>' + user_name + '</b></span></td>'
+            } else {
+                s += '<td>' + user_name + '</td>'
+            }
+
+            // HERE
+            for (let i in results['dict_answer'][u_id]) {
+                answer = results['dict_answer'][u_id][i]
+                if (answer == 1) {
+                    s += '<td><i class="material-icons" style="color: #96d800;">check</i></td>'
+                } else {
+                    s += '<td><i class="material-icons" style="color: #b7241b;">clear</i></td>'
+                }
+            }
+
+            s += '<td>' + results['dict_score'][u_id] + '</td>'
+            s += '</tr>'
+        }
+        s += '</tbody>'
+        s += '</table>'
+
+        $('#table-container').html(s)
+    }
+
+    update_table2 = function(results) {
+        list_answer = results['dict_answer']['{{request.session.user_id}}']
+        score_user = list_answer.reduce((a, b) => a + b, 0)
+        nb_question = {{ nb_question }}
+        s = '<h5 style="color:#C3073F">Résumé des questions (' + score_user + ' / ' + nb_question + ')</h5>'
+        s += '<div style="margin: 0 auto; display: inline-block;">'
+        s += '<ul class="collection">'
+
+        {% for question in questions %}
+            s += '<li class="collection-item" style="background-color: #1A1A1D;">'
+            s += '<span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>'
+
+            if (list_answer[{{forloop.counter0}}] == 1) {
+                s += '<span style="color: #96d800;"><b>{{ question.movie_guessed }}</b></span>'
+            } else {
+                s += '<span style="color: #b7241b"><b>{{ question.movie_guessed }}</b></span>'
+            }
+            s += '</li>'
+        {% endfor %}
+        s += '</ul>'
+        s += '</div>'
+        $('#table-container2').html(s)
+    }
 
 if (window.location.protocol == 'https:') {
   wsProtocol = 'wss://'
@@ -18,6 +83,16 @@ if (window.location.protocol == 'https:') {
 {% if request.session.game_master == room_name%}
   const url_socket_game = wsProtocol + window.location.host + '/ws/room/results/m/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
   const gameSocket = new WebSocket(url_socket_game);
+
+  gameSocket.onmessage = function(e) {
+      const data = JSON.parse(e.data);
+      if (data['code'] == 'new_results' && AVAILABLE_RESULTS == 0) {
+        results = JSON.parse(data['results'])
+        update_table(results)
+        update_table2(results)
+        AVAILABLE_RESULTS = 1
+      }
+  }
 
 {% endif %}
 
@@ -34,9 +109,11 @@ if (window.location.protocol == 'https:') {
           location.replace(window.location.protocol +'//'+window.location.host + '/room/' + '{{room_name}}' + '/')
         }, 2000);
         {% endif %}
-
-
-
+      } else if (data['code'] == 'new_results' && AVAILABLE_RESULTS == 0) {
+         results = JSON.parse(data['results'])
+         update_table(results)
+         update_table2(results)
+         AVAILABLE_RESULTS = 1
       }
   };
 
@@ -56,42 +133,13 @@ if (window.location.protocol == 'https:') {
 <h4>La partie est finie !</h4>
 
 <h5 style="color:#C3073F">Scores</h5>
-<div>
-<table class="centered" style="margin-left:auto; margin-right:auto; width:50%;">
-  <thead>
-    <tr>
-        <th></th>
-        {% for _ in list_answer %}
-          <th>{{ forloop.counter }}</th>
-        {% endfor %}
-        <th>Score</th>
-    </tr>
-  </thead>
 
-  <tbody>
-    {% for u_id in dict_answer %}
-    <tr>
-        {% if u_id == request.session.user_id %}
-          <td><span style="color:#C3073F"><b>{{dict_name|keyvalue:u_id}}</b></span></td>
-        {% else %}
-          <td>{{dict_name|keyvalue:u_id}}</td>
-        {% endif%}
-
-        {% for answer in dict_answer|keyvalue:u_id %}
-          {% if answer == 1 %}
-            <td><i class="material-icons" style="color: #96d800;">check</i></td>
-          {% else %}
-            <td><i class="material-icons" style="color: #b7241b;">clear</i></td>
-          {% endif%}
-        {% endfor%}
-
-        <td>{{ dict_score|keyvalue:u_id }}</td>
-
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div id="table-container">
+ <div class="progress" style="background-color:transparent;">
+      <div class="indeterminate" style="background-color: #C3073F;"></div>
+ </div>
 </div>
+
 <br />
   {% if request.session.game_master == room_name%}
 <!--<a href="#" ></a>-->
@@ -100,21 +148,10 @@ if (window.location.protocol == 'https:') {
 (En attente de l'hote pour une nouvelle partie)
 {% endif%}
   <br />
-<h5 style="color:#C3073F">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>
-  <div style="margin: 0 auto; display: inline-block;">
-  <ul class="collection">
-{% for question in questions %}
-  <li class="collection-item" style="background-color: #1A1A1D;">
-  <span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>
-  {% if list_answer|index:forloop.counter0 == 1 %}
-      <span style="color: #96d800;"><b>{{ question.movie_guessed }}</b></span>
-  {% else %}
-      <span style="color: #b7241b"><b>{{ question.movie_guessed }}</b></span>
-  {% endif %}
-  </li>
-{% endfor %}
-  </ul>
+
+<div id="table-container2">
 </div>
+
 <br /><br />
 </div>
 <br />
