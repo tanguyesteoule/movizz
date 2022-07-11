@@ -16,8 +16,11 @@ class Command(BaseCommand):
             if img_ids is None:
                 continue
             for img_id in img_ids:
-                print(f'{movie_id}/{img_id}.jpg')
-                screenshot = Screenshot.objects.get(image=f'{movie_id}/{img_id}.jpg')
-                screenshot.sfw = 0
-                screenshot.save()
+                try:
+                    print(f'{movie_id}/{img_id}.jpg')
+                    screenshot = Screenshot.objects.get(image=f'{movie_id}/{img_id}.jpg')
+                    screenshot.sfw = 0
+                    screenshot.save()
+                except:
+                    print(f'{movie_id}/{img_id}.jpg', ' - ERROR when inserting')
 
