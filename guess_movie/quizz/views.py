@@ -157,8 +157,11 @@ def create_game(request):
             for i in range(nb_question):
                 popularity = request.session['popularity_img']
                 list_movie_sel = list(
-                    Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))[
-                                 :int(popularity)]
+                    Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))
+
+                if popularity != '':
+                    list_movie_sel = list_movie_sel[:int(popularity)]
+
                 sample_movies = get_n_random_movies(3, list_movie_sel, quote=False, image=True)
 
                 # Select a random movie among them
