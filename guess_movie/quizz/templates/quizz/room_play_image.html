@@ -16,7 +16,11 @@ $(document).ready ( function () {
   event_end = false;
 
   dict_data = {}
-  {% for movie in list_movie %} dict_data["{{ movie|safe }}"] = null; {% endfor %}
+  dict_movie = {}
+  {% for movie, imdb_id in dict_movies.items %}
+      dict_movie["{{ movie|safe }}"] = "{{ imdb_id|safe }}";
+      dict_data["{{ movie|safe }}"] = null;
+  {% endfor %}
 
   if (window.location.protocol == 'https:') {
     wsProtocol = 'wss://'
@@ -116,7 +120,7 @@ $(document).ready ( function () {
             url: '/guess_image/',
             data: {
                 'question_id': Q_ID,
-                'movie_name': movie_name,
+                'imdb_id': dict_movie[movie_name],
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             },
             dataType: 'json',

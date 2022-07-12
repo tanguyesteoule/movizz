@@ -11,16 +11,11 @@ class QuoteAdmin(admin.ModelAdmin):
     list_display = ('movie', 'quote_text')
     list_filter = ['movie']
     search_fields = ['quote_text']
-    # fieldsets = [
-    #     (None, {'fields': ['question_text']}),
-    #     ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
-    # ]
-    # inlines = [ChoiceInline]
 
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
-    search_fields = ['name', 'imdb_id']
+    list_display = ('name', 'original_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
+    search_fields = ['name', 'original_name', 'imdb_id']
 
 
 class ScreenshotAdmin(admin.ModelAdmin):

@@ -430,8 +430,9 @@ def room_play_image(request, room_name, game_name):
 
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
 
-        list_movie = [m.name + f' ({m.year})' for m in all_movies]
-        context['list_movie'] = list_movie
+        dict_movies = {(f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id for m in all_movies}
+        # list_movie = [f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]' for m in all_movies]
+        context['dict_movies'] = dict_movies
 
         context['game'] = game
         context['current_question'] = game.current_q + 1
@@ -493,11 +494,11 @@ def guess_room(request):
 
 
 def guess_image(request):
-    movie_name = request.POST.get('movie_name')
+    imdb_id = request.POST.get('imdb_id')
     question_id = request.POST.get('question_id')
     question = QuestionImage.objects.get(id=question_id)
 
-    movie_id = get_object_or_404(Movie, name=movie_name[:-7], year=int(movie_name[-5:-1])).id
+    movie_id = get_object_or_404(Movie, imdb_id=imdb_id).id
     data = {}
     data['movie_id'] = movie_id
     if movie_id == question.movie_guessed.id:
@@ -514,7 +515,11 @@ def guess_image(request):
 
 def reveal_image(request):
     question_id = request.POST.get('question_id')
-    movie_name = QuestionImage.objects.get(id=question_id).movie_guessed.name
+    m = QuestionImage.objects.get(id=question_id).movie_guessed
+    if m.original_name != m.name:
+        movie_name = f'{m.original_name} ({m.name}) [{m.year}]'
+    else:
+        movie_name = f'{m.name} [{m.year}]'
 
     data = {'movie_name': movie_name}
 
