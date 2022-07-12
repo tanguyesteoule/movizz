@@ -4,10 +4,10 @@ from django.db import models
 class Movie(models.Model):
     imdb_id = models.CharField(max_length=200, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
+    original_name = models.CharField(max_length=200, null=True, blank=True)
     director = models.CharField(max_length=200, null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
     popularity = models.FloatField(null=True, blank=True)
-    # summary = models.TextField(null=True, blank=True)
     image = models.ImageField(upload_to='covers', null=True, blank=True)
     has_quote = models.BooleanField(null=True, blank=True)
     has_image = models.BooleanField(default=0, null=True, blank=True)
