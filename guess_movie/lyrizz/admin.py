@@ -36,7 +36,7 @@ def history_index_view(request):
 
 def history_view(request, game_name):
     # game = Game.objects.get(name=game_name)
-    user_id = request.session['user_id']
+    # user_id = request.session['user_id']
     game = get_object_or_404(Game, name=game_name)
     questions = Question.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)

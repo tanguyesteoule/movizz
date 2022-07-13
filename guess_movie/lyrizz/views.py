@@ -42,13 +42,17 @@ def create_user(request):
 
 
 def change_user_name(request):
-    if 'user_id' in request.session:
-        user_name = request.GET.get('user_name')
-        player = Player.objects.get(user_id=request.session['user_id'])
-        player.user_name = user_name
-        player.save()
-        request.session['user_name'] = user_name
-        return JsonResponse({})
+    if 'user_id' not in request.session:
+        user_id, user_name = create_user(request)
+    else:
+        user_id = request.session['user_id']
+
+    user_name = request.GET.get('user_name')
+    player = Player.objects.get(user_id=user_id)
+    player.user_name = user_name
+    player.save()
+    request.session['user_name'] = user_name
+    return JsonResponse({})
 
 
 #
@@ -93,9 +97,6 @@ def get_n_random_songs(n=3, list_song_sel=False):
 
 
 def create_game(request):
-    # game_mode = request.session['game_mode']
-    # game_mode_debrief = request.session['game_mode_debrief']
-
     room_name = request.POST.get('room_name')
 
     request.session['mode'] = 'start'
@@ -107,19 +108,18 @@ def create_game(request):
     # Création de la Game en base
     if 'game_master' in request.session and request.session['game_master'] == room_name:
 
-        # Selection songs
-        # if 'list_song_sel_real' in request.session and len(request.session['list_song_sel_real']) >= 3:
-        #     list_song_sel = request.session['list_song_sel_real']
-        # else:
-        #     list_song_sel = False
-
         dict_user = json.loads(request.POST.get('dict_user'))
         nb_question = max(2, min(50, int(request.POST.get('nb_question'))))
         request.session['dict_user'] = dict_user
         data = {}
 
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         game_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        game = Game(name=game_name, current_q=0, nb_q=nb_question, host=request.session['user_id'], mode=mode,
+        game = Game(name=game_name, current_q=0, nb_q=nb_question, host=user_id, mode=mode,
                     size=3, game_mode=game_mode, game_mode_debrief=game_mode_debrief)
         game.save()
 
@@ -161,10 +161,15 @@ def create_game(request):
 
 
 def save_info_game(request):
-    user_list = json.loads(request.POST.get('list_user'))
+    user_list = request.POST.get('list_user')
+    if user_list is not None:
+        user_list = json.loads(user_list)
+        request.session['user_list'] = user_list
+
     game_name = request.POST.get('game_name')
-    request.session['user_list'] = user_list
-    request.session['current_game'] = game_name
+    if game_name is not None:
+        request.session['current_game'] = game_name
+
     return JsonResponse({})
 
 
@@ -172,8 +177,16 @@ def room_play(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
         context = {'room_name': room_name, 'game_name': game_name}
         user_list = request.session['user_list']
-        user_id = request.session['user_id']
+
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         game = Game.objects.get(name=game_name)
+        if game.current_q == -1:
+            return HttpResponseRedirect(reverse('lyrizz:room_index'))
+
         question = Question.objects.filter(game_id=game.id).order_by('id')[game.current_q]
         # request.session['question_id'] = question.id
 
@@ -199,26 +212,19 @@ def room_play(request, room_name, game_name):
 def guess_room(request):
     if request.GET.get('song_prop_id') and request.GET.get('question_id'):
         question = get_object_or_404(Question, pk=request.GET.get('question_id'))
-        if Answer.objects.filter(user_id=request.session['user_id'], question=question).count() == 0:
+
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
+        if Answer.objects.filter(user_id=user_id, question=question).count() == 0:
             song_prop_id = int(request.GET.get('song_prop_id', None))
             if song_prop_id != -1:
                 song_prop = Song.objects.get(pk=song_prop_id)
-                answer = Answer(user_id=request.session['user_id'], question=question, song_prop=song_prop)
-                # else:
-                # answer = Answer(user_id=request.session['user_id'], question=question)
+                Answer.objects.get_or_create(user_id=user_id, question=question, song_prop=song_prop)
 
-                answer.save()
             data = {'song_guessed': question.song_guessed.id}
-
-            # Remplace by answer
-            # request.session['score_total'] += 1
-            # if song_prop_id == question.song_guessed.id:
-            #     request.session['score'] += 1
-
-            # try:
-            #     del request.session['question_id']
-            # except KeyError:
-            #     pass
 
             return JsonResponse(data)
 
@@ -227,7 +233,12 @@ def room_results(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
         # On refait le calcul pour être sûr des résultats
         context = {'room_name': room_name, 'game_name': game_name}
-        user_id = request.session['user_id']
+
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         game = Game.objects.get(name=game_name)
         list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
         list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
@@ -296,8 +307,11 @@ def history_index(request):
 
 
 def history(request, game_name):
-    # game = Game.objects.get(name=game_name)
-    user_id = request.session['user_id']
+    if 'user_id' not in request.session:
+        user_id, user_name = create_user(request)
+    else:
+        user_id = request.session['user_id']
+
     game = get_object_or_404(Game, name=game_name, current_q=-1)
     questions = Question.objects.filter(game=game)
     list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)

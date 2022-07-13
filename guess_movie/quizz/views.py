@@ -54,13 +54,17 @@ def create_room(request):
 
 
 def change_user_name(request):
-    if 'user_id' in request.session:
-        user_name = request.GET.get('user_name')
-        player = Player.objects.get(user_id=request.session['user_id'])
-        player.user_name = user_name
-        player.save()
-        request.session['user_name'] = user_name
-        return JsonResponse({})
+    if 'user_id' not in request.session:
+        user_id, user_name = create_user(request)
+    else:
+        user_id = request.session['user_id']
+
+    user_name = request.GET.get('user_name')
+    player = Player.objects.get(user_id=user_id)
+    player.user_name = user_name
+    player.save()
+    request.session['user_name'] = user_name
+    return JsonResponse({})
 
 
 def create_user(request):
@@ -119,8 +123,13 @@ def create_game(request):
         request.session['dict_user'] = dict_user
         data = {}
 
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         game_name = ''.join(random.choices(string.ascii_letters + string.digits, k=10))
-        game = Game(name=game_name, current_q=0, nb_q=nb_question, host=request.session['user_id'], mode=mode,
+        game = Game(name=game_name, current_q=0, nb_q=nb_question, host=user_id, mode=mode,
                     game_mode=game_mode,
                     game_mode_debrief=game_mode_debrief)
         game.save()
@@ -195,10 +204,15 @@ def create_game(request):
 
 
 def save_info_game(request):
-    user_list = json.loads(request.POST.get('list_user'))
+    user_list = request.POST.get('list_user')
+    if user_list is not None:
+        user_list = json.loads(user_list)
+        request.session['user_list'] = user_list
+
     game_name = request.POST.get('game_name')
-    request.session['user_list'] = user_list
-    request.session['current_game'] = game_name
+    if game_name is not None:
+        request.session['current_game'] = game_name
+
     return JsonResponse({})
 
 
@@ -206,8 +220,15 @@ def room_play(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
         context = {'room_name': room_name, 'game_name': game_name}
         user_list = request.session['user_list']
-        user_id = request.session['user_id']
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
         game = Game.objects.get(name=game_name)
+
+        if game.current_q == -1:
+            return HttpResponseRedirect(reverse('lyrizz:room_index'))
+
         question = Question.objects.filter(game_id=game.id).order_by('id')[game.current_q]
         # request.session['question_id'] = question.id
 
@@ -229,7 +250,12 @@ def room_results(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
         # On refait le calcul pour être sûr des résultats
         context = {'room_name': room_name, 'game_name': game_name}
-        user_id = request.session['user_id']
+
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         game = Game.objects.get(name=game_name)
         list_u = GamePlayer.objects.filter(game=game).values_list('player', flat=True)
         list_user = Player.objects.filter(id__in=list_u).values_list('user_id', flat=True)
@@ -431,14 +457,23 @@ def room_play_image(request, room_name, game_name):
     if 'current_game' in request.session and request.session['current_game'] == game_name:
         context = {'room_name': room_name, 'game_name': game_name}
         user_list = request.session['user_list']
-        user_id = request.session['user_id']
+
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         game = Game.objects.get(name=game_name)
+
+        # The game is finished
+        if game.current_q == -1:
+            return HttpResponseRedirect(reverse('quizz:room_index'))
+
         question = QuestionImage.objects.filter(game_id=game.id).order_by('id')[game.current_q]
         # request.session['question_id'] = question.id
         list_image_id = question.list_image_id.split(',')
         image = list(Screenshot.objects.filter(pk__in=list_image_id))[0].image
 
-        # already_answer = Answer.objects.filter(question=question, user_id=user_id).count()
         already_answer = AnswerImage.objects.filter(questionimage=question, user_id=user_id).count()
 
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
@@ -446,7 +481,7 @@ def room_play_image(request, room_name, game_name):
         dict_movies = {(
                            f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
                        for m in all_movies}
-        # list_movie = [f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]' for m in all_movies]
+
         context['dict_movies'] = dict_movies
 
         context['game'] = game
@@ -462,48 +497,21 @@ def room_play_image(request, room_name, game_name):
         return HttpResponseRedirect(reverse('quizz:room_index'))
 
 
-# def game_image(request):
-#     context = {}
-#
-#     all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))[:int(300)]
-#
-#     movie = random.sample(all_movies, 1)[0]
-#
-#     screenshots = list(Screenshot.objects.filter(movie_id=movie.id, sfw=1))
-#     screenshot_sample = random.sample(screenshots, 5)
-#
-#     list_movie = [m.name + f' ({m.year})' for m in all_movies]
-#     context['list_movie'] = list_movie
-#
-#     context['movie'] = movie
-#     context['screenshot_sample'] = screenshot_sample
-#
-#     return render(request, 'quizz/game_image.html', context)
-
-
 def guess_room(request):
     if request.GET.get('movie_prop_id') and request.GET.get('question_id'):
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         question = get_object_or_404(Question, pk=request.GET.get('question_id'))
-        if Answer.objects.filter(user_id=request.session['user_id'], question=question).count() == 0:
+        if Answer.objects.filter(user_id=user_id, question=question).count() == 0:
             movie_prop_id = int(request.GET.get('movie_prop_id', None))
             if movie_prop_id != -1:
                 movie_prop = Movie.objects.get(pk=movie_prop_id)
-                answer = Answer(user_id=request.session['user_id'], question=question, movie_prop=movie_prop)
-                # else:
-                # answer = Answer(user_id=request.session['user_id'], question=question)
+                Answer.objects.get_or_create(user_id=user_id, question=question, movie_prop=movie_prop)
 
-                answer.save()
             data = {'movie_guessed': question.movie_guessed.id}
-
-            # Remplace by answer
-            # request.session['score_total'] += 1
-            # if movie_prop_id == question.movie_guessed.id:
-            #     request.session['score'] += 1
-
-            # try:
-            #     del request.session['question_id']
-            # except KeyError:
-            #     pass
 
             return JsonResponse(data)
 
@@ -511,17 +519,25 @@ def guess_room(request):
 def guess_image(request):
     imdb_id = request.POST.get('imdb_id')
     question_id = request.POST.get('question_id')
-    question = QuestionImage.objects.get(id=question_id)
-
     movie_id = get_object_or_404(Movie, imdb_id=imdb_id).id
     data = {}
     data['movie_id'] = movie_id
+
+    try:
+        question = QuestionImage.objects.get(id=question_id)
+    except:
+        return JsonResponse({'movie_id': movie_id, 'res': 0})
+
     if movie_id == question.movie_guessed.id:
         data['res'] = 1
+
+        if 'user_id' not in request.session:
+            user_id, user_name = create_user(request)
+        else:
+            user_id = request.session['user_id']
+
         # Only if right answer
-        answer = AnswerImage(user_id=request.session['user_id'], questionimage=question,
-                             movie_prop=question.movie_guessed)
-        answer.save()
+        AnswerImage.objects.get_or_create(user_id=user_id, questionimage=question, movie_prop=question.movie_guessed)
     else:
         data['res'] = 0
 
