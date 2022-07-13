@@ -14,8 +14,8 @@ class QuoteAdmin(admin.ModelAdmin):
 
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('name', 'original_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
-    search_fields = ['name', 'original_name', 'imdb_id']
+    list_display = ('name', 'original_name', 'en_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
+    search_fields = ['name', 'original_name', 'en_name', 'imdb_id']
 
 
 class ScreenshotAdmin(admin.ModelAdmin):

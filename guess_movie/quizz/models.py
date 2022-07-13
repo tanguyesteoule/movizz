@@ -5,6 +5,7 @@ class Movie(models.Model):
     imdb_id = models.CharField(max_length=200, null=True, blank=True)
     name = models.CharField(max_length=200, null=True, blank=True)
     original_name = models.CharField(max_length=200, null=True, blank=True)
+    en_name = models.CharField(max_length=200, null=True, blank=True) # English name
     director = models.CharField(max_length=200, null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
     popularity = models.FloatField(null=True, blank=True)
