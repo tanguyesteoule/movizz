@@ -20,7 +20,7 @@ class Command(BaseCommand):
             year = row['year']
             link = row['link']
             try:
-                movie = Movie.objects.get(original_name=movie_name, year=year)
+                movie = Movie.objects.get(en_name=movie_name, year=year)
                 if movie.has_image == 0:
                     # print(movie_name, ';', movie.imdb_id)
                     count_ok += 1

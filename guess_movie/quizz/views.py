@@ -249,7 +249,11 @@ def room_results(request, room_name, game_name):
         dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
         dict_name = {}
         for u_id in dict_score.keys():
-            user_name = Player.objects.get(user_id=u_id).user_name
+            try:
+                user_name = Player.objects.get(user_id=u_id).user_name
+            except:
+                user_name = 'Anonymous'
+
             dict_name[u_id] = user_name
 
         dict_answer = {u_id: [] for u_id in dict_score.keys()}
@@ -306,7 +310,10 @@ def history(request, game_name):
     dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
     dict_name = {}
     for u_id in dict_score.keys():
-        user_name = Player.objects.get(user_id=u_id).user_name
+        try:
+            user_name = Player.objects.get(user_id=u_id).user_name
+        except:
+            user_name = 'Anonymous'
         dict_name[u_id] = user_name
 
     dict_answer = {u_id: [] for u_id in dict_score.keys()}
@@ -358,7 +365,11 @@ def history_image(request, game_name):
     dict_score = dict(sorted(dict_score.items(), key=lambda item: item[1], reverse=True))
     dict_name = {}
     for u_id in dict_score.keys():
-        user_name = Player.objects.get(user_id=u_id).user_name
+        try:
+            user_name = Player.objects.get(user_id=u_id).user_name
+        except:
+            user_name = 'Anonymous'
+
         dict_name[u_id] = user_name
 
     dict_answer = {u_id: [] for u_id in dict_score.keys()}
