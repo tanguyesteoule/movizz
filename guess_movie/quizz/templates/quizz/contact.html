@@ -1,0 +1,44 @@
+{% extends "quizz/base.html" %}
+{% load static %}
+
+{% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
+{% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
+
+{% block content %}
+<style>
+textarea {
+ color: white;
+ margin: 8px 0;
+ height: 300px;
+}
+
+
+</style>
+<br /><br />
+<div style="margin-left: 1em; margin-right: 1em;">
+   <h5 class="title-about center">Contact</h5>
+   <div class="centered-contact input-field">
+      N'hésitez pas à signaler tout problème (bug, mauvais nom de film, ...) ou faire remonter des remarques/idées.
+      Rentrez un email si vous souhaitez une réponse.<br />
+      Merci à vous, ça permettra d'améliorer le jeu !
+      <br /><br /><br />
+      <form action="" method="post">
+         {% csrf_token %}
+         {{ form.management_form }}
+         Email (facultatif)
+          {{ form.email }}
+         <br /><br /><br />
+         Sujet
+          {{ form.subject }}
+         <br /><br /><br />
+         Message
+          {{ form.message }}
+         <br />
+         <div class="center">
+            <input type="submit" class="btn-large waves-effect btn-color" value="Envoyer">
+         <div/><br>
+      </form>
+   </div>
+</div>
+
+{% endblock %}

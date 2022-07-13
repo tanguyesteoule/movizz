@@ -1,0 +1,17 @@
+{% extends "quizz/base.html" %}
+{% load static %}
+
+{% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
+{% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
+
+{% block content %}
+
+<br /><br />
+<div style="margin-left: 1em; margin-right: 1em;">
+   <h5 class="title-about center">Contact</h5>
+   <div class="center">
+      Le message a bien été envoyé, merci pour votre retour !
+   </div>
+</div>
+
+{% endblock %}

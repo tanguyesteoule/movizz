@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.views.generic import TemplateView
+
+from .forms import ContactForm
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, Country, MovieCountry, GamePlayer, \
     Preselect, Screenshot, QuestionImage, AnswerImage
 import random
@@ -430,7 +432,9 @@ def room_play_image(request, room_name, game_name):
 
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
 
-        dict_movies = {(f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id for m in all_movies}
+        dict_movies = {(
+                           f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
+                       for m in all_movies}
         # list_movie = [f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]' for m in all_movies]
         context['dict_movies'] = dict_movies
 
@@ -553,6 +557,19 @@ def about(request):
 
     context = {'nb_movie': nb_movie, 'nb_quote': nb_quote, 'nb_question': nb_question}
     return render(request, 'quizz/about.html', context)
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'quizz/contact_success.html')
+        else:
+            return render(request, 'quizz/contact.html', {'form': form})
+    form = ContactForm()
+    context = {'form': form}
+    return render(request, 'quizz/contact.html', context)
 
 
 def editor(request):

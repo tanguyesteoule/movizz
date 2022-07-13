@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, \
-    QuestionImage, AnswerImage, Screenshot
+    QuestionImage, AnswerImage, Screenshot, Contact
 from django.http import HttpResponse
 from django.urls import path
 from django.db import models
@@ -163,3 +163,4 @@ admin.site.register(MovieGenre)
 admin.site.register(AView, AViewAdmin)
 admin.site.register(Preselect)
 admin.site.register(Screenshot, ScreenshotAdmin)
+admin.site.register(Contact)

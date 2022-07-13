@@ -26,6 +26,7 @@ urlpatterns = [
     path('create_game/', views.create_game, name='create_game'),
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
+    path('contact/', views.contact, name='contact'),
     path('change_user_name/', views.change_user_name, name='change_user_name'),
     # path('get_movie_info/', views.get_movie_info, name='get_movie_info'),
     path('save_info_game/', views.save_info_game, name='save_info_game'),

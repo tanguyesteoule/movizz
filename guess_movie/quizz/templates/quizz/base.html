@@ -60,6 +60,7 @@
       {% block nav-exploration %}{% endblock %}
       {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}">Historique</a></li>{% endblock %}
       {% block nav-about %}<li><a href="{% url 'quizz:about' %}">A propos</a></li>{% endblock %}
+      {% block nav-contact %}<li><a href="{% url 'quizz:contact' %}">Contact</a></li>{% endblock %}
 
 		</ul>
         <ul class="navbar-nav ml-auto hide-on-small-only">
@@ -77,6 +78,7 @@
       {% block nav-exploration2 %}{% endblock %}
       {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}">Historique</a></li>{% endblock %}
       {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}">A propos</a></li>{% endblock %}
+      {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}">Contact</a></li>{% endblock %}
       {% block nav-lyrizz2 %}<li style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">Tester Lyrizz</a></li>{% endblock %}
 </ul>
 

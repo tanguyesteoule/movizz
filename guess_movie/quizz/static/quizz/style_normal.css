@@ -84,3 +84,9 @@ img.movie-img {
     height:auto;
     width:auto;
   }
+
+.centered-contact{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+}

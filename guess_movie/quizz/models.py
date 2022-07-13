@@ -16,6 +16,15 @@ class Movie(models.Model):
         return self.name
 
 
+class Contact(models.Model):
+    email = models.EmailField(blank=True)
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+
+    def __str__(self):
+        return self.subject
+
+
 class Quote(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     quote_text = models.TextField(null=True, blank=True)
