@@ -748,20 +748,17 @@ $("#link-share").click(function () {
       <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
       {% if request.session.popularity_img != None %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="1300" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
+          <label for="popularity">Nombre de films filtrés par popularité (Nombre de votes sur IMDB)</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="1300" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% else %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="0" max="1300" maxlength="10" size="5" value="500">
+          <label for="popularity">Nombre de films filtrés par popularité (Nombre de votes sur IMDB)</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="1300" maxlength="10" size="5" value="500">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% endif %}
   </fieldset>
   <br />
-  <i>Note : Si le nombre de films est inférieur à 3, tous les films sont selectionnés.</i>
-
-  <br /><br />
   <fieldset>
       <legend><b>Filtre des images NSFW</b></legend>
 

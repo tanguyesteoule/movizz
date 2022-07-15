@@ -834,7 +834,10 @@ def get_n_random_movies(n=3, list_movie_sel=False, quote=True, image=False):
         elif image:
             movies = list(Movie.objects.filter(pk__in=list_movie_sel, has_image=1))
     else:
-        movies = list(Movie.objects.all())
+        if quote:
+            movies = list(Movie.objects.filter(has_quote=1))
+        elif image:
+            movies = list(Movie.objects.filter(has_image=1))
 
     return random.sample(movies, n)
 
