@@ -43,7 +43,6 @@ $(document).ready ( function () {
       if(data['code'] == 'newimage'){
         image_url = data['image_url']
         n_image = data['n_image']
-        // $('#screenshot-img').attr('src', '{{ MEDIA_URL }}/screenshot/' + image_url)
         update_img(image_url, n_image)
       } else if (data['code'] == 'reveal') {
         REVEALED = 1
@@ -78,8 +77,8 @@ $(document).ready ( function () {
         img_path = '{{ MEDIA_URL }}/screenshot/' + data['image_url']
         $('img#screenshot-img').attr('src', img_path)
         $('#thumb1').attr('src', img_path)
-        $('#thumb2').css('visibility','hidden');
-        $('#thumb3').css('visibility','hidden');
+        $('#thumb2').removeAttr('src').css('visibility','hidden');
+        $('#thumb3').removeAttr('src').css('visibility','hidden');
         $('#nb-question').text(parseInt($('#nb-question').text()) + 1)
 
         $('#timer').text(30)
@@ -100,7 +99,8 @@ $(document).ready ( function () {
   update_img = function(img, n) {
     img_path = "{{ MEDIA_URL }}/screenshot/" + img;
     $('img#screenshot-img').attr('src', img_path)
-    $('#thumb'+parseInt(n)).attr('src', img_path).css('visibility','visible');
+    $('#thumb'+parseInt(n)).attr('src', img_path)
+    $('#thumb'+parseInt(n)).css('visibility','visible');
   }
 
     $('.screenshot-thumb').click(function() {

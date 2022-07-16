@@ -466,11 +466,11 @@ def room_play_image(request, room_name, game_name):
         game = Game.objects.get(name=game_name)
 
         # The game is finished
-        if game.current_q == -1:
+        if game.current_q == -1 or game.current_q > game.nb_q - 1:
             return HttpResponseRedirect(reverse('quizz:room_index'))
 
         question = QuestionImage.objects.filter(game_id=game.id).order_by('id')[game.current_q]
-        # request.session['question_id'] = question.id
+
         list_image_id = question.list_image_id.split(',')
         image = list(Screenshot.objects.filter(pk__in=list_image_id))[0].image
 

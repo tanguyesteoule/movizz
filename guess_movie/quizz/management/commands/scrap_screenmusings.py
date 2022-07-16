@@ -18,18 +18,16 @@ class Command(BaseCommand):
         for _, row in df.iterrows():
             movie_name = row['movie_name']
             year = row['year']
-            link = row['link']
+            imdb_id = row['imdb_id']
             try:
-                movie = Movie.objects.get(en_name=movie_name, year=year)
+                movie = Movie.objects.get(imdb_id=imdb_id)
                 if movie.has_image == 0:
-                    # print(movie_name, ';', movie.imdb_id)
+                    print('[TO FILL]', movie_name, ';', imdb_id)
                     count_ok += 1
                 else:
-                    # print('[ALREADY]', movie_name)
-                    pass
+                    print('[TO SKIP]', movie_name, ';', imdb_id)
             except:
-                print('[BUG]', movie_name)
-                pass
+                print('[TO CREATE]', movie_name, ';', imdb_id)
 
         print('ok count : ', count_ok)
 
