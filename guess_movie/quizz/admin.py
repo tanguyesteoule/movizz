@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, \
-    QuestionImage, AnswerImage, Screenshot, Contact
+    QuestionImage, AnswerImage, Screenshot, Contact, Country
 from django.http import HttpResponse
 from django.urls import path
 from django.db import models
@@ -162,11 +162,15 @@ def history_image_view(request, game_name):
 # Register your models here.
 admin.site.register(Game)
 admin.site.register(Answer)
+admin.site.register(AnswerImage)
 admin.site.register(Player)
+admin.site.register(GamePlayer)
 admin.site.register(Movie, MovieAdmin)
 admin.site.register(Quote, QuoteAdmin)
 admin.site.register(Question)
+admin.site.register(QuestionImage)
 admin.site.register(Genre)
+admin.site.register(Country)
 admin.site.register(MovieGenre)
 admin.site.register(AView, AViewAdmin)
 admin.site.register(Preselect)
