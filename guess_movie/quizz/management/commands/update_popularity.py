@@ -17,7 +17,12 @@ class Command(BaseCommand):
 
         for tt in dict_popularity.keys():
             popularity = dict_popularity[tt]
-            print(tt, popularity)
-            m = Movie.objects.get(imdb_id=tt)
-            m.popularity = popularity
-            m.save()
+
+            try:
+                print(tt, popularity)
+                m = Movie.objects.get(imdb_id=tt)
+                m.popularity = popularity
+                m.save()
+            except:
+                print(tt, 'BUG')
+                continue
