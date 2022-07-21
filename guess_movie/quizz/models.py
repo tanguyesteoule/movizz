@@ -37,7 +37,9 @@ class Quote(models.Model):
 class Screenshot(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='screenshot', null=True, blank=True)
+    num_img = models.IntegerField(null=True, blank=True)
     sfw = models.BooleanField(default=1, null=True, blank=True)
+
 
 
 class Game(models.Model):

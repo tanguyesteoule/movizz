@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.db.models import IntegerField, Value as V
+from django.db.models.functions import Cast, StrIndex, Substr
+
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, \
     QuestionImage, AnswerImage, Screenshot, Contact, Country
-from django.http import HttpResponse
 from django.urls import path
 from django.db import models
 from django.shortcuts import get_object_or_404, render
@@ -16,12 +18,28 @@ class QuoteAdmin(admin.ModelAdmin):
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('name', 'original_name', 'en_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
     search_fields = ['name', 'original_name', 'en_name', 'imdb_id']
+    list_filter = ['has_quote', 'has_image']
 
 
 class ScreenshotAdmin(admin.ModelAdmin):
-    list_display = ('movie', 'image', 'sfw')
-    list_filter = ['movie']
+    list_display = ('movie', 'image', 'num_img', 'sfw')
+    list_filter = ['sfw', 'movie']
     search_fields = ['movie__name']
+
+    def set_nsfw(self, request, screenshots):
+        for screenshot in screenshots:
+            screenshot.sfw = False
+            screenshot.save()
+
+    def set_sfw(self, request, screenshots):
+        for screenshot in screenshots:
+            screenshot.sfw = True
+            screenshot.save()
+
+    set_nsfw.short_description = 'Set Not Safe For Work (NSFW)'
+    set_sfw.short_description = 'Set Safe For Work (SFW)'
+
+    actions = [set_sfw, set_nsfw]
 
 
 class AView(models.Model):
