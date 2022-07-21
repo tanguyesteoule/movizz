@@ -1,10 +1,12 @@
 import pickle
 from django.core.management import BaseCommand
-from quizz.models import Screenshot
+from quizz.models import Screenshot, Movie
 from pathlib import Path
 import os
 
 DATA_DIR = Path(__file__).resolve().parent.parent / 'data'
+
+
 class Command(BaseCommand):
     help = "Update SFW"
 
@@ -24,3 +26,9 @@ class Command(BaseCommand):
                 except:
                     print(f'{movie_id}/{img_id}.jpg', ' - ERROR when inserting')
 
+            try:
+                movie = Movie.objects.get(imdb_id=movie_id)
+                movie.has_image = True
+                movie.save()
+            except:
+                print(f'{movie_id} - ERROR when inserting (Does not exist)')
