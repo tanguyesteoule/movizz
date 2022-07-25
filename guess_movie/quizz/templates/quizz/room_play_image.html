@@ -8,10 +8,12 @@
 <script>
 
 $(document).ready ( function () {
+  STARTED = {{ started }}
   ALREADY_ANSWERED = 0
   REVEALED = 0
   countdown = false
   countdown2 = false
+  periodic_ping = false
   Q_ID = {{ question.id }}
   event_end = false;
 
@@ -92,11 +94,30 @@ $(document).ready ( function () {
       } else if (data['code'] == 'end'){
         event_end = true;
         location.replace(window.location.protocol +'//'+window.location.host + '/room/results_image/' + '{{room_name}}' + '/' + '{{game_name}}' + '/')
+      } else if(data['code'] == 'arrivalaccepted') {
+        flush_timer('ping')
+      } else if(data['code'] == 'startgame') {
+        clean_arrival();
+        timer_func();
       }
 
   }
 
+
+  clean_arrival = function() {
+     flush_timer('ping')
+     $('#waiting').html('')
+     $('#screenshot-img').css('visibility', 'visible');
+     $('#thumb1').css('visibility', 'visible');
+     $('#input-name-movie').css('visibility', 'visible');
+     {% if request.session.game_master == room_name %}
+        $('#container-button-next').css('visibility', 'visible');
+     {% endif %}
+  }
+
   update_img = function(img, n) {
+    clean_arrival();
+
     img_path = "{{ MEDIA_URL }}/screenshot/" + img;
     $('img#screenshot-img').attr('src', img_path)
     $('#thumb'+parseInt(n)).attr('src', img_path)
@@ -250,10 +271,28 @@ $(document).ready ( function () {
             clearInterval(countdown2);
             countdown2 = false
         }
+    } else if (id_timer == 'ping') {
+        if (periodic_ping != false) {
+            clearInterval(periodic_ping);
+            periodic_ping = false
+        }
     }
   }
 
-  timer_func();
+  {% if current_question == 1 %}
+      if(STARTED == 0) {
+          periodic_ping = setInterval(function() {
+              userSocket.send(JSON.stringify({
+                'message': 'arrival',
+              }));
+          }, 1000);
+      }
+  {% endif %}
+
+  // Refresh and not first question
+  if(STARTED == 1) {
+      clean_arrival();
+  }
 
   {% if request.session.game_master == room_name %}
   window.onbeforeunload = function(e) {
@@ -286,14 +325,23 @@ $(document).ready ( function () {
 <div id="counter-question"><span id="nb-question">{{ current_question }}</span> / {{ game.nb_q }}</div>
 
 <br /><br />
+<!-- Only if first question -->
+{% if current_question == 1%}
+<div id="waiting">
+    En attente des autres joueurs
+    <div class="progress" style="background-color:transparent;">
+        <div class="indeterminate" style="background-color: #C3073F;"></div>
+    </div>
+</div>
+{% endif %}
 
   <div id="cont-screenshot">
-  <img id="screenshot-img" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ image }}" /><br />
+  <img id="screenshot-img" style="visibility: hidden;" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ image }}" /><br />
 
   <div id="cont-right-answer-div"><div id="right-answer-div"></div></div>
 
       <div class="row">
-        <div class="col s4"><img id="thumb1" class="screenshot-thumb" src="{{ MEDIA_URL }}/screenshot/{{ image }}" /></div>
+        <div class="col s4"><img id="thumb1" style="visibility: hidden;" class="screenshot-thumb" src="{{ MEDIA_URL }}/screenshot/{{ image }}" /></div>
         <div class="col s4"><img id="thumb2" style="visibility: hidden;" class="screenshot-thumb" /></div>
         <div class="col s4"><img id="thumb3" style="visibility: hidden;" class="screenshot-thumb" /></div>
       </div>
@@ -301,7 +349,7 @@ $(document).ready ( function () {
 
 </div> 
 <br />
-
+<div id="input-name-movie" style="visibility: hidden;">
   <div class="row">
     <div class="col s12">
       <div class="row">
@@ -312,6 +360,7 @@ $(document).ready ( function () {
       </div>
     </div>
   </div>
+    </div>
 <br />
 
 <div id="result" class="center"></div>
@@ -321,7 +370,7 @@ $(document).ready ( function () {
 
 
 {% if request.session.game_master == room_name %}
-  <div id="container-button-next">
+  <div id="container-button-next" style="visibility: hidden;">
   <!--    style="left:0; right:0; margin: auto; position:absolute; bottom:10%; width: 190px;">-->
       <a id="next_question" class="btn-large waves-effect btn-color">Question suivante</a>
   </div><br />

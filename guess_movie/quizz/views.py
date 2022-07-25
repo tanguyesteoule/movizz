@@ -482,6 +482,11 @@ def room_play_image(request, room_name, game_name):
                            f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
                        for m in all_movies}
 
+        if game.current_q == 0:
+            started = 0
+        else:
+            started = 1
+
         context['dict_movies'] = dict_movies
 
         context['game'] = game
@@ -491,6 +496,7 @@ def room_play_image(request, room_name, game_name):
         context['user_list'] = user_list
         context['already_answer'] = already_answer
         context['image'] = image
+        context['started'] = started
 
         return render(request, 'quizz/room_play_image.html', context)
     else:

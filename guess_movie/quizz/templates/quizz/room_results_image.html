@@ -12,7 +12,8 @@ $(document).ready(function () {
         s = '<table class="centered" style="margin-left:auto; margin-right:auto; width:50%;">'
         s += '<thead>'
         s += '<tr>'
-        s += '<th></th>'
+        s += '<th>#</th>'
+        s += '<th>Pseudo</th>'
         for (let i = 1; i < results['nb_question']+1; i++) {
           s += "<th>" + i + "</th>";
         }
@@ -21,9 +22,11 @@ $(document).ready(function () {
         s += '</thead>'
         s += '<tbody>'
 
+        i_loop = 1
         for (let u_id in results['dict_answer']) {
             user_name = results['dict_name'][u_id]
             s += '<tr>'
+            s += '<td>' + i_loop + '</td>'
             if (u_id == "{{request.session.user_id}}") {
                 s += '<td><span style="color:#C3073F"><b>' + user_name + '</b></span></td>'
             } else {
@@ -42,6 +45,7 @@ $(document).ready(function () {
 
             s += '<td>' + results['dict_score'][u_id] + '</td>'
             s += '</tr>'
+            i_loop++;
         }
         s += '</tbody>'
         s += '</table>'

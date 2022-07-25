@@ -355,10 +355,13 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
         self.task_sleep_reveal = False
         self.task_sleep_image = False
+        self.task_launch_game = False
         self.current_q_image = 0
         self.TIME_REVEAL = 10
         self.TIME_NEXT_QUESTION = 5
         self.TIME_NEXT_IMAGE = 10
+        self.users_in_game = set()
+        self.already_started = False
 
         # Join room group
         await self.channel_layer.group_add(
@@ -370,8 +373,9 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         await self.init_game()
         # if self.game_mode != 'chill':
         # self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
-        # TODO
-        self.task_sleep_image = asyncio.ensure_future(self.next_image())
+
+        # Le premier next_image doit être envoyé quand tout les joueurs sont arrivés
+        self.task_launch_game = asyncio.ensure_future(self.launch_game(sleep=True))
 
     async def init_game(self):
         self.game, self.questions, self.nb_questions, self.current_q = await self.data_init()
@@ -449,61 +453,26 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         # Attend Xs et ordonne de reveal answer
         # 0.5 to take into account delay
 
-        # time_step = int(self.game_mode) + 0.5
-
         await self.send_reveal()
 
-        # Si mode debrief timer, on attend et envoie la prochaine question
-        # if self.game_mode_debrief != 'chill':
-        # time_step_debrief = int(self.game_mode_debrief) + 0.5
         time_step_debrief = int(self.TIME_NEXT_QUESTION) + 0.5
         await asyncio.sleep(time_step_debrief)
         await self.next_question_chill()
 
-        # for i in range(1, self.nb_questions):
-        #     time_step = int(self.game_mode)
-        #     await asyncio.sleep(time_step)
-        #
-        #     self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
-        #     context = await self.get_data(i)
-        #     await self.compute_score(i - 1)
-        #     context['type'] = 'user_message'
-        #     context['code'] = 'idle'
-        #     context['dict_score'] = json.dumps(self.dict_score)
-        #
-        #     await self.incr_current_q()
-        #
-        #     await self.channel_layer.group_send(self.room_group_name, context)
-        #
-        # await asyncio.sleep(time_step)
-        # await self.end_current_q()
-        # await self.disconnect('normal')
-
     async def next_image(self):
         while self.current_q_image < 2:
-            # time_step = int(self.game_mode) + 0.5
-
             time_step = int(self.TIME_NEXT_IMAGE) + 0.5
             await asyncio.sleep(time_step)
 
-            # self.dict_current_answer = {user_id: 0 for user_id in self.list_id}
-            # self.dict_score_current = {u_id:0 for u_id in self.dict_score.keys()}
             context = await self.get_data_image(self.current_q, self.current_q_image + 1)
-            # await self.compute_score(self.current_q)
+
             context['type'] = 'newimage'
             context['code'] = 'newimage'
             context['n_image'] = self.current_q_image + 2
-            # context['dict_score'] = json.dumps(self.dict_score)
 
-            # await self.incr_current_q()
             self.current_q_image += 1
             await self.channel_layer.group_send(self.room_group_name, context)
 
-        # else:
-        #     pass
-        # await self.end_current_q()
-        # await self.disconnect('normal')
-        # TODO Afficher les 3 choix
         time_step = int(self.TIME_REVEAL) + 0.5
         await asyncio.sleep(time_step)
 
@@ -646,6 +615,35 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
 
                     self.task_sleep_reveal = asyncio.ensure_future(self.next_reveal())
 
+    async def arrival(self, event):
+        # notifies the player that he is in the game
+        user_id = event['user_id']
+        self.users_in_game.add(user_id)
+        context = {
+            'type': 'arrivalaccepted',
+            'user_id': user_id
+        }
+        await self.channel_layer.group_send(self.room_group_name, context)
+
+        # notifies all players that the game is starting
+        if len(self.list_id) == len(self.users_in_game) and not self.already_started:
+            self.already_started = True
+            if self.task_launch_game != False:
+                self.task_launch_game.cancel()
+                self.task_launch_game = asyncio.ensure_future(self.launch_game(sleep=False))
+
+    async def launch_game(self, sleep=False):
+        if sleep:
+            # Run after 15 seconds
+            await asyncio.sleep(15)
+
+        context = dict()
+        context['type'] = 'startgame'
+
+        await self.channel_layer.group_send(self.room_group_name, context)
+
+        self.task_sleep_image = asyncio.ensure_future(self.next_image())
+
     async def send_reveal(self):
         context = {
             'type': 'revealanswer',
@@ -663,10 +661,16 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
     async def newansweruser(self, event):
         pass
 
+    async def arrivalaccepted(self, event):
+        pass
+
     async def user_message(self, event):
         pass
 
     async def newimage(self, event):
+        pass
+
+    async def startgame(self, event):
         pass
 
     async def user_updateuser(self, event):
@@ -716,15 +720,32 @@ class UserConsumerImage(AsyncWebsocketConsumer):
                 'movie_id': text_data_json['movie_id'],
                 'ok': text_data_json['ok']
             }
-            await self.channel_layer.group_send(self.room_group_name, context)
+        elif message == 'arrival':
+            context = {
+                'type': 'arrival',
+                'user_id': self.user_id,
+            }
+        await self.channel_layer.group_send(self.room_group_name, context)
 
     async def user_message(self, data):
         # Send message to WebSocket
         await self.send(text_data=json.dumps(data))
 
+    async def arrivalaccepted(self, data):
+        if data['user_id'] == self.user_id:
+            context = {'code': 'arrivalaccepted'}
+            await self.send(text_data=json.dumps(context))
+
+    async def startgame(self, data):
+        context = {'code': 'startgame'}
+        await self.send(text_data=json.dumps(context))
+
     async def newimage(self, data):
         # Send message to WebSocket
         await self.send(text_data=json.dumps(data))
+
+    async def arrival(self, data):
+        pass
 
     async def newansweruser(self, data):
         # Send message to WebSocket
