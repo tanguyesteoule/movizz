@@ -11,14 +11,15 @@ class Command(BaseCommand):
     help = "Set english name"
 
     def handle(self, *args, **kwargs):
-        path_file = os.path.join(DATA_DIR, 'df_name_all.csv')
+        path_file = os.path.join(DATA_DIR, 'df_name_en.csv')
         df = pd.read_csv(path_file)
 
         for _, row in df.iterrows():
             try:
                 imdb_id = row['imdb_id']
-                original_name = str(row['original_name'])
+                # original_name = str(row['original_name'])
                 en_name = str(row['en_name'])
+
                 movie = Movie.objects.get(imdb_id=imdb_id)
                 if en_name == 'nan':
                     en_name = movie.name
