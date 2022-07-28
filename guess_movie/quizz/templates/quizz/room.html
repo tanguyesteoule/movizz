@@ -257,6 +257,8 @@ $("#link-share").click(function () {
         data_g['popularity'] = $('#popularity').val()
         data_g['popularity_img'] = $('#popularity_img').val()
         data_g['country'] = $('#country-sel').val()
+        data_g['year1_img'] = $('#year1_img').val()
+        data_g['year2_img'] = $('#year2_img').val()
         if ($("input#nsfw").is(":checked")) {
             data_g['nsfw_filter'] = 1
         } else {
@@ -309,6 +311,9 @@ $("#link-share").click(function () {
                 $("#nb_movies").text(data['nb_movies_sel'])
                 $('#nb_movies').removeClass('waiting-selection').addClass('normal-selection');
 
+                $("#nb_movies_img").text(data['nb_movies_sel_img'])
+                $('#nb_movies_img').removeClass('waiting-selection').addClass('normal-selection');
+
                 if (reset_selected) {
                   list_movie_sel_name = data['list_movie_sel_name']
                   list_movie_sel = data['list_movie_sel']
@@ -325,21 +330,14 @@ $("#link-share").click(function () {
                   $('select').formSelect();
 
                 }
-                
 
-                //console.log(data)
             }
         });
     }
-    //$(".update").change(function () {
-    //  update_data(reset_selected=false)
-    //});
 
-    //$(".update-reset").change(function() {
     $(document.body).on('change','.update-reset', function() {
      // Requete ajax et mettre à jour liste (avec reset)
       update_data(reset_selected=true)
-      //$('#selected-movies').change()
     });
 
     $(document.body).on('change','.update-without-reset', function() {
@@ -360,13 +358,20 @@ $("#link-share").click(function () {
     $("#reset_all_year").click(function () {
         //console.log('reset')
         $('#year1').val(1900).change()
-        $('#year2').val(2020).change()
+        $('#year2').val(2022).change()
+    });
+
+    $("#reset_all_year_img").click(function () {
+        $('#year1_img').val(1900).change()
+        $('#year2_img').val(2022).change()
     });
 
     $("#reset_all_popularity").click(function () {
-        //console.log('reset')
         $('#popularity').val('').change()
+    });
 
+    $("#reset_all_popularity_img").click(function () {
+        $('#popularity_img').val('').change()
     });
 
     $('#popularity').trigger('change');
@@ -389,7 +394,7 @@ $("#link-share").click(function () {
         $('#timer_nb_debrief').val(3)
         $('input.genrecbx:checkbox').prop( "checked", true ).first()
         $('#year1').val(1970)
-        $('#year2').val(2021)
+        $('#year2').val(2022)
         $('#country-sel').val("c-1");
         $('#preselect-sel').val("-1");
         $('#popularity').val(200).change()
@@ -398,7 +403,7 @@ $("#link-share").click(function () {
     $('#preset-all').click(function() {
         $('input.genrecbx:checkbox').prop( "checked", true ).first()
         $('#year1').val(1900)
-        $('#year2').val(2021)
+        $('#year2').val(2022)
         $('#country-sel').val("c-1");
         $('#preselect-sel').val("-1");
         $('#popularity').val('').change()
@@ -640,19 +645,19 @@ $("#link-share").click(function () {
       <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year">Réinitialiser</span>)</legend>
       {% if request.session.year1 or request.session.year2 %}
       <div class="input-field">
-          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2021" size="5" value="{{ request.session.year1 }}">
+          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1 }}">
       </div>
       <div class="input-field">
-          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2021" size="5" value="{{ request.session.year2 }}">
+          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2 }}">
           <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
       </div>
       <br />
       {% else %}
       <div class="input-field">
-          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2021" size="5" value="1970">
+          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="1970">
       </div>
       <div class="input-field">
-          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2021" size="5" value="2021">
+          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="2022">
           <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
       </div>
       <br />
@@ -740,12 +745,21 @@ $("#link-share").click(function () {
       <input class='update-without-reset' type="number" min="2" max="50" id="nb-question-img" name="nb-question" value="10"><br />
     {% endif %}
       </div>
-  </fieldset>
 
-    <br />
+  </fieldset>
+          <br />
+  <b>Nombre de films sélectionnés : </b>
+  <div style="color:#C3073F; font-weight: bold; display: inline;">
+  {% if request.session.list_movie_sel_img %}
+  <span class="normal-selection" id="nb_movies_img">{{ request.session.list_movie_sel_img|length }}</span> films
+  {% else %}
+  <span class="normal-selection" id="nb_movies_img">{{ nb_movies_tot_img }}</span> films
+  {% endif %}
+  </div>
+    <br /><br />
 
   <fieldset>
-      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
+      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity_img">Réinitialiser</span>)</legend>
       {% if request.session.popularity_img != None %}
       <div class="input-field">
           <label for="popularity">Nombre de films filtrés par popularité (Nombre de votes sur IMDB)</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="1300" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
@@ -772,6 +786,33 @@ $("#link-share").click(function () {
       </div>
 
   </fieldset>
+
+  <br />
+  <fieldset>
+      <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year_img">Réinitialiser</span>)</legend>
+      {% if request.session.year1_img or request.session.year2_img %}
+      <div class="input-field">
+          <label for="year1_img">De</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1_img }}">
+      </div>
+      <div class="input-field">
+          <label for="year2_img">à</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2_img }}">
+          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+      </div>
+      <br />
+      {% else %}
+      <div class="input-field">
+          <label for="year1_img">De</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="1900">
+      </div>
+      <div class="input-field">
+          <label for="year2_img">à</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="2022">
+          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+      </div>
+      <br />
+      {% endif %}
+
+
+  </fieldset>
+
       </div>
     </li>
   </ul>

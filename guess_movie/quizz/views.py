@@ -80,6 +80,9 @@ def create_user(request):
 
 
 def room(request, room_name):
+    for key, value in request.session.items():
+        print('{} => {}'.format(key, value))
+
     context = {'room_name': room_name}
     if 'user_id' not in request.session:
         user_id, user_name = create_user(request)
@@ -96,6 +99,7 @@ def room(request, room_name):
 
         # context['nb_movies_tot'] = Movie.objects.filter(has_quote=1).count()
         context['nb_movies_tot'] = 200
+        context['nb_movies_tot_img'] = 500
         context['genres'] = genres
         context['countries'] = countries
         context['preselect'] = preselect
@@ -165,15 +169,21 @@ def create_game(request):
             else:
                 sfw = 1  # Default: Filter NSFW images
 
-            for i in range(nb_question):
-                popularity = request.session['popularity_img']
-                list_movie_sel = list(
+            if 'list_movie_sel_img' in request.session and len(request.session['list_movie_sel_img']) >= 3:
+                list_movie_sel_img = request.session['list_movie_sel_img']
+            else:
+                list_movie_sel_img = list(
                     Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))
 
-                if popularity != '':
-                    list_movie_sel = list_movie_sel[:int(popularity)]
+            for i in range(nb_question):
+                # popularity = request.session['popularity_img']
+                # list_movie_sel = list(
+                #     Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))
+                #
+                # if popularity != '':
+                #     list_movie_sel = list_movie_sel[:int(popularity)]
 
-                sample_movies = get_n_random_movies(3, list_movie_sel, quote=False, image=True)
+                sample_movies = get_n_random_movies(3, list_movie_sel_img, quote=False, image=True)
 
                 # Select a random movie among them
                 movie_guessed = random.choice(sample_movies)
@@ -724,6 +734,7 @@ def home(request):
 
 def update_selection(request):
     data = {}
+    print('aaa')
     if request.POST.get('select'):
         genres = Genre.objects.all()
         # genre_id = request.GET.get('genre_id')
@@ -737,17 +748,21 @@ def update_selection(request):
         year1 = int(request.POST.get('year1'))
         year2 = int(request.POST.get('year2'))
         nb_question = int(request.POST.get('nb_question'))
-        nb_question_img = int(request.POST.get('nb_question_img'))
-        nsfw_filter = int(request.POST.get('nsfw_filter'))
         popularity = request.POST.get('popularity')
-        popularity_img = request.POST.get('popularity_img')
         mode = request.POST.get('mode')
         game_mode = request.POST.get('game_mode')
         game_mode_debrief = request.POST.get('game_mode_debrief')
         country = int(request.POST.get('country')[1:])
+
+        year1_img = int(request.POST.get('year1_img'))
+        year2_img = int(request.POST.get('year2_img'))
+        nb_question_img = int(request.POST.get('nb_question_img'))
+        nsfw_filter = int(request.POST.get('nsfw_filter'))
+        popularity_img = request.POST.get('popularity_img')
+
         list_movie_sel_real = json.loads(request.POST.get('selected_movies'))
         reset = int(request.POST.get('reset'))
-        # print('AAAAAAA:', list_movie_sel_real)
+
         if game_mode != 'chill':
             game_mode = int(game_mode)
 
@@ -772,13 +787,13 @@ def update_selection(request):
 
                 list_movie_id = list(set(list_movie_id_genre).intersection(list_movie_id_country))
 
-                if (year1 != 1900 or year2 != 2021):
+                if (year1 != 1900 or year2 != 2022):
                     list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
                                                       has_quote=1).order_by('name')
                 else:
                     list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote=1).order_by('name')
             else:
-                if (year1 != 1900 or year2 != 2021):
+                if (year1 != 1900 or year2 != 2022):
                     list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by('name')
                 else:
                     list_movie = Movie.objects.filter(has_quote=1).order_by('name')
@@ -792,8 +807,18 @@ def update_selection(request):
             presel = presel.split(',')
             list_movie = Movie.objects.filter(id__in=presel).order_by('name')
 
+        # Images
+        if year1_img != 1960 or year2_img != 2022:
+            list_movie_img = Movie.objects.filter(year__gte=year1_img, year__lte=year2_img, has_image=1).order_by('name')
+        else:
+            list_movie_img = Movie.objects.filter(has_image=1).order_by('name')
+
+        if popularity_img != '':
+            l2 = list(list_movie_img.order_by('-popularity')[:int(popularity_img)].values_list('id', flat=True))
+            list_movie_img = Movie.objects.filter(id__in=l2).order_by('name')
+
         list_movie_sel = list(dict.fromkeys([m.id for m in list_movie]))
-        # list_movie_sel = list(set(list_movie_sel))
+        list_movie_sel_img = list(dict.fromkeys([m.id for m in list_movie_img]))
 
         list_movie_sel_name = [m.name + f' ({m.year})' for m in list_movie]
 
@@ -808,23 +833,27 @@ def update_selection(request):
         request.session['year1'] = year1
         request.session['year2'] = year2
         request.session['popularity'] = popularity
-        request.session['popularity_img'] = popularity_img
         request.session['nb_question'] = nb_question
-        request.session['nb_question_img'] = nb_question_img
-        request.session['nsfw_filter'] = nsfw_filter
         request.session['mode'] = mode
         request.session['game_mode'] = game_mode
         request.session['game_mode_debrief'] = game_mode_debrief
         request.session['country_selected'] = country
         request.session['presel'] = presel_id
-        # TODO : Peut être pas le garder par la suite, permettrait de passer des questions ?
-        # if 'question_id' in request.session:
-        #     del request.session['question_id']
+
+        request.session['list_movie_sel_img'] = list_movie_sel_img
+        request.session['year1_img'] = year1_img
+        request.session['year2_img'] = year2_img
+        request.session['nsfw_filter'] = nsfw_filter
+        request.session['nb_question_img'] = nb_question_img
+        request.session['popularity_img'] = popularity_img
 
         data['nb_movies_sel'] = len(list_movie_sel_real)
         data['list_movie_sel'] = list_movie_sel
         data['list_movie_sel_name'] = list_movie_sel_name
         data['list_movie_sel_real'] = list_movie_sel_real
+
+        data['list_movie_sel_img'] = list_movie_sel_img
+        data['nb_movies_sel_img'] = len(list_movie_sel_img)
 
         return JsonResponse(data)
 
