@@ -3,7 +3,7 @@ from django.db.models import IntegerField, Value as V
 from django.db.models.functions import Cast, StrIndex, Substr
 
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, \
-    QuestionImage, AnswerImage, Screenshot, Contact, Country
+    QuestionImage, AnswerImage, Screenshot, Contact, Country, MovieCountry
 from django.urls import path
 from django.db import models
 from django.shortcuts import get_object_or_404, render
@@ -14,11 +14,15 @@ class QuoteAdmin(admin.ModelAdmin):
     list_filter = ['movie']
     search_fields = ['quote_text']
 
+class MovieCountryAdmin(admin.ModelAdmin):
+    list_display = ('movie', 'country')
+    list_filter = ['country']
+    search_fields = ['movie']
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('name', 'original_name', 'en_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image')
+    list_display = ('name', 'original_name', 'en_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image', 'check_image')
     search_fields = ['name', 'original_name', 'en_name', 'imdb_id']
-    list_filter = ['has_quote', 'has_image']
+    list_filter = ['has_quote', 'has_image', 'check_image']
 
 
 class ScreenshotAdmin(admin.ModelAdmin):
@@ -190,6 +194,7 @@ admin.site.register(QuestionImage)
 admin.site.register(Genre)
 admin.site.register(Country)
 admin.site.register(MovieGenre)
+admin.site.register(MovieCountry, MovieCountryAdmin)
 admin.site.register(AView, AViewAdmin)
 admin.site.register(Preselect)
 admin.site.register(Screenshot, ScreenshotAdmin)

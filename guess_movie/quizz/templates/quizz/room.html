@@ -239,12 +239,19 @@ $("#link-share").click(function () {
 
     update_data = function(reset_selected) {
         $('#nb_movies').removeClass('normal-selection').addClass('waiting-selection');
-        var list_m = $("input.genrecbx:checked").map(function(){return $(this).attr("name");}).get();
+        var list_m = $("input.genrecbx:checked").map(function(){return 'genre_'+$(this).attr("name");}).get();
+        var list_m_img = $("input.genrecbx_img:checked").map(function(){return 'genreimg_'+$(this).attr("name");}).get();
 
+        //genre
         data_g = {'select':1}
         for (i=0; i < list_m.length; i++) {
             data_g[list_m[i]] = 1
         }
+        // genre image
+        for (i=0; i < list_m_img.length; i++) {
+            data_g[list_m_img[i]] = 1
+        }
+
         data_g['selected_movies'] = JSON.stringify(toNumbers($('#selected-movies').val()))
 
         presel = $('#preselect-sel').val()
@@ -257,6 +264,7 @@ $("#link-share").click(function () {
         data_g['popularity'] = $('#popularity').val()
         data_g['popularity_img'] = $('#popularity_img').val()
         data_g['country'] = $('#country-sel').val()
+        data_g['country_img'] = $('#country-sel_img').val()
         data_g['year1_img'] = $('#year1_img').val()
         data_g['year2_img'] = $('#year2_img').val()
         if ($("input#nsfw").is(":checked")) {
@@ -351,9 +359,19 @@ $("#link-share").click(function () {
 
     });
 
+    $("#select_all_cbx_img").click(function () {
+        $('input.genrecbx_img:checkbox').prop( "checked", true ).first().change();
+
+    });
+
     $("#reset_all_cbx").click(function () {
         $('input.genrecbx:checkbox').prop( "checked", false ).first().change();
     });
+
+    $("#reset_all_cbx_img").click(function () {
+        $('input.genrecbx_img:checkbox').prop( "checked", false ).first().change();
+    });
+
 
     $("#reset_all_year").click(function () {
         //console.log('reset')
@@ -757,17 +775,62 @@ $("#link-share").click(function () {
   {% endif %}
   </div>
     <br /><br />
+  <fieldset>
+      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx_img">Tout cocher</span> / <span class="clickable-link" id="reset_all_cbx_img">Tout décocher</span>)</legend>
+
+
+      <ul class="checkbox">
+      {% for genre in genres %}
+      {% if request.session.list_genre_img %}
+          {% if genre.id in request.session.list_genre_img %}
+
+      <li><label class="label-for-check" for='idcbx_img{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx_img" id='idcbx_img{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
+          {% else %}
+          <li><label class="label-for-check" for='idcbx_img{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx_img" id='idcbx_img{{ genre.id }}' name="{{ genre.id }}" value="1"><span>{{ genre.name }}</span></label></li>
+          {% endif %}
+      {% else %}
+          <li><label class="label-for-check" for='idcbx_img{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx_img" id='idcbx_img{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
+      {% endif %}
+      {% endfor %}
+      </ul>
+
+  </fieldset>
+  <br />
 
   <fieldset>
-      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity_img">Réinitialiser</span>)</legend>
+  <legend><b>Pays</b></legend>
+  <div class="input-field col m6">
+    <select class="update-reset" name="country-sel_img" id="country-sel_img">
+<!--      <option value="" disabled selected>Choose your option</option>-->
+      {% if not request.session.country_selected_img or request.session.country_selected_img == -1 %}
+        <option value="c-1" selected="selected">Tous les pays</option>
+      {% else %}
+        <option value="c-1">Tous les pays</option>
+      {% endif%}
+
+      {% for country in countries %}
+        {% if request.session.country_selected_img == country.id%}
+            <option value="c{{ country.id }}" selected="selected">{{ country.name }}</option>
+        {% else %}
+            <option value="c{{ country.id }}">{{ country.name }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+<!--    <label>Materialize Select</label>-->
+  </div>
+
+  </fieldset>
+          <br />
+  <fieldset>
+      <legend><b>Popularité (Nombre de votes sur IMDb)</b> (<span class="clickable-link" id="reset_all_popularity_img">Réinitialiser</span>)</legend>
       {% if request.session.popularity_img != None %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité (Nombre de votes sur IMDB)</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="1300" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% else %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité (Nombre de votes sur IMDB)</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="1300" maxlength="10" size="5" value="500">
+          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="500">
           <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
       </div>
       {% endif %}
@@ -784,6 +847,8 @@ $("#link-share").click(function () {
           <b>On</b>
         </label>
       </div>
+      <br />
+      <span class="helper-text" style="font-size: 12px">Si coché, seulement les films qui ont déjà été vérifiés sont proposés (Travail en cours)</span>
 
   </fieldset>
 

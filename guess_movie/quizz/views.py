@@ -80,9 +80,6 @@ def create_user(request):
 
 
 def room(request, room_name):
-    for key, value in request.session.items():
-        print('{} => {}'.format(key, value))
-
     context = {'room_name': room_name}
     if 'user_id' not in request.session:
         user_id, user_name = create_user(request)
@@ -173,7 +170,7 @@ def create_game(request):
                 list_movie_sel_img = request.session['list_movie_sel_img']
             else:
                 list_movie_sel_img = list(
-                    Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))
+                    Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id', flat=True))
 
             for i in range(nb_question):
                 # popularity = request.session['popularity_img']
@@ -489,7 +486,7 @@ def room_play_image(request, room_name, game_name):
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
 
         dict_movies = {(
-                           f'{m.original_name} ({m.name}) [{m.year}]' if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
+                           f'{m.original_name} ({m.name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
                        for m in all_movies}
 
         if game.current_q == 0:
@@ -734,15 +731,18 @@ def home(request):
 
 def update_selection(request):
     data = {}
-    print('aaa')
     if request.POST.get('select'):
         genres = Genre.objects.all()
-        # genre_id = request.GET.get('genre_id')
-        # data['genre_id'] = genre_id
+
         list_genre_id = []
         for g in genres:
-            if request.POST.get(str(g.id)):
+            if request.POST.get(f'genre_{g.id}'):
                 list_genre_id.append(g.id)
+
+        list_genre_id_img = []
+        for g in genres:
+            if request.POST.get(f'genreimg_{g.id}'):
+                list_genre_id_img.append(g.id)
 
         presel_id = int(request.POST.get('presel'))
         year1 = int(request.POST.get('year1'))
@@ -759,6 +759,7 @@ def update_selection(request):
         nb_question_img = int(request.POST.get('nb_question_img'))
         nsfw_filter = int(request.POST.get('nsfw_filter'))
         popularity_img = request.POST.get('popularity_img')
+        country_img = int(request.POST.get('country_img')[1:])
 
         list_movie_sel_real = json.loads(request.POST.get('selected_movies'))
         reset = int(request.POST.get('reset'))
@@ -808,10 +809,36 @@ def update_selection(request):
             list_movie = Movie.objects.filter(id__in=presel).order_by('name')
 
         # Images
-        if year1_img != 1960 or year2_img != 2022:
-            list_movie_img = Movie.objects.filter(year__gte=year1_img, year__lte=year2_img, has_image=1).order_by('name')
+        default_list_img = list(Movie.objects.filter(has_image=1).values_list('id', flat=True))
+        dict_param = {'has_image': 1}
+        if year1_img != 1900:
+            dict_param['year__gte'] = year1_img
+        if year2_img != 2022:
+            dict_param['year__lte'] = year2_img
+        if nsfw_filter == 1:
+            dict_param['check_image'] = 1
+        if country_img != -1:
+            list_movie_id_country_img = list(MovieCountry.objects.filter(country_id=country_img).values_list('movie_id', flat=True))
         else:
-            list_movie_img = Movie.objects.filter(has_image=1).order_by('name')
+            list_movie_id_country_img = default_list_img
+        if len(list_genre_id) != 0:
+            list_movie_id_genre_img = list(MovieGenre.objects.filter(genre_id__in=list_genre_id_img).values_list('movie_id', flat=True))
+        else:
+            list_movie_id_genre_img = default_list_img
+
+        list_movie_id = list(set(list_movie_id_country_img).intersection(list_movie_id_genre_img))
+        dict_param['pk__in'] = list_movie_id
+        list_movie_img = Movie.objects.filter(**dict_param)
+        # if year1_img != 1900 or year2_img != 2022:
+        #     if nsfw_filter == 1:  # Filter NSFW images
+        #         list_movie_img = Movie.objects.filter(year__gte=year1_img, year__lte=year2_img, has_image=1, check_image=1).order_by('name')
+        #     else:
+        #         list_movie_img = Movie.objects.filter(year__gte=year1_img, year__lte=year2_img, has_image=1).order_by('name')
+        # else:
+        #     if nsfw_filter == 1:  # Filter NSFW images
+        #         list_movie_img = Movie.objects.filter(has_image=1, check_image=1).order_by('name')
+        #     else:
+        #         list_movie_img = Movie.objects.filter(has_image=1).order_by('name')
 
         if popularity_img != '':
             l2 = list(list_movie_img.order_by('-popularity')[:int(popularity_img)].values_list('id', flat=True))
@@ -840,12 +867,14 @@ def update_selection(request):
         request.session['country_selected'] = country
         request.session['presel'] = presel_id
 
+        request.session['list_genre_img'] = list_genre_id_img
         request.session['list_movie_sel_img'] = list_movie_sel_img
         request.session['year1_img'] = year1_img
         request.session['year2_img'] = year2_img
         request.session['nsfw_filter'] = nsfw_filter
         request.session['nb_question_img'] = nb_question_img
         request.session['popularity_img'] = popularity_img
+        request.session['country_selected_img'] = country_img
 
         data['nb_movies_sel'] = len(list_movie_sel_real)
         data['list_movie_sel'] = list_movie_sel
