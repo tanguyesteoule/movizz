@@ -1,7 +1,8 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load quizz_extras %}
-{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
-{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>{% trans "Current game" %}</b></a></li>{% endblock %}
+{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>{% trans "Current game" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 <script>
@@ -13,7 +14,7 @@ $(document).ready(function () {
         s += '<thead>'
         s += '<tr>'
         s += '<th>#</th>'
-        s += '<th>Pseudo</th>'
+        s += '<th>{% trans "Username" %}</th>'
         for (let i = 1; i < results['nb_question']+1; i++) {
           s += "<th>" + i + "</th>";
         }
@@ -57,7 +58,7 @@ $(document).ready(function () {
         list_answer = results['dict_answer']['{{request.session.user_id}}']
         score_user = list_answer.reduce((a, b) => a + b, 0)
         nb_question = {{ nb_question }}
-        s = '<h5 style="color:#C3073F">Résumé des questions (' + score_user + ' / ' + nb_question + ')</h5>'
+        s = '<h5 style="color:#C3073F">{% trans "Summary of questions" %} (' + score_user + ' / ' + nb_question + ')</h5>'
         s += '<div style="margin: 0 auto; display: inline-block;">'
         s += '<ul class="collection">'
 
@@ -134,7 +135,7 @@ if (window.location.protocol == 'https:') {
 
 {% block content %}
 <div style="text-align: center;">
-<h4>La partie est finie !</h4>
+<h4>{% trans "Game is over !" %}</h4>
 
 <h5 style="color:#C3073F">Scores</h5>
 
@@ -147,9 +148,9 @@ if (window.location.protocol == 'https:') {
 <br />
   {% if request.session.game_master == room_name%}
 <!--<a href="#" ></a>-->
-  <a id="new-link" class="btn-large waves-effect btn-color">Rejouer</a><br />
+  <a id="new-link" class="btn-large waves-effect btn-color">{% trans "Play again" %}</a><br />
 {% else %}
-(En attente de l'hote pour une nouvelle partie)
+    {% trans "(Waiting for the host for a new game)" %}
 {% endif%}
   <br />
 

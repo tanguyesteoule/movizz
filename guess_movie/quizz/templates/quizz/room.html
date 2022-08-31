@@ -1,8 +1,9 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load quizz_extras %}
 
-{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
-{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>Jouer</b></a></li>{% endblock %}
+{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>{% trans "Play" %}</b></a></li>{% endblock %}
+{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>{% trans "Play" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 
@@ -23,30 +24,6 @@ setTimeout(() => {
     $('#start-link').removeClass('disabled');
 }, 2000);
 
-/*
-var webSocketFactory = {
-  connectionTries: 1,
-  connect: function(url) {
-    var ws = new WebSocket(url);
-    ws.addEventListener("error", e => {
-      // readyState === 3 is CLOSED
-      if (e.target.readyState === 3) {
-        this.connectionTries--;
-
-        if (this.connectionTries > 0) {
-          setTimeout(() => this.connect(url), 5000);
-        } else {
-
-          
-          $('#bug-text').html("Un problème est en cours avec le serveur<br />Veuillez réessayer ultérieurement, désolé !")
-          $('#bug').css('visibility','visible');
-          throw "Maximum number of connection trials has been reached";
-        }
-
-      }
-    });
-  }
-};*/
 
 connect_socket = function(url) {
   var connectionTries = 1;
@@ -59,9 +36,7 @@ connect_socket = function(url) {
     if (this.connectionTries > 0) {
       setTimeout(() => this.connect(url), 5000);
     } else {
-
-      
-      $('#bug-text').html("Un problème est en cours avec le serveur<br />Veuillez réessayer ultérieurement, désolé !")
+      $('#bug-text').html('{% trans "room-error" %}')
       $('#bug').css('visibility','visible');
       throw "Maximum number of connection trials has been reached";
     }
@@ -331,7 +306,7 @@ $("#link-share").click(function () {
                         str_html += "<option value='" + list_movie_sel[i] + "' selected>" + list_movie_sel_name[i] + "</option>"
                     }
                   } else {
-                    str_html += "<option value='' disabled>Trop de films pour personnalisation</option>"
+                    str_html += "<option value='' disabled>{% trans "Too many films for customization" %}</option>"
                   }
                   str_html += "</select>"
                   $('#div-selected-movies').html(str_html)
@@ -443,13 +418,13 @@ $("#link-share").click(function () {
 <div id="room-img-container">
 <div style="text-align:center">
     <div class="input-field"><input type="text" id="user-name" name="user-name" value="{{request.session.user_name}}" maxlength="25">
-    <label for="user-name">Pseudo</label></div>
+    <label for="user-name">{% trans "Username" %}</label></div>
 <!--    <a id="button-change-name" class="btn waves-effect btn-color">Renommer</a><br /><br />-->
-    <a id="link-share" class="btn waves-effect btn-color">Copier le lien d'invitation</a><br />
-    <span style="visibility:hidden" id="status-copy"> Copié !</span><br />
+    <a id="link-share" class="btn waves-effect btn-color">{% trans "Copy the invitation link" %}</a><br />
+    <span style="visibility:hidden" id="status-copy"> {% trans "Copied !" %}</span><br />
 </div>
   <div style="text-align:center">
-    <h6 style="color:#C3073F; font-weight:bold;">Liste des joueurs (<span id="nb-user"></span>)</h6>
+    <h6 style="color:#C3073F; font-weight:bold;">{% trans "Players list" %} (<span id="nb-user"></span>)</h6>
     <div id="list-user"></div>
 
 </div>
@@ -461,37 +436,37 @@ $("#link-share").click(function () {
 <br />
   <div class="center">
     {% if request.session.mode == 'image'%}
-      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" checked /><span>Mode Image</span></label>
-      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote"/><span>Mode Citation</span></label>
+      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" checked /><span>{% trans "Image Mode" %}</span></label>
+      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote"/><span>{% trans "Quote Mode" %}</span></label>
     {% else %}
-      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" /><span>Mode Image</span></label>
-      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote" checked/><span>Mode Citation</span></label>
+      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" /><span>{% trans "Image Mode" %}</span></label>
+      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote" checked/><span>{% trans "Quote Mode" %}</span></label>
     {% endif %}
   </div>
   <br />
 
   <ul id="ul-quote" class="collapsible" style="width:90%;margin: 0 auto;">
     <li>
-      <div class="collapsible-header">Paramètres de la partie (Mode Citation)<i class="material-icons">expand_more</i></div>
+      <div class="collapsible-header">{% trans "Game settings" %} ({% trans "Quote Mode" %})<i class="material-icons">expand_more</i></div>
       <div class="collapsible-body">
-        <h5 class="title-about">Configuration basique</h5>
+        <h5 class="title-about">{% trans "Basic configuration" %}</h5>
       <fieldset>
-          <legend><b>Présélections</b> </legend>
+          <legend><b>{% trans "Preselections" %}</b> </legend>
           <div id="preset-container" style="text-align:center;">
-            <a id="preset-default" title="Par défaut" class="btn waves-effect btn-color">Par défaut (simple)</a>
-            <a id="preset-all" title="Tous les films" class="btn waves-effect btn-color">Tous les films</a>
+            <a id="preset-default" title="Par défaut" class="btn waves-effect btn-color">{% trans "Default (easy)" %}</a>
+            <a id="preset-all" title="Tous les films" class="btn waves-effect btn-color">{% trans "All movies" %}</a>
           </div>
       </fieldset>
     <br />
     <fieldset>
-          <legend><b>Présélections de la communauté</b> </legend>
+          <legend><b>{% trans "Community preselections" %}</b> </legend>
        <div class="input-field col m6">
     <select class="update-reset" name="preselect-sel" id="preselect-sel">
 
     {% if not request.session.presel or request.session.presel == -1 %}
-      <option value="-1" selected>Pas de présélection</option>
+      <option value="-1" selected>{% trans "No preselection" %}</option>
     {% else %}
-      <option value="-1">Pas de présélection</option>
+      <option value="-1">{% trans "No preselection" %}</option>
     {% endif %}
 
     {% for p in preselect %}
@@ -503,16 +478,15 @@ $("#link-share").click(function () {
     {% endfor %}
 
     </select>
-    <span class="helper-text" data-error="wrong" data-success="right">Les présélections sont proposées par les utilisateurs dans le mode Editeur
-    <br />(ce champ est prioritaire par rapport aux autres paramètres).</span>
+    <span class="helper-text" data-error="wrong" data-success="right">{% trans "room-presel" %}</span>
 
   </div>
 
       </fieldset>
-      <h5 class="title-about">Configuration avancée</h5>
+      <h5 class="title-about">{% trans "Advanced configuration" %}</h5>
     <br />
     <fieldset>
-      <legend><b>Temps de réflexion</b> </legend>
+      <legend><b>{% trans "Reflection time" %}</b> </legend>
           <div class="mode-img-container">
      <div>
         <label>
@@ -521,7 +495,7 @@ $("#link-share").click(function () {
             {% else %}
             <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" />
             {% endif %}
-            <span>Illimité (par l'hôte)</span>
+            <span>{% trans "Unlimited (by host)" %}</span>
         </label>
      </div>
      <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
@@ -533,24 +507,24 @@ $("#link-share").click(function () {
             <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" />
             {% endif %}
 
-            <span>Automatique</span>
+            <span>{% trans "Automatic" %}</span>
         </label>
      </div>
      <div class="input-field" style="width:20%;">
-        <label for="timer_nb">Temps de reflexion</label>
+        <label for="timer_nb">{% trans "Reflection time" %}</label>
          {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
             <input class='update-without-reset' type="number" min="5" max="15" id="timer_nb" name="timer_nb" value="{{ request.session.game_mode }}"><br />
         {% else %}
             <input class='update-without-reset' type="number" min="5" max="15" id="timer_nb" name="timer_nb" value="10"><br />
         {% endif %}
 
-        <span class="helper-text" data-error="wrong" data-success="right">Doit être entre 5 et 15s</span>
+        <span class="helper-text" data-error="wrong" data-success="right">{% trans "Must be between 5 and 15s" %}</span>
     </div>
       </div>
   </fieldset>
 <br />
     <fieldset>
-      <legend><b>Changement de question</b> </legend>
+      <legend><b>{% trans "Change of question" %}</b> </legend>
           <div class="mode-img-container">
      <div>
         <label>
@@ -559,7 +533,7 @@ $("#link-share").click(function () {
             {% else %}
             <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" />
             {% endif %}
-            <span>Manuel (par l'hôte)</span>
+            <span>{% trans "Manual (by host)" %}</span>
         </label>
      </div>
      <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
@@ -571,27 +545,27 @@ $("#link-share").click(function () {
             <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" />
             {% endif %}
 
-            <span>Automatique</span>
+            <span>{% trans "Automatic" %}</span>
         </label>
      </div>
      <div class="input-field" style="width:20%;">
-        <label for="timer_nb_debrief">Temps d'attente</label>
+        <label for="timer_nb_debrief">{% trans "Waiting time" %}</label>
          {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief != 'chill' %}
             <input class='update-without-reset' type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief" value="{{ request.session.game_mode_debrief }}"><br />
         {% else %}
             <input class='update-without-reset' type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief" value="3"><br />
         {% endif %}
 
-        <span class="helper-text" data-error="wrong" data-success="right">Doit être entre 2 et 10s</span>
+        <span class="helper-text" data-error="wrong" data-success="right">{% trans "Must be between 2 and 10s" %}</span>
     </div>
       </div>
   </fieldset>
 
 <br />
   <fieldset>
-      <legend><b>Nombre de questions</b> </legend>
+      <legend><b>{% trans "Number of questions" %}</b> </legend>
       <div class="input-field">
-    <label for="nb-question">Nombre de questions posées</label>
+    <label for="nb-question">{% trans "Number of questions" %}</label>
     {% if request.session.nb_question %}
       <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="{{ request.session.nb_question }}"><br />
     {% else %}
@@ -599,21 +573,20 @@ $("#link-share").click(function () {
     {% endif %}
       </div>
   </fieldset>
-    <p>Si vous trouvez le jeu trop difficile ou que vous avez des goûts spécifiques, vous pouvez filtrer
-  les films par genre, année et par popularité.</p>
+    <p>{% trans "room-filter-msg" %}</p>
 
-  <b>Nombre de films sélectionnés : </b>
+  <b>{% trans "Number of selected movies:" %} </b>
   <div style="color:#C3073F; font-weight: bold; display: inline;">
   {% if request.session.list_movie_sel %}
-  <span class="normal-selection" id="nb_movies">{{ request.session.list_movie_sel|length }}</span> films
+  <span class="normal-selection" id="nb_movies">{{ request.session.list_movie_sel|length }}</span> {% trans "movies" %}
   {% else %}
-  <span class="normal-selection" id="nb_movies">{{ nb_movies_tot }}</span> films
+  <span class="normal-selection" id="nb_movies">{{ nb_movies_tot }}</span> {% trans "movies" %}
   {% endif %}
   </div>
     <br /><br />
   <fieldset>
       <input id="select" name="select" type="hidden" value="1">
-      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx">Tout cocher</span> / <span class="clickable-link" id="reset_all_cbx">Tout décocher</span>)</legend>
+      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx">{% trans "Check all" %}</span> / <span class="clickable-link" id="reset_all_cbx">{% trans "Uncheck all" %}</span>)</legend>
 
 
       <ul class="checkbox">
@@ -635,14 +608,14 @@ $("#link-share").click(function () {
   <br />
 
   <fieldset>
-  <legend><b>Pays</b></legend>
+  <legend><b>{% trans "Countries" %}</b></legend>
   <div class="input-field col m6">
     <select class="update-reset" name="country-sel" id="country-sel">
 <!--      <option value="" disabled selected>Choose your option</option>-->
       {% if not request.session.country_selected or request.session.country_selected == -1 %}
-        <option value="c-1" selected="selected">Tous les pays</option>
+        <option value="c-1" selected="selected">{% trans "All countries" %}</option>
       {% else %}
-        <option value="c-1">Tous les pays</option>
+        <option value="c-1">{% trans "All countries" %}</option>
       {% endif%}
 
       {% for country in countries %}
@@ -660,23 +633,23 @@ $("#link-share").click(function () {
 
   <br />
   <fieldset>
-      <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year">Réinitialiser</span>)</legend>
+      <legend><b>{% trans "Years" %}</b> (<span class="clickable-link" id="reset_all_year">{% trans "Reset" %}</span>)</legend>
       {% if request.session.year1 or request.session.year2 %}
       <div class="input-field">
-          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1 }}">
+          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1 }}">
       </div>
       <div class="input-field">
-          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2 }}">
-          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2 }}">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
       {% else %}
       <div class="input-field">
-          <label for="year1">De</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="1970">
+          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="1970">
       </div>
       <div class="input-field">
-          <label for="year2">à</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="2022">
-          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="2022">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
       {% endif %}
@@ -686,16 +659,16 @@ $("#link-share").click(function () {
 
       <br />
   <fieldset>
-      <legend><b>Popularité</b> (<span class="clickable-link" id="reset_all_popularity">Réinitialiser</span>)</legend>
+      <legend><b>{% trans "Popularity" %}</b> (<span class="clickable-link" id="reset_all_popularity">{% trans "Reset" %}</span>)</legend>
       {% if request.session.popularity != None %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="{{ request.session.popularity }}">
-          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="{{ request.session.popularity }}">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
       </div>
       {% else %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="200">
-          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="200">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
       </div>
       {% endif %}
     <br />
@@ -703,16 +676,11 @@ $("#link-share").click(function () {
   <br />
 
   <fieldset>
-      <legend><b>Films sélectionnés</b></legend>
+      <legend><b>{% trans "Selected movies" %}</b></legend>
 
       <div class="input-field col s12">
         <div id="div-selected-movies">
           <select id="selected-movies" class="update-without-reset" multiple>
-            {% comment %} <option value="" disabled>Filtrer les films</option> {% endcomment %}
-
-            <!-- request.session['list_movie_sel_real'] -->
-
-            
 
             {% if request.session.list_movie_sel|length <= 200 %}
               {% for m_name in request.session.list_movie_sel_name %}
@@ -723,14 +691,13 @@ $("#link-share").click(function () {
                 {% endif %}
               {% endfor %}
             {% else %}
-              <option value="" disabled>Trop de films pour personnalisation</option>
+              <option value="" disabled>{% trans "Too many films for customization" %}</option>
             {% endif %}
 
           </select>
         </div>
 
-        <!-- <label>Liste des films sélectionnés</label> -->
-        <span class="helper-text" data-error="wrong" data-success="right">Vous pouvez retirer des films de la liste (si moins de 200 films). Toute action sur les autres paramètres réinitialisera la liste.</span>
+        <span class="helper-text" data-error="wrong" data-success="right">{% trans "room-selected-msg" %}</span>
       </div>
 
     <br />
@@ -738,7 +705,7 @@ $("#link-share").click(function () {
 
 
   <br />
-  <i>Note : Si le nombre de films est inférieur à 3, tous les films sont selectionnés.</i>
+  <i>{% trans "room-note-msg" %}</i>
 
       </div>
     </li>
@@ -748,15 +715,15 @@ $("#link-share").click(function () {
 
   <ul id="ul-image" class="collapsible" style="width:90%;margin: 0 auto;">
     <li>
-      <div class="collapsible-header">Paramètres de la partie (Mode Image)<i class="material-icons">expand_more</i></div>
+      <div class="collapsible-header">{% trans "Game settings" %} ({% trans "Image Mode" %})<i class="material-icons">expand_more</i></div>
       <div class="collapsible-body">
       <br />
 
 
   <fieldset>
-      <legend><b>Nombre de questions</b> </legend>
+      <legend><b>{% trans "Number of questions" %}</b> </legend>
       <div class="input-field">
-    <label for="nb-question">Nombre de questions posées</label>
+    <label for="nb-question">{% trans "Number of questions" %}</label>
     {% if request.session.nb_question_img %}
       <input class='update-without-reset' type="number" min="2" max="50" id="nb-question-img" name="nb-question" value="{{ request.session.nb_question_img }}"><br />
     {% else %}
@@ -766,17 +733,17 @@ $("#link-share").click(function () {
 
   </fieldset>
           <br />
-  <b>Nombre de films sélectionnés : </b>
+  <b>{% trans "Number of selected movies:" %} </b>
   <div style="color:#C3073F; font-weight: bold; display: inline;">
   {% if request.session.list_movie_sel_img %}
-  <span class="normal-selection" id="nb_movies_img">{{ request.session.list_movie_sel_img|length }}</span> films
+  <span class="normal-selection" id="nb_movies_img">{{ request.session.list_movie_sel_img|length }}</span> {% trans "movies" %}
   {% else %}
-  <span class="normal-selection" id="nb_movies_img">{{ nb_movies_tot_img }}</span> films
+  <span class="normal-selection" id="nb_movies_img">{{ nb_movies_tot_img }}</span> {% trans "movies" %}
   {% endif %}
   </div>
     <br /><br />
   <fieldset>
-      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx_img">Tout cocher</span> / <span class="clickable-link" id="reset_all_cbx_img">Tout décocher</span>)</legend>
+      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx_img">{% trans "Check all" %}</span> / <span class="clickable-link" id="reset_all_cbx_img">{% trans "Uncheck all" %}</span>)</legend>
 
 
       <ul class="checkbox">
@@ -798,14 +765,14 @@ $("#link-share").click(function () {
   <br />
 
   <fieldset>
-  <legend><b>Pays</b></legend>
+  <legend><b>{% trans "Countries" %}</b></legend>
   <div class="input-field col m6">
     <select class="update-reset" name="country-sel_img" id="country-sel_img">
 <!--      <option value="" disabled selected>Choose your option</option>-->
       {% if not request.session.country_selected_img or request.session.country_selected_img == -1 %}
-        <option value="c-1" selected="selected">Tous les pays</option>
+        <option value="c-1" selected="selected">{% trans "All countries" %}</option>
       {% else %}
-        <option value="c-1">Tous les pays</option>
+        <option value="c-1">{% trans "All countries" %}</option>
       {% endif%}
 
       {% for country in countries %}
@@ -822,22 +789,22 @@ $("#link-share").click(function () {
   </fieldset>
           <br />
   <fieldset>
-      <legend><b>Popularité (Nombre de votes sur IMDb)</b> (<span class="clickable-link" id="reset_all_popularity_img">Réinitialiser</span>)</legend>
+      <legend><b>{% trans "Popularity" %} ({% trans "Number of votes on IMDb" %})</b> (<span class="clickable-link" id="reset_all_popularity_img">{% trans "Reset" %}</span>)</legend>
       {% if request.session.popularity_img != None %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
-          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
       </div>
       {% else %}
       <div class="input-field">
-          <label for="popularity">Nombre de films filtrés par popularité</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="500">
-          <span class="helper-text" data-error="wrong" data-success="right">Laisser vide pour ne pas filtrer par popularité</span>
+          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="500">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
       </div>
       {% endif %}
   </fieldset>
   <br />
   <fieldset>
-      <legend><b>Filtre des images NSFW</b></legend>
+      <legend><b>{% trans "NSFW image filter" %}</b></legend>
 
       <div class="switch center">
         <label>
@@ -848,29 +815,29 @@ $("#link-share").click(function () {
         </label>
       </div>
       <br />
-      <span class="helper-text" style="font-size: 12px">Si coché, seulement les films qui ont déjà été vérifiés sont proposés (Travail en cours)</span>
+      <span class="helper-text" style="font-size: 12px">{% trans "room-nsfw-msg" %}</span>
 
   </fieldset>
 
   <br />
   <fieldset>
-      <legend><b>Années</b> (<span class="clickable-link" id="reset_all_year_img">Réinitialiser</span>)</legend>
+      <legend><b>{% trans "Years" %}</b> (<span class="clickable-link" id="reset_all_year_img">{% trans "Reset" %}</span>)</legend>
       {% if request.session.year1_img or request.session.year2_img %}
       <div class="input-field">
-          <label for="year1_img">De</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1_img }}">
+          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1_img }}">
       </div>
       <div class="input-field">
-          <label for="year2_img">à</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2_img }}">
-          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2_img }}">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
       {% else %}
       <div class="input-field">
-          <label for="year1_img">De</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="1900">
+          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="1900">
       </div>
       <div class="input-field">
-          <label for="year2_img">à</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="2022">
-          <span class="helper-text" data-error="wrong" data-success="right">Format : AAAA (Les bornes sont inclues)</span>
+          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="2022">
+          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
       {% endif %}
@@ -885,14 +852,13 @@ $("#link-share").click(function () {
 
 <br /><br />
 <div style="text-align:center;">
-    <a id="start-link" class="btn waves-effect btn-color disabled">Commencer la partie</a>
+    <a id="start-link" class="btn waves-effect btn-color disabled">{% trans "Start game" %}</a>
 
 </div>
 <br />
 
 {% else %}
-<div class="center">L'hôte est en train de choisir les paramètres de la partie<br />
-Veuillez patienter</div>
+<div class="center">{% trans "room-msg-waiting" %}</div>
 
 {% endif %}
 

@@ -1,8 +1,9 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load quizz_extras %}
 
-{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
-{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>{% trans "History" %}</b></a></li>{% endblock %}
+{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>{% trans "History" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 <script>
@@ -16,12 +17,7 @@ $(document).ready ( function () {
 
 {% block content %}
 <div style="text-align: center;">
-<h5 style="color:#C3073F">Partie {{ game.name }}</h5>
-
-<!--<h6 style="color:#C3073F">Scores</h6>-->
-{% comment %} {% for key, value in dict_score.items %}
-    {{dict_name|keyvalue:key}} : {{ value }} <br />
-{% endfor %} {% endcomment %}
+<h5 style="color:#C3073F">{% trans "Game" %} {{ game.name }}</h5>
 
 
 <div>
@@ -67,9 +63,21 @@ $(document).ready ( function () {
   <li class="collection-item" style="background-color: #1A1A1D;">
   <span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>
   {% if list_answer|index:forloop.counter0 == 1 %}
-      <span style="color: #96d800;"><b>{{ question.movie_guessed }}</b></span>
+      <span style="color: #96d800;"><b>
+      {% if LANGUAGE_CODE == 'en' %}
+          {{ question.movie_guessed.en_name }}
+      {% else %}
+          {{ question.movie_guessed.name }}
+      {% endif %}
+      </b></span>
   {% else %}
-      <span style="color: #b7241b"><b>{{ question.movie_guessed }}</b></span>
+      <span style="color: #b7241b"><b>
+      {% if LANGUAGE_CODE == 'en' %}
+          {{ question.movie_guessed.en_name }}
+      {% else %}
+          {{ question.movie_guessed.name }}
+      {% endif %}
+      </b></span>
   {% endif %}
   </li>
 {% endfor %}
@@ -77,7 +85,7 @@ $(document).ready ( function () {
 </div>
 
 <br /><br />
-    <a href="{% url 'quizz:history_index' %}" class="btn-large waves-effect btn-color">Retour</a><br>
+    <a href="{% url 'quizz:history_index' %}" class="btn-large waves-effect btn-color">{% trans "Back" %}</a><br>
 </div>
 <br />
 

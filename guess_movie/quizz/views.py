@@ -20,6 +20,7 @@ import re
 from collections import Counter
 import pandas as pd
 from django.utils.safestring import mark_safe
+from django.utils import translation
 
 """
 # Init NLP
@@ -170,7 +171,8 @@ def create_game(request):
                 list_movie_sel_img = request.session['list_movie_sel_img']
             else:
                 list_movie_sel_img = list(
-                    Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id', flat=True))
+                    Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id',
+                                                                                                         flat=True))
 
             for i in range(nb_question):
                 # popularity = request.session['popularity_img']
@@ -485,9 +487,11 @@ def room_play_image(request, room_name, game_name):
 
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
 
-        dict_movies = {(
-                           f'{m.original_name} ({m.name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
-                       for m in all_movies}
+        if request.LANGUAGE_CODE == 'fr':
+            dict_movies = {(f'{m.original_name} ({m.name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'.replace('"', '\\"')): m.imdb_id for m in all_movies}
+        else:
+            dict_movies = {(f'{m.original_name} ({m.en_name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.en_name else f'{m.en_name} [{m.year}]'.replace('"', '\\"')): m.imdb_id
+                           for m in all_movies}
 
         if game.current_q == 0:
             started = 0
@@ -615,8 +619,12 @@ def contact(request):
 def editor(request):
     context = {}
     movies = Movie.objects.filter(has_quote=1)
-    list_movie = [m.name + f' ({m.year})' for m in movies]
-    dict_m = {(m.name + f' ({m.year})'): 'null' for m in movies}
+    if request.LANGUAGE_CODE == 'fr':
+        list_movie = [m.name + f' ({m.year})' for m in movies]
+        dict_m = {(m.name + f' ({m.year})'): 'null' for m in movies}
+    else:
+        list_movie = [m.en_name + f' ({m.year})' for m in movies]
+        dict_m = {(m.en_name + f' ({m.year})'): 'null' for m in movies}
     context['list_movie'] = list_movie
     context['dict_m'] = mark_safe(json.dumps(dict_m))
     return render(request, 'quizz/editor.html', context)
@@ -729,6 +737,20 @@ def home(request):
     return render(request, 'quizz/home.html', context)
 
 
+def switch_language(request):
+
+    if 'django_language' not in request.COOKIES:
+        new_language = 'en'
+    elif request.COOKIES['django_language'] == 'en':
+        new_language = 'fr'
+    elif request.COOKIES['django_language'] == 'fr':
+        new_language = 'en'
+
+    json = JsonResponse({'new_language': new_language})
+    json.set_cookie('django_language', new_language, max_age=None)
+    return json
+
+
 def update_selection(request):
     data = {}
     if request.POST.get('select'):
@@ -818,11 +840,13 @@ def update_selection(request):
         if nsfw_filter == 1:
             dict_param['check_image'] = 1
         if country_img != -1:
-            list_movie_id_country_img = list(MovieCountry.objects.filter(country_id=country_img).values_list('movie_id', flat=True))
+            list_movie_id_country_img = list(
+                MovieCountry.objects.filter(country_id=country_img).values_list('movie_id', flat=True))
         else:
             list_movie_id_country_img = default_list_img
         if len(list_genre_id) != 0:
-            list_movie_id_genre_img = list(MovieGenre.objects.filter(genre_id__in=list_genre_id_img).values_list('movie_id', flat=True))
+            list_movie_id_genre_img = list(
+                MovieGenre.objects.filter(genre_id__in=list_genre_id_img).values_list('movie_id', flat=True))
         else:
             list_movie_id_genre_img = default_list_img
 
@@ -847,7 +871,11 @@ def update_selection(request):
         list_movie_sel = list(dict.fromkeys([m.id for m in list_movie]))
         list_movie_sel_img = list(dict.fromkeys([m.id for m in list_movie_img]))
 
-        list_movie_sel_name = [m.name + f' ({m.year})' for m in list_movie]
+        # Select english movie name if necessary
+        if request.LANGUAGE_CODE == 'fr':
+            list_movie_sel_name = [m.name + f' ({m.year})' for m in list_movie]
+        else:
+            list_movie_sel_name = [m.en_name + f' ({m.year})' for m in list_movie]
 
         if reset:
             list_movie_sel_real = list_movie_sel
