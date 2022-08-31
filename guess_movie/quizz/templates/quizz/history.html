@@ -1,8 +1,9 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load quizz_extras %}
 
-{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
-{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>{% trans "History" %}</b></a></li>{% endblock %}
+{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>{% trans "History" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 <script>
@@ -16,7 +17,7 @@ $(document).ready ( function () {
 
 {% block content %}
 <div style="text-align: center;">
-<h5 style="color:#C3073F">Partie {{ game.name }}</h5>
+<h5 style="color:#C3073F">{% trans "Game" %} {{ game.name }}</h5>
 
 <!--<h6 style="color:#C3073F">Scores</h6>-->
 {% comment %} {% for key, value in dict_score.items %}
@@ -62,35 +63,46 @@ $(document).ready ( function () {
 </div>
 <br />
 
-<!--<h5 style="color:#C3073F">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>-->
   <div style="margin: 0 auto; display: inline-block;">
   <ul class="collection">
 {% for question in questions %}
-<!--      <li class="collection-item" style="background-color: #1A1A1D;"><a href="{% url 'quizz:history' game.name %}">{{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }})<br />Par {{game.host}}</li>-->
+
       <li class="collection-item" style="background-color: #1A1A1D;">
       <span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>
       “ {{ question.quote }} ”<br />
           {% if question.movie1 == question.movie_guessed %}
-            <span style="color: #96d800;"><b>{{ question.movie1 }}</b></span><br />
+            <span style="color: #96d800;"><b>
+            {% if LANGUAGE_CODE == 'en' %} {{ question.movie1.en_name }} {% else %} {{ question.movie1.name }} {% endif %}
+            </b></span><br />
           {% else %}
-            <span style="color: #b7241b;"><b>{{ question.movie1 }}</b></span><br />
+            <span style="color: #b7241b;"><b>
+                {% if LANGUAGE_CODE == 'en' %} {{ question.movie1.en_name }} {% else %} {{ question.movie1.name }} {% endif %}
+            </b></span><br />
           {% endif%}
           {% if question.movie2 == question.movie_guessed %}
-            <span style="color: #96d800;"><b>{{ question.movie2 }}</b></span><br />
+            <span style="color: #96d800;"><b>
+                {% if LANGUAGE_CODE == 'en' %} {{ question.movie2.en_name }} {% else %} {{ question.movie2.name }} {% endif %}
+            </b></span><br />
           {% else %}
-            <span style="color: #b7241b;"><b>{{ question.movie2 }}</b></span><br />
+            <span style="color: #b7241b;"><b>
+                {% if LANGUAGE_CODE == 'en' %} {{ question.movie2.en_name }} {% else %} {{ question.movie2.name }} {% endif %}
+            </b></span><br />
           {% endif%}
           {% if question.movie3 == question.movie_guessed %}
-            <span style="color: #96d800;"><b>{{ question.movie3 }}</b></span><br />
+            <span style="color: #96d800;"><b>
+                {% if LANGUAGE_CODE == 'en' %} {{ question.movie3.en_name }} {% else %} {{ question.movie3.name }} {% endif %}
+            </b></span><br />
           {% else %}
-            <span style="color: #b7241b;"><b>{{ question.movie3 }}</b></span><br />
+            <span style="color: #b7241b;"><b>
+                {% if LANGUAGE_CODE == 'en' %} {{ question.movie3.en_name }} {% else %} {{ question.movie3.name }} {% endif %}
+            </b></span><br />
           {% endif%}
       </li>
 {% endfor %}
   </ul>
 </div>
 <br /><br />
-    <a href="{% url 'quizz:history_index' %}" class="btn-large waves-effect btn-color">Retour</a><br>
+    <a href="{% url 'quizz:history_index' %}" class="btn-large waves-effect btn-color">{% trans "Back" %}</a><br>
 </div>
 <br />
 

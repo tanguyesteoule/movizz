@@ -1,7 +1,7 @@
 {% extends "quizz/base.html" %}
-
-{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
-{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+{% load i18n %}
+{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>{% trans "Current game" %}</b></a></li>{% endblock %}
+{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>{% trans "Current game" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 <script>
@@ -66,11 +66,7 @@ function update_data(data) {
 
 }
 
-
-
-
-
-    $('.collapsible').collapsible();
+$('.collapsible').collapsible();
 
 
 if (window.location.protocol == 'https:') {
@@ -164,7 +160,7 @@ update_user_list = function(data) {
     list_user_html += dict_user[u_id] + ' ' + dict_score[u_id]
 
     if(u_id == '{{request.session.user_id}}'){
-        list_user_html += ' (vous)'
+        list_user_html += ' ({% trans "you" %})'
     }
 
     if(mode == 'update'){
@@ -342,7 +338,15 @@ reveal_func = function() {
 
     <div class="container-div">
         <img class="movie-img image responsive-img" id="img{{ movie.id }}" src="{{ MEDIA_URL }}{{ movie.image }}"/><br />
-        <div class="overlay" id="ovl{{ movie.id }}"><div class="text">{{ movie.name }}</div></div>
+        <div class="overlay" id="ovl{{ movie.id }}">
+            <div class="text">
+                {% if LANGUAGE_CODE == 'en' %}
+                    {{ movie.en_name }}
+                {% else %}
+                    {{ movie.name }}
+                {% endif %}
+            </div>
+        </div>
     </div>
 
 </div>
@@ -360,7 +364,7 @@ reveal_func = function() {
 
 <div id="container-button-next">
 <!--    style="left:0; right:0; margin: auto; position:absolute; bottom:10%; width: 190px;">-->
-    <a id="next_question" class="btn-large waves-effect btn-color">Suivant</a>
+    <a id="next_question" class="btn-large waves-effect btn-color">{% trans "Next" %}</a>
 </div><br />
 {% endif%}
 
@@ -371,7 +375,7 @@ reveal_func = function() {
     {% else %}
         <li>
     {% endif%}
-      <div class="collapsible-header collapsible-user">Liste des joueurs (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
+      <div class="collapsible-header collapsible-user">{% trans "Players list" %} (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
       <div class="collapsible-body">
           <div id="list-user">
             <ul>
@@ -392,7 +396,7 @@ reveal_func = function() {
 
 <div id="error-host">
   <div class='error-host-text'>
-    L'hôte a été déconnecté, la partie est terminée.<br /><br />
+    {% trans "The host has been disconnected, the game is over." %}<br /><br />
       <div class="preloader-wrapper active">
     <div class="spinner-layer spinner-red-only">
       <div class="circle-clipper left">

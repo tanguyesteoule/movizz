@@ -1,12 +1,14 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load static %}
 
-{% block nav-about %}<li class="active"><a href="{% url 'quizz:about' %}"><b>A propos</b></a></li>{% endblock %}
-{% block nav-about2 %}<li class="active"><a href="{% url 'quizz:about' %}"><b>A propos</b></a></li>{% endblock %}
+{% block nav-about %}<li class="active"><a href="{% url 'quizz:about' %}"><b>{% trans "About" %}</b></a></li>{% endblock %}
+{% block nav-about2 %}<li class="active"><a href="{% url 'quizz:about' %}"><b>{% trans "About" %}</b></a></li>{% endblock %}
 
 {% block content %}
 <br /><br />
 <div style="margin-left: 1em;">
+{% trans "(Only in french, sorry...)" %}
 <h5 class="title-about">Quelques mots sur Movizz</h5>
 <p class="content-about">
 Movizz est un mini-jeu consistant à deviner de quel film est tirée une réplique.
@@ -19,6 +21,7 @@ Movizz est un mini-jeu consistant à deviner de quel film est tirée une répliq
 
 <h5 class="title-about">Quels sont les derniers changements ?</h5>
     <ul class="browser-default">
+        <li><b>07/10/2022</b>: Ajout de la version en anglais</li>
         <li><b>13/07/2022</b>: Ajout d'un formulaire de contact</li>
         <li><b>12/07/2022</b>: Ajout des titres de films originaux</li>
         <li><b>07/07/2022</b>: Ajout filtre des images NSFW</li>
@@ -31,6 +34,7 @@ Movizz est un mini-jeu consistant à deviner de quel film est tirée une répliq
     <ul class="browser-default">
         <li><b>Films</b> : {{ nb_movie }}</li>
         <li><b>Répliques</b> : {{ nb_quote }}</li>
+        <li><b>Screenshots</b> : {{ nb_screenshot }}</li>
         <li><b>Questions posées</b> : {{ nb_question }}</li>
     </ul>
 </p>

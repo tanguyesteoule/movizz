@@ -1,8 +1,9 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load quizz_extras %}
 
-{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
-{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>Partie en cours</b></a></li>{% endblock %}
+{% block nav-current-game %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>{% trans "Current game" %}</b></a></li>{% endblock %}
+{% block nav-current-game2 %}<li class="active"><a href="{% url 'quizz:room' room_name %}"><b>{% trans "Current game" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 <script>
@@ -147,7 +148,7 @@ $(document).ready ( function () {
             dataType: 'json',
             success: function (data) {
                 if (data['res'] == 1) {
-                  str_html = "<span style='color:green'>" +  movie_name + " est la bonne réponse !</span>"
+                  str_html = "<span style='color:green'>" +  movie_name + " {% trans "is the right answer" %} !</span>"
                   userSocket.send(JSON.stringify({
                     'message': 'new_answer',
                     'movie_id': data['movie_id'],
@@ -156,7 +157,7 @@ $(document).ready ( function () {
                   ALREADY_ANSWERED = 1
 
                 } else {
-                  str_html = "<span style='color:red'>" +  movie_name + " n'est pas la bonne réponse.</span>"
+                  str_html = "<span style='color:red'>" +  movie_name + " {% trans "is not the right answer" %}.</span>"
                   userSocket.send(JSON.stringify({
                     'message': 'new_answer',
                     'movie_id': data['movie_id'],
@@ -205,7 +206,7 @@ $(document).ready ( function () {
       list_user_html += dict_user[u_id] + ' ' + dict_score[u_id]
 
       if(u_id == '{{request.session.user_id}}'){
-          list_user_html += ' (vous)'
+          list_user_html += ' ({% trans "you" %})'
       }
 
       if(mode == 'update'){
@@ -328,7 +329,7 @@ $(document).ready ( function () {
 <!-- Only if first question -->
 {% if current_question == 1%}
 <div id="waiting">
-    En attente des autres joueurs
+    {% trans "Waiting for other players" %}
     <div class="progress" style="background-color:transparent;">
         <div class="indeterminate" style="background-color: #C3073F;"></div>
     </div>
@@ -355,7 +356,7 @@ $(document).ready ( function () {
       <div class="row">
         <div class="input-field col s12">
           <input type="text" id="name-input" class="autocomplete" value="">
-          <label for="name-input">Nom du film</label>
+          <label for="name-input">{% trans "Movie name" %}</label>
         </div>
       </div>
     </div>
@@ -372,7 +373,7 @@ $(document).ready ( function () {
 {% if request.session.game_master == room_name %}
   <div id="container-button-next" style="visibility: hidden;">
   <!--    style="left:0; right:0; margin: auto; position:absolute; bottom:10%; width: 190px;">-->
-      <a id="next_question" class="btn-large waves-effect btn-color">Question suivante</a>
+      <a id="next_question" class="btn-large waves-effect btn-color">{% trans "Next question" %}</a>
   </div><br />
 {% endif %}
 
@@ -385,13 +386,13 @@ $(document).ready ( function () {
     {% else %}
         <li>
     {% endif%}
-      <div class="collapsible-header collapsible-user">Liste des joueurs (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
+      <div class="collapsible-header collapsible-user">{% trans "Players list" %} (<span id="nb-user">{{ user_list|length }}</span>) <i class="material-icons">expand_more</i> </div>
       <div class="collapsible-body">
           <div id="list-user">
             <ul>
             {% for user_n in user_list %}
                 {% if user_n == request.session.user_name%}
-                    <li>{{user_n}} 0 (vous)</li>
+                    <li>{{user_n}} 0 ({% trans "you" %})</li>
                 {% else %}
                     <li>{{user_n}} 0</li>
                 {% endif %}

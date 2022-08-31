@@ -1,4 +1,5 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load static %}
 
 {% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
@@ -18,24 +19,22 @@ textarea {
 <div style="margin-left: 1em; margin-right: 1em;">
    <h5 class="title-about center">Contact</h5>
    <div class="centered-contact input-field">
-      N'hésitez pas à signaler tout problème (bug, mauvais nom de film, ...) ou faire remonter des remarques/idées.
-      Rentrez un email si vous souhaitez une réponse.<br />
-      Merci à vous, ça permettra d'améliorer le jeu !
+      {% trans "intro-contact" %}
       <br /><br /><br />
       <form action="" method="post">
          {% csrf_token %}
          {{ form.management_form }}
-         Email (facultatif)
+         Email ({% trans "optional" %})
           {{ form.email }}
          <br /><br /><br />
-         Sujet
+         {% trans "title-contact" %}
           {{ form.subject }}
          <br /><br /><br />
          Message
           {{ form.message }}
          <br />
          <div class="center">
-            <input type="submit" class="btn-large waves-effect btn-color" value="Envoyer">
+            <input type="submit" class="btn-large waves-effect btn-color" value='{% trans "Send" %}'>
          <div/><br>
       </form>
    </div>

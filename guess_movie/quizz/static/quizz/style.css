@@ -663,3 +663,10 @@ img.screenshot-thumb {
 .switch label input[type=checkbox]:checked+.lever:after {
    background-color: var(--guillemet-color);
 }
+
+#switch-language {
+    padding-right:25px;
+    vertical-align: middle;
+    height:35px;
+    cursor: pointer;
+}

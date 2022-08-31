@@ -11,6 +11,7 @@ class Movie(models.Model):
     popularity = models.FloatField(null=True, blank=True)
     image = models.ImageField(upload_to='covers', null=True, blank=True)
     has_quote = models.BooleanField(null=True, blank=True)
+    has_quote_en = models.BooleanField(null=True, blank=True, default=False)
     has_image = models.BooleanField(default=0, null=True, blank=True)
     check_image = models.BooleanField(default=0, null=True, blank=True)
 
@@ -30,6 +31,7 @@ class Contact(models.Model):
 class Quote(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     quote_text = models.TextField(null=True, blank=True)
+    language = models.CharField(max_length=200, default='fr')
 
     def __str__(self):
         return self.quote_text

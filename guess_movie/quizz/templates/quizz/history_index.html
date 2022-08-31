@@ -1,8 +1,9 @@
 {% extends "quizz/base.html" %}
+{% load i18n %}
 {% load quizz_extras %}
 
-{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
-{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>Historique</b></a></li>{% endblock %}
+{% block nav-history %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>{% trans "History" %}</b></a></li>{% endblock %}
+{% block nav-history2 %}<li class="active"><a href="{% url 'quizz:history_index' %}"><b>{% trans "History" %}</b></a></li>{% endblock %}
 
 {% block javascript %}
 <script>
@@ -16,24 +17,24 @@ $(document).ready ( function () {
 
 {% block content %}
 <div style="text-align: center;">
-<h5 style="color:#C3073F">Historique des parties</h5>
+<h5 style="color:#C3073F">{% trans "Games history" %}</h5>
 
-<!--<h5 style="color:#C3073F">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>-->
   <div style="margin: 0 auto; display: inline-block;">
-{% if games.count != 0%}
+
+{% if games %}
       <ul class="collection">
     {% for game in games %}
           <li class="collection-item" style="background-color: #1A1A1D;">
           {% if game.mode == 'image' %}
           [IMAGES]<a href="{% url 'quizz:history_image' game.name %}">
           {% else %}
-          [CITATIONS]<a href="{% url 'quizz:history' game.name %}">
+          [{% trans "QUOTES" %}]<a href="{% url 'quizz:history' game.name %}">
           {% endif%}
-          {{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }}) par <b>{{dict_name|keyvalue:game.host}}</b> ({{ game.nb_q}} questions)</li>
+          {{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }}) {% trans "by" %} <b>{{dict_name|keyvalue:game.host}}</b> ({{ game.nb_q}} questions)</li>
     {% endfor %}
       </ul>
 {% else %}
-    Vous n'avez joué aucune partie
+      {% trans "You have not played any games" %}
 {% endif %}
 </div>
 <br /><br />

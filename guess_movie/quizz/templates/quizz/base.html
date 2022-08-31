@@ -1,7 +1,11 @@
 {% load static %}
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
 <!DOCTYPE html>
 
-<html lang="fr">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BGJ7SV34ND"></script>
@@ -33,8 +37,24 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
       $(document).ready(function(){
- 		$('.sidenav').sidenav();
- 	  });
+ 		  $('.sidenav').sidenav();
+
+
+          $('#switch-language').click(function() {
+              $.ajax({
+                  type: "POST",
+                  url: '/switch_language/',
+                  data: {
+                      'csrfmiddlewaretoken': '{{ csrf_token }}',
+                  },
+                  dataType: 'json',
+                  success: function (data) {
+                      window.location.reload();
+                  }
+              });
+          });
+
+      });
   </script>
 
 {% block javascript %}
@@ -53,33 +73,45 @@
 		</a>
 
 		<ul class="left hide-on-small-only "  >
-      {% block nav-home %}<li><a href="{% url 'quizz:home' %}">Accueil</a></li>{% endblock %}
-      {% block nav-play %}<li><a href="{% url 'quizz:room_index' %}">Jouer</a></li>{% endblock %}
+      {% block nav-home %}<li><a href="{% url 'quizz:home' %}">{% trans "Home" %}</a></li>{% endblock %}
+      {% block nav-play %}<li><a href="{% url 'quizz:room_index' %}">{% trans "Play" %}</a></li>{% endblock %}
       {% block nav-current-game %}{% endblock %}
-      {% block nav-editor %}<li><a href="{% url 'quizz:editor' %}">Editeur</a></li>{% endblock %}
+      {% block nav-editor %}<li><a href="{% url 'quizz:editor' %}">{% trans "Editor" %}</a></li>{% endblock %}
       {% block nav-exploration %}{% endblock %}
-      {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}">Historique</a></li>{% endblock %}
-      {% block nav-about %}<li><a href="{% url 'quizz:about' %}">A propos</a></li>{% endblock %}
-      {% block nav-contact %}<li><a href="{% url 'quizz:contact' %}">Contact</a></li>{% endblock %}
+      {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}">{% trans "History" %}</a></li>{% endblock %}
+      {% block nav-about %}<li><a href="{% url 'quizz:about' %}">{% trans "About" %}</a></li>{% endblock %}
+      {% block nav-contact %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
+
+
 
 		</ul>
         <ul class="navbar-nav ml-auto hide-on-small-only">
-            {% block nav-lyrizz %}<li class="right" style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">Tester Lyrizz</a></li>{% endblock %}
+            {% block nav-lyrizz %}<li class="right" style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">{% trans "Test Lyrizz" %}</a></li>{% endblock %}
+            {% if LANGUAGE_CODE == 'en' %}
+                <li class="right"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></li>
+            {% else %}
+                <li class="right"><img id="switch-language" src="{% static 'quizz/en.png' %}" /></li>
+            {% endif %}
         </ul>
 	</div>
 </nav>
 
 
 <ul class="sidenav sidenav-style" id="nav-mobile">
-      {% block nav-home2 %}<li><a href="{% url 'quizz:home' %}">Accueil</a></li>{% endblock %}
-      {% block nav-play2 %}<li><a href="{% url 'quizz:room_index' %}">Jouer</a></li>{% endblock %}
+      {% block nav-home2 %}<li><a href="{% url 'quizz:home' %}">{% trans "Home" %}</a></li>{% endblock %}
+      {% block nav-play2 %}<li><a href="{% url 'quizz:room_index' %}">{% trans "Play" %}</a></li>{% endblock %}
       {% block nav-current-game2 %}{% endblock %}
-      {% block nav-editor2 %}<li><a href="{% url 'quizz:editor' %}">Editeur</a></li>{% endblock %}
+      {% block nav-editor2 %}<li><a href="{% url 'quizz:editor' %}">{% trans "Editor" %}</a></li>{% endblock %}
       {% block nav-exploration2 %}{% endblock %}
-      {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}">Historique</a></li>{% endblock %}
-      {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}">A propos</a></li>{% endblock %}
-      {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}">Contact</a></li>{% endblock %}
-      {% block nav-lyrizz2 %}<li style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">Tester Lyrizz</a></li>{% endblock %}
+      {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}">{% trans "History" %}</a></li>{% endblock %}
+      {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}">{% trans "About" %}</a></li>{% endblock %}
+      {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
+      {% block nav-lyrizz2 %}<li style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">{% trans "Test Lyrizz" %}</a></li>{% endblock %}
+        {% if LANGUAGE_CODE == 'en' %}
+            <li class="center"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></li>
+        {% else %}
+            <li class="center"><img id="switch-language" src="{% static 'quizz/en.png' %}" /></li>
+        {% endif %}
 </ul>
 
 {% endblock %}

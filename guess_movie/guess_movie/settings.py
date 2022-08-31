@@ -14,12 +14,12 @@ from pathlib import Path
 import os
 from decouple import config
 import logging
+from django.utils.translation import gettext_lazy as _
 
 IS_PROD = os.environ['IS_PROD']
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -42,7 +42,6 @@ if IS_PROD == 'True':
     ALLOWED_HOSTS = ['movizz.fr', '51.68.225.98']
 else:
     ALLOWED_HOSTS = []
-
 
 if IS_PROD == 'True':
     LOGGING = {
@@ -94,6 +93,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -165,7 +165,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -224,6 +223,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+LANGUAGES = (
+    ('en', _('English')),
+    ('fr', _('French')),
+)
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -232,7 +239,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     # os.path.join(BASE_DIR, 'static'),
     os.path.join(BASE_DIR, 'quizz', 'static'),
-    ]
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # MEDIA_ROOT = '/home/tanguy/workspace/git/guess_movie/media/'

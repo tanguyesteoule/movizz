@@ -20,6 +20,7 @@ import re
 from collections import Counter
 import pandas as pd
 from django.utils.safestring import mark_safe
+from django.utils import translation
 
 """
 # Init NLP
@@ -108,6 +109,7 @@ def create_game(request):
     game_mode = request.session['game_mode']
     game_mode_debrief = request.session['game_mode_debrief']
     room_name = request.POST.get('room_name')
+    language = request.LANGUAGE_CODE
 
     mode = request.session['mode']
     # Création de la Game en base
@@ -149,7 +151,7 @@ def create_game(request):
                 movie_guessed = random.choice(sample_movies)
 
                 # Select a random quote of this movie
-                all_quotes = Quote.objects.filter(movie__pk=movie_guessed.id)
+                all_quotes = Quote.objects.filter(movie__pk=movie_guessed.id, language=language)
                 quote = random.choice(all_quotes)
 
                 # Create a Question object
@@ -170,15 +172,10 @@ def create_game(request):
                 list_movie_sel_img = request.session['list_movie_sel_img']
             else:
                 list_movie_sel_img = list(
-                    Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id', flat=True))
+                    Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id',
+                                                                                                         flat=True))
 
             for i in range(nb_question):
-                # popularity = request.session['popularity_img']
-                # list_movie_sel = list(
-                #     Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id', flat=True))
-                #
-                # if popularity != '':
-                #     list_movie_sel = list_movie_sel[:int(popularity)]
 
                 sample_movies = get_n_random_movies(3, list_movie_sel_img, quote=False, image=True)
 
@@ -485,9 +482,11 @@ def room_play_image(request, room_name, game_name):
 
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
 
-        dict_movies = {(
-                           f'{m.original_name} ({m.name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'): m.imdb_id
-                       for m in all_movies}
+        if request.LANGUAGE_CODE == 'fr':
+            dict_movies = {(f'{m.original_name} ({m.name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'.replace('"', '\\"')): m.imdb_id for m in all_movies}
+        else:
+            dict_movies = {(f'{m.original_name} ({m.en_name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.en_name else f'{m.en_name} [{m.year}]'.replace('"', '\\"')): m.imdb_id
+                           for m in all_movies}
 
         if game.current_q == 0:
             started = 0
@@ -560,10 +559,16 @@ def guess_image(request):
 def reveal_image(request):
     question_id = request.POST.get('question_id')
     m = QuestionImage.objects.get(id=question_id).movie_guessed
-    if m.original_name != m.name:
-        movie_name = f'{m.original_name} ({m.name}) [{m.year}]'
+    if request.LANGUAGE_CODE == 'fr':
+        if m.original_name != m.name:
+            movie_name = f'{m.original_name} ({m.name}) [{m.year}]'
+        else:
+            movie_name = f'{m.name} [{m.year}]'
     else:
-        movie_name = f'{m.name} [{m.year}]'
+        if m.original_name != m.en_name:
+            movie_name = f'{m.original_name} ({m.en_name}) [{m.year}]'
+        else:
+            movie_name = f'{m.en_name} [{m.year}]'
 
     data = {'movie_name': movie_name}
 
@@ -594,8 +599,9 @@ def about(request):
     nb_movie = Movie.objects.filter(has_quote=1).count()
     nb_quote = Quote.objects.all().count()
     nb_question = Question.objects.all().count()
+    nb_screenshot = Screenshot.objects.all().count()
 
-    context = {'nb_movie': nb_movie, 'nb_quote': nb_quote, 'nb_question': nb_question}
+    context = {'nb_movie': nb_movie, 'nb_quote': nb_quote, 'nb_question': nb_question, 'nb_screenshot': nb_screenshot}
     return render(request, 'quizz/about.html', context)
 
 
@@ -615,8 +621,12 @@ def contact(request):
 def editor(request):
     context = {}
     movies = Movie.objects.filter(has_quote=1)
-    list_movie = [m.name + f' ({m.year})' for m in movies]
-    dict_m = {(m.name + f' ({m.year})'): 'null' for m in movies}
+    if request.LANGUAGE_CODE == 'fr':
+        list_movie = [m.name + f' ({m.year})' for m in movies]
+        dict_m = {(m.name + f' ({m.year})'): 'null' for m in movies}
+    else:
+        list_movie = [m.en_name + f' ({m.year})' for m in movies]
+        dict_m = {(m.en_name + f' ({m.year})'): 'null' for m in movies}
     context['list_movie'] = list_movie
     context['dict_m'] = mark_safe(json.dumps(dict_m))
     return render(request, 'quizz/editor.html', context)
@@ -729,6 +739,20 @@ def home(request):
     return render(request, 'quizz/home.html', context)
 
 
+def switch_language(request):
+
+    if 'django_language' not in request.COOKIES:
+        new_language = 'en'
+    elif request.COOKIES['django_language'] == 'en':
+        new_language = 'fr'
+    elif request.COOKIES['django_language'] == 'fr':
+        new_language = 'en'
+
+    json = JsonResponse({'new_language': new_language})
+    json.set_cookie('django_language', new_language, max_age=None)
+    return json
+
+
 def update_selection(request):
     data = {}
     if request.POST.get('select'):
@@ -761,6 +785,7 @@ def update_selection(request):
         popularity_img = request.POST.get('popularity_img')
         country_img = int(request.POST.get('country_img')[1:])
 
+        language = request.LANGUAGE_CODE
         list_movie_sel_real = json.loads(request.POST.get('selected_movies'))
         reset = int(request.POST.get('reset'))
 
@@ -789,18 +814,31 @@ def update_selection(request):
                 list_movie_id = list(set(list_movie_id_genre).intersection(list_movie_id_country))
 
                 if (year1 != 1900 or year2 != 2022):
-                    list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
-                                                      has_quote=1).order_by('name')
+                    if language == 'fr':
+                        list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
+                                                          has_quote=1).order_by('name')
+                    else:
+                        list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
+                                                          has_quote_en=1).order_by('name')
                 else:
-                    list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote=1).order_by('name')
+                    if language == 'fr':
+                        list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote=1).order_by('name')
+                    else:
+                        list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote_en=1).order_by('name')
             else:
                 if (year1 != 1900 or year2 != 2022):
-                    list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by('name')
+                    if language == 'fr':
+                        list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by('name')
+                    else:
+                        list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote_en=1).order_by(
+                            'name')
                 else:
-                    list_movie = Movie.objects.filter(has_quote=1).order_by('name')
+                    if language == 'fr':
+                        list_movie = Movie.objects.filter(has_quote=1).order_by('name')
+                    else:
+                        list_movie = Movie.objects.filter(has_quote_en=1).order_by('name')
 
             if popularity != '':
-                # list_movie = list_movie.order_by('-popularity')[:int(popularity)].order_by('name')
                 l1 = list(list_movie.order_by('-popularity')[:int(popularity)].values_list('id', flat=True))
                 list_movie = Movie.objects.filter(id__in=l1).order_by('name')
         else:
@@ -818,27 +856,19 @@ def update_selection(request):
         if nsfw_filter == 1:
             dict_param['check_image'] = 1
         if country_img != -1:
-            list_movie_id_country_img = list(MovieCountry.objects.filter(country_id=country_img).values_list('movie_id', flat=True))
+            list_movie_id_country_img = list(
+                MovieCountry.objects.filter(country_id=country_img).values_list('movie_id', flat=True))
         else:
             list_movie_id_country_img = default_list_img
         if len(list_genre_id) != 0:
-            list_movie_id_genre_img = list(MovieGenre.objects.filter(genre_id__in=list_genre_id_img).values_list('movie_id', flat=True))
+            list_movie_id_genre_img = list(
+                MovieGenre.objects.filter(genre_id__in=list_genre_id_img).values_list('movie_id', flat=True))
         else:
             list_movie_id_genre_img = default_list_img
 
         list_movie_id = list(set(list_movie_id_country_img).intersection(list_movie_id_genre_img))
         dict_param['pk__in'] = list_movie_id
         list_movie_img = Movie.objects.filter(**dict_param)
-        # if year1_img != 1900 or year2_img != 2022:
-        #     if nsfw_filter == 1:  # Filter NSFW images
-        #         list_movie_img = Movie.objects.filter(year__gte=year1_img, year__lte=year2_img, has_image=1, check_image=1).order_by('name')
-        #     else:
-        #         list_movie_img = Movie.objects.filter(year__gte=year1_img, year__lte=year2_img, has_image=1).order_by('name')
-        # else:
-        #     if nsfw_filter == 1:  # Filter NSFW images
-        #         list_movie_img = Movie.objects.filter(has_image=1, check_image=1).order_by('name')
-        #     else:
-        #         list_movie_img = Movie.objects.filter(has_image=1).order_by('name')
 
         if popularity_img != '':
             l2 = list(list_movie_img.order_by('-popularity')[:int(popularity_img)].values_list('id', flat=True))
@@ -847,7 +877,11 @@ def update_selection(request):
         list_movie_sel = list(dict.fromkeys([m.id for m in list_movie]))
         list_movie_sel_img = list(dict.fromkeys([m.id for m in list_movie_img]))
 
-        list_movie_sel_name = [m.name + f' ({m.year})' for m in list_movie]
+        # Select english movie name if necessary
+        if language == 'fr':
+            list_movie_sel_name = [m.name + f' ({m.year})' for m in list_movie]
+        else:
+            list_movie_sel_name = [m.en_name + f' ({m.year})' for m in list_movie]
 
         if reset:
             list_movie_sel_real = list_movie_sel

@@ -10,19 +10,22 @@ from django.shortcuts import get_object_or_404, render
 
 
 class QuoteAdmin(admin.ModelAdmin):
-    list_display = ('movie', 'quote_text')
-    list_filter = ['movie']
+    list_display = ('movie', 'quote_text', 'language')
+    list_filter = ['language', 'movie']
     search_fields = ['quote_text']
+
 
 class MovieCountryAdmin(admin.ModelAdmin):
     list_display = ('movie', 'country')
     list_filter = ['country']
     search_fields = ['movie']
 
+
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('name', 'original_name', 'en_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_image', 'check_image')
+    list_display = (
+    'name', 'original_name', 'en_name', 'year', 'imdb_id', 'popularity', 'has_quote', 'has_quote_en', 'has_image', 'check_image')
     search_fields = ['name', 'original_name', 'en_name', 'imdb_id']
-    list_filter = ['has_quote', 'has_image', 'check_image']
+    list_filter = ['has_quote', 'has_quote_en', 'has_image', 'check_image']
 
 
 class ScreenshotAdmin(admin.ModelAdmin):
