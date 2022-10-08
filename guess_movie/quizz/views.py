@@ -1,6 +1,6 @@
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -483,9 +483,13 @@ def room_play_image(request, room_name, game_name):
         all_movies = list(Movie.objects.filter(has_image=1).order_by('-popularity'))  # [:int(500)]
 
         if request.LANGUAGE_CODE == 'fr':
-            dict_movies = {(f'{m.original_name} ({m.name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'.replace('"', '\\"')): m.imdb_id for m in all_movies}
+            dict_movies = {(f'{m.original_name} ({m.name}) [{m.year}]'.replace('"',
+                                                                               '\\"') if m.original_name != m.name else f'{m.name} [{m.year}]'.replace(
+                '"', '\\"')): m.imdb_id for m in all_movies}
         else:
-            dict_movies = {(f'{m.original_name} ({m.en_name}) [{m.year}]'.replace('"', '\\"') if m.original_name != m.en_name else f'{m.en_name} [{m.year}]'.replace('"', '\\"')): m.imdb_id
+            dict_movies = {(f'{m.original_name} ({m.en_name}) [{m.year}]'.replace('"',
+                                                                                  '\\"') if m.original_name != m.en_name else f'{m.en_name} [{m.year}]'.replace(
+                '"', '\\"')): m.imdb_id
                            for m in all_movies}
 
         if game.current_q == 0:
@@ -740,7 +744,6 @@ def home(request):
 
 
 def switch_language(request):
-
     if 'django_language' not in request.COOKIES:
         new_language = 'en'
     elif request.COOKIES['django_language'] == 'en':
@@ -751,6 +754,21 @@ def switch_language(request):
     json = JsonResponse({'new_language': new_language})
     json.set_cookie('django_language', new_language, max_age=None)
     return json
+
+
+def switch_language_mobile(request):
+    if 'django_language' not in request.COOKIES:
+        new_language = 'en'
+    elif request.COOKIES['django_language'] == 'en':
+        new_language = 'fr'
+        request.COOKIES['django_language'] = 'fr'
+    elif request.COOKIES['django_language'] == 'fr':
+        new_language = 'en'
+        request.COOKIES['django_language'] = 'en'
+    context = {}
+    response = redirect('/')
+    response.set_cookie('django_language', new_language, max_age=None)
+    return response
 
 
 def update_selection(request):
@@ -828,7 +846,8 @@ def update_selection(request):
             else:
                 if (year1 != 1900 or year2 != 2022):
                     if language == 'fr':
-                        list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by('name')
+                        list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by(
+                            'name')
                     else:
                         list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote_en=1).order_by(
                             'name')

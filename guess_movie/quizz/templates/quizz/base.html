@@ -108,9 +108,9 @@
       {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
       {% block nav-lyrizz2 %}<li style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">{% trans "Test Lyrizz" %}</a></li>{% endblock %}
         {% if LANGUAGE_CODE == 'en' %}
-            <li class="center"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></li>
+            <li class="center"><a href="{% url 'quizz:switch_language_mobile' %}"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></a></li>
         {% else %}
-            <li class="center"><img id="switch-language" src="{% static 'quizz/en.png' %}" /></li>
+            <li class="center"><a href="{% url 'quizz:switch_language_mobile' %}"><img id="switch-language" src="{% static 'quizz/en.png' %}" /></a></li>
         {% endif %}
 </ul>
 
