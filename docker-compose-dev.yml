@@ -1,0 +1,62 @@
+version: "0.1"
+services:
+
+  redis:
+    image: "redis:6"
+    ports:
+     - "6379:6379"
+
+    volumes:
+     - ./redis-data:/var/lib/redis
+     - ./redis.conf:/usr/local/etc/redis/redis.conf
+
+    environment:
+     - REDIS_REPLICATION_MODE=master
+
+    networks:
+      - movizz-network
+
+  dbtest:
+    image: bitnami/mysql:8.0.23
+    container_name: dbtest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=django2
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=quizz_db
+    networks:
+      - movizz-network
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  movizz:
+    build:
+      context: .
+    container_name: movizz
+    volumes:
+      - .:/app/
+    environment:
+      IS_PROD: False
+    links:
+      - dbtest:dbtest
+      - redis:redis
+    depends_on:
+      - redis
+      - dbtest
+    ports:
+      - "80:80"
+    tty: true
+    stdin_open: true
+    networks:
+      - movizz-network
+volumes:
+  dbdata:
+networks:
+  movizz-network:
+  node_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 0.0.0.0/16

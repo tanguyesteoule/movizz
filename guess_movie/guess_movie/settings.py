@@ -130,7 +130,7 @@ if IS_PROD == 'True':
     ipadress = 'redis://:george_abitbol@51.68.225.98:6379'
 else:
     # ipadress = '127.0.0.1'
-    ipadress = 'redis://127.0.0.1:6379'
+    ipadress = 'redis://redis:6379'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',

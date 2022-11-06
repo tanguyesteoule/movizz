@@ -63,3 +63,13 @@ There are two game modes for movizz:
 Although the code is available, this project was not designed to be directly reusable.
 Indeed, to deploy it on your own server you will have to adapt several parts that are specific to the configuration of my server.
 Moreover, there is no dialogue/lyric data because it would overload the git repository (But I shared the notebooks used to extract them).
+
+
+## Dev
+- need media folder with covers / covers_lyrizz / screenshot
+- need to fill database
+
+Then you can run with:
+```
+docker compose -f docker-compose-dev.yml up
+```
