@@ -765,7 +765,14 @@ def switch_language_mobile(request):
     elif request.COOKIES['django_language'] == 'fr':
         new_language = 'en'
         request.COOKIES['django_language'] = 'en'
-    context = {}
+    response = redirect('/')
+    response.set_cookie('django_language', new_language, max_age=None)
+    return response
+
+
+def english_home(request):
+    new_language = 'en'
+    request.COOKIES['django_language'] = 'en'
     response = redirect('/')
     response.set_cookie('django_language', new_language, max_age=None)
     return response

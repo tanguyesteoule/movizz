@@ -35,6 +35,8 @@ urlpatterns = [
     path('update_selection/', views.update_selection, name='update_selection'),
     path('switch_language/', views.switch_language, name='switch_language'),
     path('switch_language_mobile/', views.switch_language_mobile, name='switch_language_mobile'),
+    path('en/', views.english_home, name='english_home'),
+    
     # path('selection/', views.selection, name='selection'),
     path('game/', views.game, name='game'),
     # path('guess/', views.guess, name='guess'),
