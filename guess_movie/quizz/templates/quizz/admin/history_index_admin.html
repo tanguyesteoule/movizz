@@ -29,7 +29,7 @@ $(document).ready ( function () {
           {% else %}
             [CITATIONS]<a href="/admin/quizz/aview/history/{{game.name}}/">
           {% endif%}
-          {{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }}) par <b>{{dict_name|keyvalue:game.host}}</b> ({{ game.nb_q}} questions)</li>
+          {{ game.name }}</a> ({{ game.timestamp|date:'d/m/Y H:i' }}) par <b>{{dict_name|keyvalue:game.host}}</b> ({{ game.nb_q}} questions - {{dict_nb_players|keyvalue:game.name}} joueurs)</li>
     {% endfor %}
       </ul>
 {% else %}

@@ -76,8 +76,11 @@ def history_index_view(request):
     players = Player.objects.all()
     dict_name = {p.user_id: p.user_name for p in players}
 
+    dict_nb_players = {game.name: GamePlayer.objects.filter(game=game).count() for game in games}
+
     context['games'] = games
     context['dict_name'] = dict_name
+    context['dict_nb_players'] = dict_nb_players
 
     return render(request, 'quizz/admin/history_index_admin.html', context)
 

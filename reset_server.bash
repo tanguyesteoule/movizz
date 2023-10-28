@@ -7,4 +7,6 @@ sudo docker exec -it movizz_redis_1 bash -c 'redis-cli config set stop-writes-on
 
 sudo systemctl restart gunicorn
 sudo systemctl restart guessmovie-daphne.service
+sudo systemctl restart noplp.service
+
 sudo service nginx restart
