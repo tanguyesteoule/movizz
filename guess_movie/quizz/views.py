@@ -49,7 +49,7 @@ def create_room(request):
     request.session['game_master'] = room_name
 
     if 'mode' not in request.session:
-        request.session['mode'] = 'quote'
+        request.session['mode'] = 'image'
 
     return HttpResponseRedirect(reverse('quizz:room', args=(room_name,)))
 
