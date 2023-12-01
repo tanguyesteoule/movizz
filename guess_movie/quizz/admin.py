@@ -7,7 +7,7 @@ from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Pla
 from django.urls import path
 from django.db import models
 from django.shortcuts import get_object_or_404, render
-
+from django.core.paginator import Paginator
 
 class QuoteAdmin(admin.ModelAdmin):
     list_display = ('movie', 'quote_text', 'language')
@@ -70,7 +70,15 @@ class AViewAdmin(admin.ModelAdmin):
 
 def history_index_view(request):
     context = {}
-    games = Game.objects.all().order_by('-id')
+    games_all = Game.objects.all().order_by('-id')
+    nb_game_quote = games_all.filter(mode='quote').count()
+    nb_game_image = games_all.filter(mode='image').count()
+    nb_questions = Question.objects.all().count()
+    nb_questions_image = QuestionImage.objects.all().count()
+    paginator = Paginator(games_all, 100)
+
+    page = request.GET.get('page')
+    games = paginator.get_page(page)
 
     dict_name = {}
     players = Player.objects.all()
@@ -81,6 +89,10 @@ def history_index_view(request):
     context['games'] = games
     context['dict_name'] = dict_name
     context['dict_nb_players'] = dict_nb_players
+    context['nb_game_quote'] = nb_game_quote
+    context['nb_game_image'] = nb_game_image
+    context['nb_questions'] = nb_questions
+    context['nb_questions_image'] = nb_questions_image
 
     return render(request, 'quizz/admin/history_index_admin.html', context)
 

@@ -18,14 +18,14 @@ $(document).ready ( function () {
 <div style="text-align: center;">
 <h5 style="color:#C3073F">Historique des parties (Admin)</h5>
 
-<!--<h5 style="color:#C3073F">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>-->
   <div style="margin: 0 auto; display: inline-block;">
+    <b>[Games quote]</b> {{ nb_game_quote }} <b>[Games image]</b> {{ nb_game_image }} <b>[Questions quote]</b> {{ nb_questions }} <b>[Questions image]</b> {{ nb_questions_image }}
 {% if games.count != 0%}
       <ul class="collection">
     {% for game in games %}
           <li class="collection-item" style="background-color: #1A1A1D;">
           {% if game.mode == 'image' %}
-            [IMAGES]<a href="/admin/quizz/aview/history_image/{{game.name}}/">
+            <span style="color: #C3073F">[IMAGES]</span><a href="/admin/quizz/aview/history_image/{{game.name}}/">
           {% else %}
             [CITATIONS]<a href="/admin/quizz/aview/history/{{game.name}}/">
           {% endif%}
@@ -35,6 +35,25 @@ $(document).ready ( function () {
 {% else %}
     Vous n'avez joué aucune partie
 {% endif %}
+
+<div class="pagination">
+  <span class="step-links">
+      {% if games.has_previous %}
+          <a href="?page=1">&laquo; first</a>
+          <a href="?page={{ games.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+          Page {{ games.number }} of {{ games.paginator.num_pages }}.
+      </span>
+
+      {% if games.has_next %}
+          <a href="?page={{ games.next_page_number }}">next</a>
+          <a href="?page={{ games.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+  </span>
+</div>
+
 </div>
 <br /><br />
 </div>
