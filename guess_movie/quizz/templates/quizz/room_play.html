@@ -34,19 +34,33 @@ function update_data(data) {
   img1.attr("id", 'img'+ data['movie1_id']);
   img1.attr("src", '{{ MEDIA_URL }}/' + data['movie1_url']);
   $("div.image1").find('.overlay').attr("id",'ovl'+data['movie1_id']);
-  $("div.image1").find('.text').text(data['movie1_name']);
+  {% if LANGUAGE_CODE == 'en' %}
+    $("div.image1").find('.text').text(data['movie1_en_name']);
+  {% else %}
+    $("div.image1").find('.text').text(data['movie1_name']);
+  {% endif %}
 
   var img2 = $("div.image2").find('img');
   img2.attr("id", 'img'+ data['movie2_id']);
   img2.attr("src", '{{ MEDIA_URL }}/' + data['movie2_url']);
   $("div.image2").find('.overlay').attr("id",'ovl'+data['movie2_id']);
-  $("div.image2").find('.text').text(data['movie2_name']);
+  {% if LANGUAGE_CODE == 'en' %}
+    $("div.image2").find('.text').text(data['movie2_en_name']);
+  {% else %}
+    $("div.image2").find('.text').text(data['movie2_name']);
+  {% endif %}
+
 
   var img3 = $("div.image3").find('img');
   img3.attr("id", 'img'+ data['movie3_id']);
   img3.attr("src", '{{ MEDIA_URL }}/' + data['movie3_url']);
   $("div.image3").find('.overlay').attr("id",'ovl'+data['movie3_id']);
-  $("div.image3").find('.text').text(data['movie3_name']);
+  {% if LANGUAGE_CODE == 'en' %}
+    $("div.image3").find('.text').text(data['movie3_en_name']);
+  {% else %}
+    $("div.image3").find('.text').text(data['movie3_name']);
+  {% endif %}
+
 
   $("#quote-text").text(data['quote_text']);
 

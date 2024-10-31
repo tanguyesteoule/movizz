@@ -124,6 +124,7 @@ def create_game(request):
         dict_user = json.loads(request.POST.get('dict_user'))
         nb_question = max(2, min(50, int(request.POST.get('nb_question'))))
         request.session['dict_user'] = dict_user
+        request.session['language_code'] = request.LANGUAGE_CODE
         data = {}
 
         if 'user_id' not in request.session:
@@ -231,7 +232,7 @@ def room_play(request, room_name, game_name):
         game = Game.objects.get(name=game_name)
 
         if game.current_q == -1:
-            return HttpResponseRedirect(reverse('lyrizz:room_index'))
+            return HttpResponseRedirect(reverse('quizz:room_index'))
 
         question = Question.objects.filter(game_id=game.id).order_by('id')[game.current_q]
         # request.session['question_id'] = question.id
