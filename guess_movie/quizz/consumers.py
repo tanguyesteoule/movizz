@@ -23,6 +23,11 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
         self.dict_user = self.scope["session"]["dict_user"]
         self.game_mode = self.scope["session"]["game_mode"]
         self.game_mode_debrief = self.scope["session"]["game_mode_debrief"]
+        if "language_code" not in self.scope["session"]:
+            self.language_code = "en"
+        else:
+            self.language_code = self.scope["session"]["language_code"]
+
         # self.mode = 'chill' 'timer'
         self.list_id = list(self.dict_user.keys())
         # self.current_q = 0
@@ -66,9 +71,12 @@ class GameMasterConsumer(AsyncWebsocketConsumer):
             'movie1_id': q.movie1.id,
             'movie2_id': q.movie2.id,
             'movie3_id': q.movie3.id,
-            'movie1_name': q.movie1.name,
+            'movie1_name': q.movie1.name,  # French names
             'movie2_name': q.movie2.name,
             'movie3_name': q.movie3.name,
+            'movie1_en_name': q.movie1.en_name,  # English names
+            'movie2_en_name': q.movie2.en_name,
+            'movie3_en_name': q.movie3.en_name,
             'movie1_url': str(q.movie1.image),
             'movie2_url': str(q.movie2.image),
             'movie3_url': str(q.movie3.image),
@@ -1005,6 +1013,8 @@ class GameMasterConsumerResults(AsyncWebsocketConsumer):
         nb_user = await self.get_nb_user()
         if nb_user > 10:  # Waiting for users
             await asyncio.sleep(5)
+        else:
+            await asyncio.sleep(2)
 
         # Send results
         results = await self.compute_results()

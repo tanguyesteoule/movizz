@@ -110,9 +110,21 @@ if (window.location.protocol == 'https:') {
   <li class="collection-item" style="background-color: #1A1A1D;">
   <span class="number-list-score"><b>({{forloop.counter}})&nbsp;&nbsp;</b></span>
   {% if list_answer|index:forloop.counter0 == 1 %}
-      “ {{ question.quote }} ” <span style="color: #96d800;"><br /><b>{{ question.movie_guessed }}</b></span>
+      “ {{ question.quote }} ” <span style="color: #96d800;"><br /><b>
+        {% if LANGUAGE_CODE == 'en' %}
+            {{ question.movie_guessed.en_name }}
+        {% else %}
+            {{ question.movie_guessed.name }}
+        {% endif %}
+      </b></span>
   {% else %}
-      “ {{ question.quote }} ” <span style="color: #b7241b"><br /><b>{{ question.movie_guessed }}</b></span>
+      “ {{ question.quote }} ” <span style="color: #b7241b"><br /><b>
+        {% if LANGUAGE_CODE == 'en' %}
+            {{ question.movie_guessed.en_name }}
+        {% else %}
+            {{ question.movie_guessed.name }}
+        {% endif %}
+      </b></span>
   {% endif %}
   </li>
 {% endfor %}
