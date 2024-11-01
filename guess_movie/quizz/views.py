@@ -167,17 +167,20 @@ def create_game(request):
             if 'nsfw_filter' in request.session:
                 sfw = int(request.session['nsfw_filter'])
             else:
-                sfw = 1  # Default: Filter NSFW images
+                sfw = 0  # Default: Not filter NSFW images
 
             if 'list_movie_sel_img' in request.session and len(request.session['list_movie_sel_img']) >= 3:
                 list_movie_sel_img = request.session['list_movie_sel_img']
             else:
-                list_movie_sel_img = list(
-                    Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id',
-                                                                                                         flat=True))
+                if sfw == 1:
+                    # If sfw, only keep manually checked movies
+                    list_movie_sel_img = list(
+                        Movie.objects.filter(has_image=1, check_image=1).order_by('-popularity').values_list('id', flat=True))
+                else:
+                    list_movie_sel_img = list(
+                        Movie.objects.filter(has_image=1).order_by('-popularity').values_list('id',flat=True))
 
             for i in range(nb_question):
-
                 sample_movies = get_n_random_movies(3, list_movie_sel_img, quote=False, image=True)
 
                 # Select a random movie among them
@@ -839,7 +842,7 @@ def update_selection(request):
 
                 list_movie_id = list(set(list_movie_id_genre).intersection(list_movie_id_country))
 
-                if (year1 != 1900 or year2 != 2022):
+                if (year1 != 1900 or year2 != 2025):
                     if language == 'fr':
                         list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
                                                           has_quote=1).order_by('name')
@@ -852,7 +855,7 @@ def update_selection(request):
                     else:
                         list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote_en=1).order_by('name')
             else:
-                if (year1 != 1900 or year2 != 2022):
+                if (year1 != 1900 or year2 != 2025):
                     if language == 'fr':
                         list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by(
                             'name')
@@ -878,7 +881,7 @@ def update_selection(request):
         dict_param = {'has_image': 1}
         if year1_img != 1900:
             dict_param['year__gte'] = year1_img
-        if year2_img != 2022:
+        if year2_img != 2025:
             dict_param['year__lte'] = year2_img
         if nsfw_filter == 1:
             dict_param['check_image'] = 1

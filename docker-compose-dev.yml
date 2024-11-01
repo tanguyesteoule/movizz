@@ -37,6 +37,7 @@ services:
     container_name: movizz
     volumes:
       - .:/app/
+      # - /home/tanguy/workspace/jupyter/movizz_new/data_process/2024/data/screenshot/:/app/data/screenshot/
     environment:
       IS_PROD: False
     links:

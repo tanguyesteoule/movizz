@@ -1,0 +1,485 @@
+movie_id;movie_title;movie_title_original;rating_count;title_year;director;list_genre;list_country;movie_title_en
+tt0120689;La Ligne verte;The Green Mile;1400000;1999;Frank Darabont;Period Drama,Prison Drama,Supernatural Fantasy,Tragedy,Crime,Drama,Fantasy,Mystery;United States;The Green Mile
+tt10872600;Spider-Man: No Way Home;Spider-Man: No Way Home;912000;2021;Jon Watts;Superhero,Supernatural Fantasy,Urban Adventure,Action,Adventure,Fantasy,Sci-Fi;United States;Spider-Man: No Way Home
+tt15398776;Oppenheimer;Oppenheimer;810000;2023;Christopher Nolan;Docudrama,Epic,Historical Epic,Period Drama,Psychological Drama,Biography,Drama,History;United States,United Kingdom;Oppenheimer
+tt1745960;Top Gun: Maverick;Top Gun: Maverick;737000;2022;Joseph Kosinski;Action Epic,Epic,Action,Drama;United States;Top Gun: Maverick
+tt1517268;Barbie;Barbie;573000;2023;Greta Gerwig;High-Concept Comedy,Quirky Comedy,Satire,Adventure,Comedy,Fantasy;United States,United Kingdom;Barbie
+tt6710474;Everything Everywhere All at Once;Everything Everywhere All at Once;556000;2022;Daniel Kwan;Adventure Epic,Dark Comedy,Martial Arts,Sci-Fi Epic,Action,Adventure,Comedy,Fantasy,Sci-Fi;United States;Everything Everywhere All at Once
+tt15239678;Dune: Deuxième partie;Dune: Part Two;536000;2024;Denis Villeneuve;Action Epic,Desert Adventure,Epic,Sci-Fi Epic,Space Sci-Fi,Action,Adventure,Drama,Sci-Fi;United States,Canada,United Arab Emirates,Hungary,Italy,New Zealand,Jordan,Gambia;Dune: Part Two
+tt9419884;Doctor Strange in the Multiverse of Madness;Doctor Strange in the Multiverse of Madness;496000;2022;Sam Raimi;Dark Fantasy,Superhero,Action,Adventure,Fantasy,Sci-Fi;United States;Doctor Strange in the Multiverse of Madness
+tt12593682;Bullet Train;Bullet Train;466000;2022;David Leitch;One-Person Army Action,Action,Comedy,Thriller;United States,Japan;Bullet Train
+tt11564570;Glass Onion : Une histoire à couteaux tirés;Glass Onion;459000;2022;Rian Johnson;Cozy Mystery,Satire,Whodunnit,Comedy,Crime,Drama,Mystery,Thriller;United States;Glass Onion
+tt9376612;Shang-Chi et la Légende des Dix Anneaux;Shang-Chi and the Legend of the Ten Rings;449000;2021;Destin Daniel Cretton;Action Epic,Adventure Epic,Fantasy Epic,Martial Arts,Superhero,Action,Adventure,Fantasy,Sci-Fi;United States;Shang-Chi and the Legend of the Ten Rings
+tt6146586;John Wick Parabellum;John Wick: Chapter 3 - Parabellum;439000;2019;Chad Stahelski;Gun Fu,One-Person Army Action,Action,Crime,Thriller;United States,Morocco,Ukraine,Italy;John Wick: Chapter 3 - Parabellum
+tt6334354;The Suicide Squad;The Suicide Squad;422000;2021;James Gunn;Gun Fu,Superhero,Action,Adventure,Comedy,Sci-Fi;United States;The Suicide Squad
+tt10648342;Thor: Love and Thunder;Thor: Love and Thunder;417000;2022;Taika Waititi;Superhero,Action,Adventure,Comedy,Fantasy,Romance,Sci-Fi;Australia,United States;Thor: Love and Thunder
+tt9362722;Spider-Man: Across the Spider-Verse;Spider-Man: Across the Spider-Verse;411000;2023;Joaquim Dos Santos;Computer Animation,Superhero,Supernatural Fantasy,Teen Adventure,Urban Adventure,Action,Adventure,Animation,Fantasy,Sci-Fi;United States;Spider-Man: Across the Spider-Verse
+tt9032400;Les Éternels;Eternals;396000;2021;Chloé Zhao;Superhero,Action,Adventure,Fantasy,Sci-Fi;United States;Eternals
+tt10366206;John Wick : Chapitre 4;John Wick: Chapter 4;355000;2023;Chad Stahelski;Action Epic,Gun Fu,One-Person Army Action,Action,Crime,Thriller;United States,Germany;John Wick: Chapter 4
+tt1591095;Insidious;Insidious;346000;2010;James Wan;Supernatural Horror,Suspense Mystery,Horror,Mystery,Thriller;United States,Canada;Insidious
+tt7349950;Ça : Chapitre 2;It Chapter Two;313000;2019;Andy Muschietti;Monster Horror,Supernatural Horror,Drama,Fantasy,Horror;United States,Canada;It Chapter Two
+tt14230458;Pauvres Créatures;Poor Things;309000;2023;Yorgos Lanthimos;Dark Comedy,Steampunk,Comedy,Drama,Romance,Sci-Fi;Ireland,United Kingdom,United States,Hungary;Poor Things
+tt10838180;Matrix Resurrections;The Matrix Resurrections;287000;2021;Lana Wachowski;Cyberpunk,Martial Arts,Action,Sci-Fi;United States,Australia;The Matrix Resurrections
+tt10954984;Nope;Nope;286000;2022;Jordan Peele;Alien Invasion,Monster Horror,Supernatural Horror,Horror,Mystery,Sci-Fi,Thriller;Canada,Japan,United States;Nope
+tt0286716;Hulk;Hulk;282000;2003;Ang Lee;Kaiju,One-Person Army Action,Superhero,Action,Sci-Fi;United States;Hulk
+tt9603212;Mission : Impossible - Dead Reckoning, partie 1;Mission: Impossible - Dead Reckoning Part One;267000;2023;Christopher McQuarrie;Action Epic,Adventure Epic,Spy,Action,Adventure,Thriller;United States;Mission: Impossible - Dead Reckoning Part One
+tt11813216;Les Banshees d'Inisherin;The Banshees of Inisherin;266000;2022;Martin McDonagh;Dark Comedy,Period Drama,Psychological Drama,Tragedy,Comedy,Drama;Ireland,United Kingdom,United States;The Banshees of Inisherin
+tt11138512;The Northman;The Northman;264000;2022;Robert Eggers;Action Epic,Adventure Epic,Historical Epic,One-Person Army Action,Period Drama,Tragedy,Action,Adventure,Drama,Fantasy;United Kingdom,China,United States;The Northman
+tt1051906;Invisible Man;The Invisible Man;264000;2020;Leigh Whannell;Psychological Horror,Psychological Thriller,Suspense Mystery,Drama,Horror,Mystery,Sci-Fi,Thriller;Australia,United States;The Invisible Man
+tt5537002;Killers of the Flower Moon;Killers of the Flower Moon;263000;2023;Martin Scorsese;Epic,Period Drama,Tragedy,True Crime,Western Epic,Crime,Drama,History,Mystery,Romance;United States;Killers of the Flower Moon
+tt0985699;Walkyrie;Valkyrie;263000;2008;Bryan Singer;Political Thriller,Drama,History,Thriller,War;United Kingdom,France,Germany,Italy,Spain,Japan,United States;Valkyrie
+tt3704428;Elvis;Elvis;244000;2022;Baz Luhrmann;Biography,Drama,Music;United States,Australia;Elvis
+tt1980209;No Pain No Gain;Pain & Gain;233000;2013;Michael Bay;Caper,True Crime,Action,Biography,Comedy,Crime,Drama,Mystery;United States;Pain & Gain
+tt17351924;Saltburn;Saltburn;229000;2023;Emerald Fennell;Dark Comedy,Psychological Thriller,Drama,Thriller;United Kingdom,United States;Saltburn
+tt4513678;S.O.S. fantômes: L'héritage;Ghostbusters: Afterlife;228000;2021;Jason Reitman;Supernatural Fantasy,Adventure,Comedy,Fantasy,Sci-Fi;United States,Canada;Ghostbusters: Afterlife
+tt13833688;The Whale;The Whale;225000;2022;Darren Aronofsky;Epic,Psychological Drama,Tragedy,Drama;United States;The Whale
+tt12037194;Furiosa : Une saga Mad Max;Furiosa: A Mad Max Saga;222000;2024;George Miller;Action Epic,Car Action,Desert Adventure,Dystopian Sci-Fi,Action,Adventure,Sci-Fi,Thriller;Australia,United States;Furiosa: A Mad Max Saga
+tt12747748;Le Monde après nous;Leave the World Behind;216000;2023;Sam Esmail;Psychological Thriller,Drama,Mystery,Thriller;United States;Leave the World Behind
+tt7144666;Black Phone;The Black Phone;213000;2021;Scott Derrickson;Psychological Horror,Supernatural Horror,Horror,Mystery,Thriller;United States;The Black Phone
+tt15791034;Barbare;Barbarian;207000;2022;Zach Cregger;Psychological Horror,Psychological Thriller,Suspense Mystery,Horror,Mystery,Thriller;Bulgaria,United States;Barbarian
+tt8106534;6 Underground;6 Underground;201000;2019;Michael Bay;Action,Thriller;United States,Singapore,Canada,China,Thailand,Germany,United Arab Emirates,Italy,Switzerland,Hungary,France,United Kingdom,Austria;6 Underground
+tt1136617;The Killer;The Killer;199000;2023;David Fincher;Psychological Thriller,Action,Adventure,Crime,Drama,Thriller;United States;The Killer
+tt0106308;L'Armée des ténèbres : Evil Dead III;Army of Darkness;199000;1992;Sam Raimi;Dark Comedy,Farce,Quest,Slapstick,Supernatural Horror,Zombie Horror,Comedy,Horror;United States;Army of Darkness
+tt0096754;Abyss;The Abyss;198000;1989;James Cameron;Sea Adventure,Adventure,Drama,Mystery,Sci-Fi,Thriller;United States;The Abyss
+tt10293406;The Power of the Dog;The Power of the Dog;197000;2021;Jane Campion;Period Drama,Psychological Drama,Drama,Western;New Zealand,United Kingdom,Canada,Australia,United States;The Power of the Dog
+tt13560574;X;X;195000;2022;Ti West;Slasher Horror,Suspense Mystery,Horror,Mystery,Thriller;United States,New Zealand;X
+tt2226417;Insidious : Chapitre 2;Insidious: Chapter 2;193000;2013;James Wan;Supernatural Horror,Horror,Mystery,Thriller;United Kingdom,Canada,United States;Insidious: Chapter 2
+tt0061512;Luke la main froide;Cool Hand Luke;192000;1967;Stuart Rosenberg;Prison Drama,Tragedy,Crime,Drama;United States;Cool Hand Luke
+tt7322224;Sans filtre;Triangle of Sadness;190000;2022;Ruben Östlund;Dark Comedy,Satire,Comedy,Drama;United Kingdom,Sweden,Germany,Mexico,France,Turkey,Denmark,United States,Switzerland,Greece;Triangle of Sadness
+tt4244994;Le Dernier Duel;The Last Duel;188000;2021;Ridley Scott;Action Epic,Costume Drama,Epic,Historical Epic,Action,Drama,History,Thriller;United States,United Kingdom;The Last Duel
+tt0101272;La Famille Addams;The Addams Family;186000;1991;Barry Sonnenfeld;Dark Comedy,Satire,Supernatural Fantasy,Comedy,Fantasy;United States;The Addams Family
+tt17279496;Civil War;Civil War;184000;2024;Alex Garland;Political Thriller,Road Trip,Action,Adventure,Thriller;United States,United Kingdom;Civil War
+tt10640346;Babylon;Babylon;180000;2022;Damien Chazelle;Costume Drama,Period Drama,Showbiz Drama,Comedy,Drama,History;United States;Babylon
+tt0103074;Thelma & Louise;Thelma & Louise;178000;1991;Ridley Scott;Contemporary Western,Road Trip,Tragedy,Adventure,Crime,Drama;United States,United Kingdom,France;Thelma & Louise
+tt4178092;The Gift;The Gift;177000;2015;Joel Edgerton;Psychological Thriller,Drama,Mystery,Thriller;United States,Australia,China;The Gift
+tt11858890;The Creator;The Creator;174000;2023;Gareth Edwards;Action Epic,Adventure Epic,Artificial Intelligence,Cyberpunk,Dystopian Sci-Fi,Sci-Fi Epic,Action,Adventure,Drama,Sci-Fi;United States;The Creator
+tt14849194;Winter Break;The Holdovers;169000;2023;Alexander Payne;Holiday Comedy,Comedy,Drama,Holiday;United States;The Holdovers
+tt10638522;La Main;Talk to Me;167000;2022;Danny Philippou;Supernatural Horror,Horror,Thriller;Australia,United Kingdom;Talk to Me
+tt6166392;Wonka;Wonka;162000;2023;Paul King;Supernatural Fantasy,Adventure,Comedy,Family,Fantasy,Musical;United States,United Kingdom,Canada;Wonka
+tt10731256;Don't Worry Darling;Don't Worry Darling;156000;2022;Olivia Wilde;Psychological Thriller,Drama,Mystery,Thriller;United States;Don't Worry Darling
+tt17009710;Anatomie d'une chute;Anatomie d'une chute;155000;2023;Justine Triet;Legal Drama,Legal Thriller,Psychological Drama,Psychological Thriller,Crime,Drama,Thriller;France;Anatomy of a Fall
+tt23289160;Godzilla Minus One;Gojira -1.0;154000;2023;Takashi Yamazaki;Action Epic,Adventure Epic,Epic,Kaiju,Monster Horror,Period Drama,Sci-Fi Epic,Supernatural Horror,Tragedy,Action;Japan;Godzilla Minus One
+tt8760708;M3GAN;M3GAN;153000;2022;Gerard Johnstone;Horror,Sci-Fi,Thriller;United States,New Zealand;M3GAN
+tt1488606;Triple Frontière;Triple Frontier;150000;2019;J.C. Chandor;Action,Thriller;United States;Triple Frontier
+tt3829266;The Predator;The Predator;150000;2018;Shane Black;Alien Invasion,Urban Adventure,Action,Adventure,Sci-Fi,Thriller;Canada,United States,United Kingdom,India,Australia,Brazil,China;The Predator
+tt16277242;Le Cercle des neiges;La sociedad de la nieve;149000;2023;J.A. Bayona;Docudrama,Mountain Adventure,Survival,Adventure,Biography,Drama,History,Thriller;Spain;Society of the Snow
+tt13345606;Evil Dead Rise;Evil Dead Rise;149000;2023;Lee Cronin;Body Horror,Dark Comedy,Slasher Horror,Supernatural Horror,Zombie Horror,Horror;Ireland,New Zealand,United States;Evil Dead Rise
+tt1549920;Le Dernier Rempart;The Last Stand;146000;2013;Kim Jee-woon;Contemporary Western,Action,Thriller,Western;United States,South Korea;The Last Stand
+tt10545296;Hunger Games : La Ballade du serpent et de l'oiseau chanteur;The Hunger Games: The Ballad of Songbirds & Snakes;145000;2023;Francis Lawrence;Dystopian Sci-Fi,Teen Adventure,Action,Adventure,Drama,Sci-Fi,Thriller,War;United States,Canada;The Hunger Games: The Ballad of Songbirds & Snakes
+tt11271038;Licorice Pizza;Licorice Pizza;143000;2021;Paul Thomas Anderson;Coming-of-Age,Feel-Good Romance,Period Drama,Showbiz Drama,Teen Comedy,Teen Drama,Teen Romance,Comedy,Drama,Romance;United States,Canada;Licorice Pizza
+tt0918927;Doute;Doubt;138000;2008;John Patrick Shanley;Legal Drama,Psychological Drama,Drama,Mystery;United States;Doubt
+tt13238346;Past lives - Nos vies d'avant;Past Lives;135000;2023;Celine Song;Korean Drama,Drama,Romance;United States,South Korea;Past Lives
+tt0338564;Infernal Affairs;Mou gaan dou;133000;2002;Wai Keung Lau;Cop Drama,Action,Crime,Drama,Mystery,Thriller;Hong Kong;Infernal Affairs
+tt8244784;The Hunt;The Hunt;133000;2020;Craig Zobel;Dark Comedy,Slasher Horror,Action,Horror,Thriller;United States,Japan,China;The Hunt
+tt0074119;Les hommes du président;All the President's Men;129000;1976;Alan J. Pakula;Conspiracy Thriller,Political Drama,Political Thriller,Workplace Drama,Drama,History,Thriller;United States;All the President's Men
+tt15679400;Knock at the Cabin;Knock at the Cabin;126000;2023;M. Night Shyamalan;Psychological Thriller,Horror,Mystery,Thriller;United States,Japan,China;Knock at the Cabin
+tt23468450;Longlegs;Longlegs;125000;2024;Osgood Perkins;Psychological Horror,Psychological Thriller,Serial Killer,Supernatural Horror,Crime,Horror,Thriller;Canada,United States;Longlegs
+tt0055614;West Side Story;West Side Story;123000;1961;Jerome Robbins;Classic Musical,Pop Musical,Tragedy,Crime,Drama,Musical,Romance;United States;West Side Story
+tt18925334;Pearl;Pearl;123000;2022;Ti West;Coming-of-Age,Period Drama,Psychological Drama,Psychological Horror,Psychological Thriller,Showbiz Drama,Slasher Horror,Drama,Horror,Thriller;United States,New Zealand;Pearl
+tt14230388;Asteroid City;Asteroid City;123000;2023;Wes Anderson;Quirky Comedy,Showbiz Drama,Comedy,Drama,Romance,Sci-Fi;United States;Asteroid City
+tt9243804;The Green Knight;The Green Knight;122000;2021;David Lowery;Adventure Epic,Fantasy Epic,Quest,Sword & Sorcery,Adventure,Drama,Fantasy;United States,Canada,Ireland;The Green Knight
+tt14208870;The Fabelmans;The Fabelmans;122000;2022;Steven Spielberg;Coming-of-Age,Period Drama,Showbiz Drama,Teen Drama,Drama;United States,India;The Fabelmans
+tt22687790;Mystère à Venise;A Haunting in Venice;122000;2023;Kenneth Branagh;Psychological Horror,Psychological Thriller,Whodunnit,Crime,Drama,Horror,Mystery,Thriller;United States;A Haunting in Venice
+tt0096061;Fantômes en fête;Scrooged;118000;1988;Richard Donner;Dark Comedy,Holiday Comedy,Supernatural Fantasy,Comedy,Drama,Fantasy,Holiday,Romance;United States;Scrooged
+tt1488589;Pinocchio;Guillermo del Toro's Pinocchio;117000;2022;Guillermo del Toro;Dark Fantasy,Fairy Tale,Stop Motion Animation,Adventure,Animation,Drama,Family,Fantasy,Musical;United States,Mexico,France;Guillermo del Toro's Pinocchio
+tt1438176;Fright Night;Fright Night;115000;2011;Craig Gillespie;Teen Horror,Vampire Horror,Action,Comedy,Drama,Horror,Mystery;United States,India;Fright Night
+tt7160372;La Zone d'intérêt;The Zone of Interest;115000;2023;Jonathan Glazer;Period Drama,Drama,History,War;United Kingdom,Poland,United States;The Zone of Interest
+tt0106220;Les Valeurs de la famille Addams;Addams Family Values;114000;1993;Barry Sonnenfeld;Dark Comedy,Satire,Supernatural Fantasy,Comedy,Fantasy;United States;Addams Family Values
+tt0093389;Le Dernier Empereur;The Last Emperor;113000;1987;Bernardo Bertolucci;Docudrama,Historical Epic,Period Drama,Biography,Drama,History;China,Italy,United Kingdom,France;The Last Emperor
+tt3811906;Malignant;Malignant;113000;2021;James Wan;Body Horror,Psychological Horror,Serial Killer,Slasher Horror,Splatter Horror,Supernatural Horror,Crime,Horror,Mystery;United States,China;Malignant
+tt16426418;Challengers;Challengers;113000;2024;Luca Guadagnino;Psychological Drama,Steamy Romance,Comedy,Drama,Romance,Sport;United States,Italy;Challengers
+tt1386932;Ip Man 2, le retour du grand maître;Yip Man 2;112000;2010;Wilson Yip;Kung Fu,Martial Arts,Action,Biography,Drama,History;Hong Kong,China;Ip Man 2
+tt9071322;Dark Waters;Dark Waters;111000;2019;Todd Haynes;Docudrama,Legal Drama,Biography,Drama,History,Mystery;United States;Dark Waters
+tt0066206;Patton;Patton;110000;1970;Franklin J. Schaffner;War Epic,Biography,Drama,War;United States;Patton
+tt14539740;Godzilla x Kong : Le Nouvel Empire;Godzilla x Kong: The New Empire;107000;2024;Adam Wingard;Action Epic,Disaster,Globetrotting Adventure,Kaiju,Supernatural Fantasy,Action,Adventure,Fantasy,Sci-Fi,Thriller;United States,Australia;Godzilla x Kong: The New Empire
+tt4998632;Ambulance;Ambulance;104000;2022;Michael Bay;Cop Drama,Heist,Action,Crime,Drama,Thriller;United States,Japan;Ambulance
+tt19770238;Aftersun;Aftersun;103000;2022;Charlotte Wells;Coming-of-Age,Teen Drama,Drama;United Kingdom,United States,Turkey,Philippines,Netherlands;Aftersun
+tt11358390;Renfield;Renfield;103000;2023;Chris McKay;Dark Comedy,Splatter Horror,Vampire Horror,Action,Comedy,Fantasy,Horror;United States,United Kingdom,Canada;Renfield
+tt10665338;Halloween Kills;Halloween Kills;101000;2021;David Gordon Green;Slasher Horror,Action,Drama,Horror,Thriller;United States;Halloween Kills
+tt23561236;Fiction à L'Américaine;American Fiction;100000;2023;Cord Jefferson;Dark Comedy,High-Concept Comedy,Satire,Comedy,Drama;United States;American Fiction
+tt7456310;Anna;Anna;99000;2019;Luc Besson;Action,Thriller;France,United States,Canada,Russia,Serbia,France;Anna
+tt14444726;Tár;Tár;98000;2022;Todd Field;Psychological Drama,Drama,Music;United States;Tár
+tt3581652;West Side Story;West Side Story;98000;2021;Steven Spielberg;Pop Musical,Crime,Drama,Musical,Romance;United States,Canada,United Kingdom;West Side Story
+tt20215968;Hit Man;Hit Man;96000;2023;Richard Linklater;Docudrama,Romantic Comedy,Comedy,Crime,Romance;United States;Hit Man
+tt14966898;Late Night with the Devil;Late Night with the Devil;96000;2023;Cameron Cairnes;Found Footage Horror,Supernatural Horror,Horror;Australia,United Arab Emirates,United States;Late Night with the Devil
+tt0154420;Festen;Festen;95000;1998;Thomas Vinterberg;Dark Comedy,Drama;Denmark,Sweden;The Celebration
+tt11003218;Pig;Pig;94000;2021;Michael Sarnoski;Drama,Mystery;United States,United Kingdom;Pig
+tt21064584;Iron Claw;The Iron Claw;93000;2023;Sean Durkin;Docudrama,Tragedy,Biography,Drama,Sport;United Kingdom,United States;The Iron Claw
+tt13375076;L'Exorciste du Vatican;The Pope's Exorcist;90000;2023;Julius Avery;Supernatural Horror,Horror,Thriller;United States,Spain,United Kingdom;The Pope's Exorcist
+tt0312528;Le chat chapeauté;The Cat in the Hat;89000;2003;Bo Welch;Slapstick,Adventure,Comedy,Family,Fantasy;United States,Canada;The Cat in the Hat
+tt26753003;Trap;Trap;89000;2024;M. Night Shyamalan;Psychological Thriller,Serial Killer,Crime,Horror,Mystery,Thriller;United States,Canada;Trap
+tt8110652;Bodies Bodies Bodies;Bodies Bodies Bodies;79000;2022;Halina Reijn;Dark Comedy,Teen Horror,Comedy,Horror,Mystery,Thriller;United States,France;Bodies Bodies Bodies
+tt9347730;Candyman;Candyman;78000;2021;Nia DaCosta;Psychological Horror,Psychological Thriller,Slasher Horror,Supernatural Horror,Horror,Thriller;United States,Canada,Australia;Candyman
+tt8368406;Vivarium;Vivarium;78000;2019;Lorcan Finnegan;Suspense Mystery,Horror,Mystery,Sci-Fi;Ireland,Belgium,Denmark;Vivarium
+tt4361050;Ouija : Les Origines;Ouija: Origin of Evil;77000;2016;Mike Flanagan;Drama,Horror,Mystery,Thriller;United States;Ouija: Origin of Evil
+tt6587046;Le Garçon et le Héron;Kimitachi wa dô ikiru ka;77000;2023;Hayao Miyazaki;Anime,Fantasy Epic,Hand-Drawn Animation,Isekai,Adventure,Animation,Drama,Fantasy;Japan;The Boy and the Heron
+tt9214772;Monkey Man;Monkey Man;76000;2024;Dev Patel;Action Epic,Martial Arts,One-Person Army Action,Action,Crime,Thriller;United States,Canada,Singapore,India;Monkey Man
+tt6246322;Don't Breathe 2;Don't Breathe 2;75000;2021;Rodo Sayagues;One-Person Army Action,Action,Crime,Horror,Thriller;United States;Don't Breathe 2
+tt27489557;Abigail;Abigail;75000;2024;Matt Bettinelli-Olpin;Dark Comedy,Monster Horror,Vampire Horror,Horror,Thriller;United States,Ireland,Canada;Abigail
+tt21942866;Dream Scenario;Dream Scenario;75000;2023;Kristoffer Borgli;Dark Comedy,High-Concept Comedy,Psychological Horror,Comedy,Drama,Fantasy,Horror;United States,Canada;Dream Scenario
+tt0089469;Legend;Legend;74000;1985;Ridley Scott;Adventure Epic,Dark Fantasy,Fairy Tale,Fantasy Epic,Sword & Sorcery,Adventure,Fantasy,Romance;United Kingdom,United States;Legend
+tt0086006;Jamais plus jamais;Never Say Never Again;74000;1983;Irvin Kershner;Action,Adventure,Thriller;United Kingdom,United States,Germany;Never Say Never Again
+tt1655389;Blonde;Blonde;74000;2022;Andrew Dominik;Period Drama,Psychological Drama,Showbiz Drama,Tragedy,Drama,History;United States;Blonde
+tt0083791;Dark Crystal;The Dark Crystal;73000;1982;Jim Henson;Adventure Epic,Dark Fantasy,Fantasy Epic,Adventure,Family,Fantasy;United Kingdom,United States;The Dark Crystal
+tt0052561;Autopsie d'un meurtre;Anatomy of a Murder;73000;1959;Otto Preminger;Legal Drama,Drama,Mystery;United States;Anatomy of a Murder
+tt10696784;The Harder They Fall;The Harder They Fall;73000;2021;Jeymes Samuel;Action,Drama,Western;United States;The Harder They Fall
+tt14509110;Traquée;No One Will Save You;71000;2023;Brian Duffield;Alien Invasion,Psychological Thriller,Horror,Sci-Fi,Thriller;United States;No One Will Save You
+tt0099365;Darkman;Darkman;71000;1990;Sam Raimi;Dark Comedy,Superhero,Action,Sci-Fi,Thriller;United States;Darkman
+tt13841850;Men;Men;70000;2022;Alex Garland;Folk Horror,Drama,Fantasy,Horror,Thriller;United Kingdom,United States;Men
+tt8589698;Ninja Turtles: Teenage Years;Teenage Mutant Ninja Turtles: Mutant Mayhem;69000;2023;Jeff Rowe;Computer Animation,Hand-Drawn Animation,Superhero,Teen Adventure,Teen Comedy,Urban Adventure,Action,Adventure,Animation,Comedy;United States,Japan,Canada;Teenage Mutant Ninja Turtles: Mutant Mayhem
+tt0099422;Dick Tracy;Dick Tracy;67000;1990;Warren Beatty;Police Procedural,Action,Comedy,Crime,Music,Romance,Thriller;United States;Dick Tracy
+tt0280609;Dog Soldiers;Dog Soldiers;67000;2002;Neil Marshall;Werewolf Horror,Action,Horror,Thriller;United Kingdom,Luxembourg;Dog Soldiers
+tt13521006;Beau Is Afraid;Beau Is Afraid;66000;2023;Ari Aster;Dark Comedy,Psychological Drama,Psychological Horror,Quest,Tragedy,Comedy,Drama,Horror;United States,United Kingdom,Finland,Canada;Beau Is Afraid
+tt9198364;Trois mille ans à t'attendre;Three Thousand Years of Longing;66000;2022;George Miller;Fairy Tale,Fantasy Epic,Supernatural Fantasy,Drama,Fantasy,Romance;Australia,United States;Three Thousand Years of Longing
+tt5535276;Maestro;Maestro;65000;2023;Bradley Cooper;Docudrama,Biography,Drama,History,Music,Romance;United States,Canada;Maestro
+tt8110232;Many Saints of Newark - Une histoire des Soprano;The Many Saints of Newark;65000;2021;Alan Taylor;Crime,Drama;United States;The Many Saints of Newark
+tt11301886;Rebel Ridge;Rebel Ridge;64000;2024;Jeremy Saulnier;One-Person Army Action,Action,Crime,Drama,Thriller;United States;Rebel Ridge
+tt0070909;Mondwest;Westworld;64000;1973;Michael Crichton;Artificial Intelligence,Dystopian Sci-Fi,Action,Drama,Sci-Fi,Thriller,Western;United States;Westworld
+tt10168670;Bones and All;Bones and All;63000;2022;Luca Guadagnino;Coming-of-Age,Road Trip,Tragic Romance,Drama,Horror,Romance;Italy,United States;Bones and All
+tt13651794;May December;May December;63000;2023;Todd Haynes;Dark Comedy,Psychological Drama,Drama;United States;May December
+tt0080745;Flash Gordon;Flash Gordon;63000;1980;Mike Hodges;Dystopian Sci-Fi,Space Sci-Fi,Superhero,Action,Adventure,Sci-Fi;United Kingdom,United States,Netherlands,Italy;Flash Gordon
+tt27503384;Perfect Days;Perfect Days;63000;2023;Wim Wenders;Drama;Japan,Germany;Perfect Days
+tt10365998;Infinity Pool;Infinity Pool;62000;2023;Brandon Cronenberg;Body Horror,Psychological Drama,Psychological Horror,Crime,Horror,Mystery,Sci-Fi,Thriller;Canada,Croatia,Hungary,United States,France;Infinity Pool
+tt21192142;Sans jamais nous connaître;All of Us Strangers;61000;2023;Andrew Haigh;Drama,Romance;United Kingdom,United States;All of Us Strangers
+tt0085549;Flashdance;Flashdance;61000;1983;Adrian Lyne;Feel-Good Romance,Drama,Music,Romance;United States;Flashdance
+tt0062229;Le Samouraï;Le samouraï;60000;1967;Jean-Pierre Melville;Crime,Drama,Thriller;France,Italy;Le Samouraï
+tt2361317;Live by Night;Live by Night;60000;2016;Ben Affleck;Dark Comedy,Gangster,Action,Crime,Drama,Thriller;United States;Live by Night
+tt12477480;Decision to Leave;Heojil kyolshim;59000;2022;Park Chan-wook;Whodunnit,Crime,Drama,Mystery,Romance,Thriller;South Korea;Decision to Leave
+tt3758542;Ferrari;Ferrari;57000;2023;Michael Mann;Docudrama,Motorsport,Biography,Drama,History,Sport;United States,United Kingdom,Italy,Saudi Arabia;Ferrari
+tt0095294;Hellraiser II : Les Écorchés;Hellbound: Hellraiser II;57000;1988;Tony Randel;Body Horror,Horror,Thriller;United Kingdom;Hellbound: Hellraiser II
+tt5672290;La Malédiction : L'Origine;The First Omen;56000;2024;Arkasha Stevenson;Supernatural Horror,Horror;United States,Italy,Serbia,Canada;The First Omen
+tt14544192;Bo Burnham: Inside;Bo Burnham: Inside;56000;2021;Bo Burnham;Dark Comedy,Psychological Drama,Satire,Stand-Up,Comedy,Documentary,Drama,Music;United States;Bo Burnham: Inside
+tt0091080;Vendredi 13, chapitre VI : Jason le mort-vivant;Jason Lives: Friday the 13th Part VI;53000;1986;Tom McLoughlin;Dark Comedy,Slasher Horror,Splatter Horror,Supernatural Horror,Teen Horror,Zombie Horror,Horror,Thriller;United States;Friday the 13th Part VI: Jason Lives
+tt0097202;The Killer;Dip huet seung hung;52000;1989;John Woo;Gun Fu,Action,Crime,Drama,Thriller;Hong Kong;The Killer
+tt0887261;Hellraiser;Hellraiser;51000;2022;David Bruckner;Slasher Horror,Supernatural Horror,Horror,Mystery,Thriller;United States,Serbia;Hellraiser
+tt14253846;Ne dis rien;Speak No Evil;51000;2022;Christian Tafdrup;Psychological Drama,Psychological Horror,Psychological Thriller,Drama,Horror,Mystery,Thriller;Denmark,Netherlands;Speak No Evil
+tt21454134;The Bikeriders;The Bikeriders;51000;2023;Jeff Nichols;Gangster,Period Drama,Crime,Drama;United States;The Bikeriders
+tt22048412;MaXXXine;MaXXXine;49000;2024;Ti West;Serial Killer,Slasher Horror,Crime,Horror;United States,United Kingdom,New Zealand;MaXXXine
+tt0388473;Tokyo Godfathers;Tôkyô goddofâzâzu;48000;2003;Shôgo Furuya;Adult Animation,Anime,Adventure,Animation,Comedy,Drama;Japan;Tokyo Godfathers
+tt3427252;Le Croque-mitaine;The Boogeyman;47000;2023;Rob Savage;Supernatural Horror,Horror,Mystery,Thriller;United States,Canada;The Boogeyman
+tt0078767;Amityville : La Maison du diable;The Amityville Horror;46000;1979;Stuart Rosenberg;Horror;United States;The Amityville Horror
+tt9288822;The Wonder;The Wonder;46000;2022;Sebastián Lelio;Period Drama,Psychological Drama,Psychological Thriller,Drama,Mystery,Thriller;Ireland,United Kingdom,United States;The Wonder
+tt6160448;White Noise;White Noise;46000;2022;Noah Baumbach;Dark Comedy,Satire,Comedy,Drama,Horror,Mystery;United States,United Kingdom;White Noise
+tt0097388;Vendredi 13, chapitre VIII : L'Ultime Retour;Friday the 13th Part VIII: Jason Takes Manhattan;45000;1989;Rob Hedden;Dark Comedy,Slasher Horror,Supernatural Horror,Urban Adventure,Adventure,Horror,Thriller;Canada,United States;Friday the 13th Part VIII: Jason Takes Manhattan
+tt0040506;Key Largo;Key Largo;45000;1948;John Huston;Film Noir,Action,Crime,Drama,Thriller;United States;Key Largo
+tt16300962;When Evil Lurks;Cuando acecha la maldad;45000;2023;Demián Rugna;Supernatural Horror,Horror;Argentina,United States;When Evil Lurks
+tt6341832;Oxygène;Oxygène;45000;2021;Alexandre Aja;Artificial Intelligence,Psychological Drama,Drama,Fantasy,Sci-Fi,Thriller;France,United States;Oxygen
+tt19637052;Love Lies Bleeding;Love Lies Bleeding;45000;2024;Rose Glass;Dark Romance,Drug Crime,Erotic Thriller,Action,Adventure,Crime,Mystery,Romance,Thriller;United Kingdom,United States;Love Lies Bleeding
+tt0046303;L'Homme des vallées perdues;Shane;45000;1953;George Stevens;Classical Western,Drama,Western;United States;Shane
+tt23137390;Immaculée;Immaculate;44000;2024;Michael Mohan;Horror;United States,Italy;Immaculate
+tt13669038;Women Talking;Women Talking;44000;2022;Sarah Polley;Period Drama,Psychological Drama,Drama;United States;Women Talking
+tt0095179;Vendredi 13, chapitre VII : Un nouveau défi;Friday the 13th Part VII: The New Blood;44000;1988;John Carl Buechler;Slasher Horror,Supernatural Horror,Teen Horror,Horror,Thriller;United States;Friday the 13th: The New Blood
+tt9873892;Ils ont cloné Tyrone;They Cloned Tyrone;43000;2023;Juel Taylor;Dark Comedy,Satire,Comedy,Mystery,Sci-Fi,Thriller;United States;They Cloned Tyrone
+tt14549466;Les Crimes du futur;Crimes of the Future;43000;2022;David Cronenberg;Body Horror,Dystopian Sci-Fi,Drama,Horror,Sci-Fi;Canada,Greece,United Kingdom,France;Crimes of the Future
+tt22408160;Kinds of Kindness;Kinds of Kindness;43000;2024;Yorgos Lanthimos;Dark Comedy,Tragedy,Comedy,Drama,Horror;Ireland,United Kingdom,United States,Greece;Kinds of Kindness
+tt0049261;Géant;Giant;43000;1956;George Stevens;Western Epic,Drama,Western;United States;Giant
+tt0048605;7 ans de réflexion;The Seven Year Itch;43000;1955;Billy Wilder;Screwball Comedy,Comedy,Romance;United States;The Seven Year Itch
+tt0221073;Chopper;Chopper;42000;2000;Andrew Dominik;Dark Comedy,True Crime,Biography,Crime,Drama;Australia;Chopper
+tt0091738;Peggy Sue s'est mariée;Peggy Sue Got Married;42000;1986;Francis Ford Coppola;Romantic Comedy,Comedy,Drama,Fantasy,Romance;United States;Peggy Sue Got Married
+tt22041854;Priscilla;Priscilla;42000;2023;Sofia Coppola;Coming-of-Age,Dark Romance,Docudrama,Period Drama,Showbiz Drama,Teen Romance,Biography,Drama,Music,Romance;Italy,United States;Priscilla
+tt0054167;Le voyeur;Peeping Tom;41000;1960;Michael Powell;Slasher Horror,Drama,Horror,Thriller;United Kingdom;Peeping Tom
+tt0024184;L'Homme invisible;The Invisible Man;41000;1933;James Whale;Body Horror,Psychological Horror,Slasher Horror,Supernatural Horror,Horror,Sci-Fi;United States;The Invisible Man
+tt5867314;The Empty Man;The Empty Man;41000;2020;David Prior;Psychological Horror,Supernatural Horror,Drama,Horror,Mystery,Thriller;United States,South Africa,France;The Empty Man
+tt10095582;The Tragedy of Macbeth;The Tragedy of Macbeth;41000;2021;Joel Coen;Period Drama,Political Drama,Political Thriller,Psychological Drama,Psychological Thriller,Suspense Mystery,Tragedy,Drama,Mystery,Thriller;United States;The Tragedy of Macbeth
+tt14128670;Kimi;Kimi;40000;2022;Steven Soderbergh;Cyber Thriller,Crime,Drama,Mystery,Thriller;United States;Kimi
+tt9812474;Lamb;Dýrið;40000;2021;Valdimar Jóhannsson;Body Horror,Psychological Horror,Drama,Fantasy,Horror;Iceland,Sweden,Poland;Lamb
+tt0048473;La Complainte du sentier;Pather Panchali;39000;1955;Satyajit Ray;Coming-of-Age,Tragedy,Drama;India;Pather Panchali
+tt9660502;Close;Close;39000;2022;Lukas Dhont;Teen Drama,Drama;Belgium,Netherlands,France;Close
+tt0901487;Le Bon, la Brute et le Cinglé;Joeun nom, napun nom, esanghan nom;38000;2008;Kim Jee-woon;Parody,Action,Adventure,Comedy,Western;South Korea;The Good the Bad the Weird
+tt0052893;Hiroshima mon amour;Hiroshima mon amour;37000;1959;Alain Resnais;Psychological Drama,Drama,Romance;France,Japan;Hiroshima Mon Amour
+tt0104409;Hellraiser III;Hellraiser III: Hell on Earth;36000;1992;Anthony Hickox;Horror;United Kingdom,United States;Hellraiser III: Hell on Earth
+tt0283832;8 femmes;8 femmes;35000;2002;François Ozon;Comedy,Crime,Musical,Romance;France,Italy;8 Women
+tt0260991;JSA - Joint Security Area;Gongdong gyeongbi guyeok JSA;35000;2000;Park Chan-wook;Action,Drama,Thriller,War;South Korea;Joint Security Area
+tt13453006;Red Rocket;Red Rocket;35000;2021;Sean Baker;Comedy,Drama;United States;Red Rocket
+tt0077713;Oeil pour oeil;Day of the Woman;32000;1978;Meir Zarchi;Splatter Horror,Horror,Thriller;United States;I Spit on Your Grave
+tt0117737;Beauté volée;Stealing Beauty;31000;1996;Bernardo Bertolucci;Steamy Romance,Drama,Mystery,Romance;United Kingdom,France,Italy;Stealing Beauty
+tt0119485;Kundun;Kundun;31000;1997;Martin Scorsese;Biography,Drama,History,War;Monaco,United States,Morocco;Kundun
+tt0089489;Lifeforce - L'étoile du mal;Lifeforce;31000;1985;Tobe Hooper;Alien Invasion,Action,Horror,Mystery,Romance,Sci-Fi,Thriller;United Kingdom;Lifeforce
+tt4648786;Harriet;Harriet;31000;2019;Kasi Lemmons;Action,Biography,Drama,History;China,United States;Harriet
+tt0086856;Les Aventures de Buckaroo Banzaï à travers la 8e dimension;The Adventures of Buckaroo Banzai Across the 8th Dimension;30000;1984;W.D. Richter;Space Sci-Fi,Adventure,Comedy,Sci-Fi;United States;The Adventures of Buckaroo Banzai Across the 8th Dimension
+tt6116856;The Night Comes for Us;The Night Comes for Us;30000;2018;Timo Tjahjanto;Martial Arts,Action,Crime,Thriller;Indonesia,United States;The Night Comes for Us
+tt0072417;Une femme sous influence;A Woman Under the Influence;30000;1974;John Cassavetes;Drama,Romance;United States;A Woman Under the Influence
+tt0106912;Visiteurs extraterrestres;Fire in the Sky;29000;1993;Robert Lieberman;Alien Invasion,Biography,Drama,Fantasy,Mystery,Sci-Fi;United States;Fire in the Sky
+tt21027780;Les feuilles mortes;Kuolleet lehdet;29000;2023;Aki Kaurismäki;Romantic Comedy,Comedy,Drama,Romance;Finland,Germany;Fallen Leaves
+tt15339456;Marcel, le Coquillage (avec ses chaussures);Marcel the Shell with Shoes On;29000;2021;Dean Fleischer Camp;Mockumentary,Stop Motion Animation,Animation,Comedy,Drama,Family,Fantasy;United States;Marcel the Shell with Shoes On
+tt5635026;Peter Pan & Wendy;Peter Pan & Wendy;29000;2023;David Lowery;Adventure Epic,Fairy Tale,Fantasy Epic,Adventure,Family,Fantasy;United States,United Kingdom;Peter Pan & Wendy
+tt23736044;L'innocence;Kaibutsu;29000;2023;Hirokazu Koreeda;Coming-of-Age,Drama,Thriller;Japan;Monster
+tt0037059;Le chant du Missouri;Meet Me in St. Louis;28000;1944;Vincente Minnelli;Classic Musical,Holiday Family,Comedy,Drama,Family,Holiday,Musical,Romance;United States;Meet Me in St. Louis
+tt0075968;Les Duellistes;The Duellists;27000;1977;Ridley Scott;Period Drama,War Epic,Drama,War;United Kingdom,United States;The Duellists
+tt1288403;Universal Soldier: Régénération;Universal Soldier: Regeneration;27000;2009;John Hyams;Action,Adventure,Sci-Fi;United States;Universal Soldier: Regeneration
+tt0091630;Extra sangsues;Night of the Creeps;27000;1986;Fred Dekker;Parody,Teen Comedy,Zombie Horror,Comedy,Horror,Sci-Fi;United States;Night of the Creeps
+tt0265343;Le mariage des moussons;Monsoon Wedding;27000;2001;Mira Nair;Comedy,Drama,Romance;India,United States,Italy,Germany,France,United Kingdom;Monsoon Wedding
+tt0114608;Le Cavalier du diable;Tales from the Crypt: Demon Knight;27000;1995;Ernest R. Dickerson;Action,Fantasy,Horror,Thriller;United States;Tales from the Crypt: Demon Knight
+tt0062136;Playtime;Playtime;27000;1967;Jacques Tati;Slapstick,Comedy;France,Italy;Playtime
+tt6823148;Benedetta;Benedetta;26000;2021;Paul Verhoeven;Period Drama,Biography,Drama,Romance;France,Belgium,Netherlands;Benedetta
+tt0050706;Mon oncle;Mon oncle;25000;1958;Jacques Tati;Satire,Comedy;France,Italy;My Uncle
+tt0116514;Hellraiser: Bloodline;Hellraiser: Bloodline;25000;1996;Kevin Yagher;Horror,Sci-Fi;United Kingdom,United States;Hellraiser: Bloodline
+tt14402146;Empire of Light;Empire of Light;25000;2022;Sam Mendes;Psychological Drama,Drama,Romance;United Kingdom,United States;Empire of Light
+tt0087799;La nuit de la comète;Night of the Comet;25000;1984;Thom Eberhardt;Dark Comedy,Parody,Satire,Comedy,Horror,Sci-Fi;United States;Night of the Comet
+tt0112857;Le diable en robe bleue;Devil in a Blue Dress;25000;1995;Carl Franklin;Hard-boiled Detective,Crime,Drama,Mystery,Thriller;United States;Devil in a Blue Dress
+tt26470109;Oddity;Oddity;25000;2024;Damian Mc Carthy;Supernatural Horror,Horror,Thriller;Ireland;Oddity
+tt15574270;I Saw the TV Glow;I Saw the TV Glow;25000;2024;Jane Schoenbrun;Drama,Horror;United States,United Kingdom;I Saw the TV Glow
+tt21188080;Lisa Frankenstein;Lisa Frankenstein;24000;2024;Zelda Williams;Comedy,Horror,Romance;United States;Lisa Frankenstein
+tt0062138;Le point de non-retour;Point Blank;24000;1967;John Boorman;Crime,Drama,Thriller;United States;Point Blank
+tt15109082;The Quiet Girl;An Cailín Ciúin;24000;2022;Colm Bairéad;Drama;Ireland;The Quiet Girl
+tt10192406;Causeway;Causeway;24000;2022;Lila Neugebauer;Psychological Drama,Drama;United States;Causeway
+tt12718300;Confess, Fletch;Confess, Fletch;24000;2022;Greg Mottola;Bumbling Detective,Cozy Mystery,Comedy,Crime,Mystery;United States;Confess, Fletch
+tt28912885;Venin;Poison;23000;2023;Wes Anderson;Comedy,Drama,Short,Thriller;United States;Poison
+tt0093407;Neige sur Beverly Hills;Less Than Zero;23000;1987;Marek Kanievska;Crime,Drama;United States;Less Than Zero
+tt1018765;Que le meilleur gagne;Our Brand Is Crisis;23000;2015;David Gordon Green;Political Drama,Comedy,Drama;United States;Our Brand Is Crisis
+tt15799866;Silent Night;Silent Night;23000;2023;John Woo;One-Person Army Action,Action,Thriller;United States,Mexico;Silent Night
+tt8143990;Kajillionaire;Kajillionaire;23000;2020;Miranda July;Comedy,Crime,Drama;United States;Kajillionaire
+tt0071994;Phantom of the Paradise;Phantom of the Paradise;23000;1974;Brian De Palma;Dark Comedy,Comedy,Drama,Fantasy,Horror,Music,Romance,Thriller;United States;Phantom of the Paradise
+tt0117057;Leçons de séduction;The Mirror Has Two Faces;23000;1996;Barbra Streisand;Comedy,Drama,Romance;United States;The Mirror Has Two Faces
+tt0088178;Stop Making Sense;Stop Making Sense;22000;1984;Jonathan Demme;Concert,Music Documentary,Documentary,Music;United States;Stop Making Sense
+tt10763820;Night Teeth;Night Teeth;22000;2021;Adam Randall;Supernatural Horror,Action,Crime,Drama,Fantasy,Horror,Thriller;United Kingdom,United States;Night Teeth
+tt0083624;Frère de sang;Basket Case;22000;1982;Frank Henenlotter;Body Horror,Comedy,Horror;United States;Basket Case
+tt0037674;Les enfants du paradis;Les enfants du paradis;22000;1945;Marcel Carné;Period Drama,Drama,Romance;France;Children of Paradise
+tt1659343;Universal Soldier: Le Jour du jugement;Universal Soldier: Day of Reckoning;22000;2012;John Hyams;Action,Horror,Mystery,Sci-Fi,Thriller;United States;Universal Soldier: Day of Reckoning
+tt4805316;A Dark Song;A Dark Song;22000;2016;Liam Gavin;Folk Horror,Drama,Fantasy,Horror,Mystery;Ireland,United Kingdom;A Dark Song
+tt0057187;Irma la Douce;Irma la Douce;22000;1963;Billy Wilder;Farce,Satire,Comedy,Romance;United States;Irma la Douce
+tt10687506;La vie extraordinaire de Louis Wain;The Electrical Life of Louis Wain;21000;2021;Will Sharpe;Period Drama,Tragedy,Biography,Drama,History;United Kingdom;The Electrical Life of Louis Wain
+tt28912758;Le cygne;The Swan;21000;2023;Wes Anderson;Comedy,Drama,Short;United States;The Swan
+tt4882376;D'abord, ils ont tué mon père;First They Killed My Father;21000;2017;Angelina Jolie;Biography,Drama,History,War;Cambodia,United States;First They Killed My Father
+tt28912858;Le Preneur de Rats;The Rat Catcher;21000;2023;Wes Anderson;Comedy,Short;United States;The Rat Catcher
+tt0102713;Le prince des marées;The Prince of Tides;20000;1991;Barbra Streisand;Drama,Romance;United States;The Prince of Tides
+tt0093677;Opéra;Opera;20000;1987;Dario Argento;Giallo,Serial Killer,Slasher Horror,Crime,Horror,Mystery,Thriller;Italy;Opera
+tt0081318;Frayeurs;Paura nella città dei morti viventi;20000;1980;Lucio Fulci;Splatter Horror,Zombie Horror,Horror;Italy;City of the Living Dead
+tt30321146;In a Violent Nature;In a Violent Nature;20000;2024;Chris Nash;Slasher Horror,Teen Horror,Drama,Horror,Thriller;Canada;In a Violent Nature
+tt0229440;Hellraiser 5: Inferno;Hellraiser: Inferno;20000;2000;Scott Derrickson;Psychological Horror,Psychological Thriller,Serial Killer,Supernatural Horror,Suspense Mystery,Crime,Horror,Mystery,Thriller;United States;Hellraiser: Inferno
+tt14781036;À l'intérieur;Inside;19000;2023;Vasilis Katsoupis;Psychological Drama,Drama,Thriller;Greece,Germany,Belgium;Inside
+tt5439812;Zola;Zola;19000;2020;Janicza Bravo;Dark Comedy,Comedy,Crime,Drama;United States;Zola
+tt19356262;Drive-Away Dolls;Drive-Away Dolls;19000;2024;Ethan Coen;Buddy Comedy,Quirky Comedy,Road Trip,Action,Comedy,Thriller;United Kingdom,United States;Drive-Away Dolls
+tt0052918;Mirage de la vie;Imitation of Life;19000;1959;Douglas Sirk;Drama;United States;Imitation of Life
+tt13204490;Petite maman;Petite maman;19000;2021;Céline Sciamma;Coming-of-Age,Drama,Fantasy;France;Petite Maman
+tt16280138;Magic Mike: Dernière danse;Magic Mike's Last Dance;18000;2023;Steven Soderbergh;Showbiz Drama,Comedy,Drama;United States;Magic Mike's Last Dance
+tt0105217;L'Esprit de Caïn;Raising Cain;18000;1992;Brian De Palma;Slasher Horror,Crime,Drama,Horror,Thriller;United States;Raising Cain
+tt1200263;La couleur pourpre;The Color Purple;18000;2023;Blitz Bazawule;Drama,Musical;United States;The Color Purple
+tt21307994;The House;Skinamarink;17000;2022;Kyle Edward Ball;Supernatural Horror,Horror,Mystery;United States;Skinamarink
+tt9000184;Goodnight Mommy;Goodnight Mommy;17000;2022;Matt Sobel;Psychological Drama,Psychological Thriller,Crime,Drama,Horror,Mystery,Thriller;United States;Goodnight Mommy
+tt0173716;Cecil B. Demented;Cecil B. Demented;17000;2000;John Waters;Dark Comedy,Satire,Comedy,Crime,Thriller;United States,France;Cecil B. Demented
+tt0052572;Le monde d'Apu;Apur Sansar;17000;1959;Satyajit Ray;Tragedy,Drama;India;The World of Apu
+tt6433880;Anna et l'Apocalypse;Anna and the Apocalypse;16000;2017;John McPhail;Pop Musical,Zombie Horror,Comedy,Horror,Musical;United Kingdom;Anna and the Apocalypse
+tt0827517;Nouvelle donne;Reprise;16000;2006;Joachim Trier;Drama;Norway;Reprise
+tt0048956;L'invaincu;Aparajito;16000;1956;Satyajit Ray;Coming-of-Age,Tragedy,Drama;India;Aparajito
+tt12519030;Ego;Pahanhautoja;16000;2022;Hanna Bergholm;Body Horror,Monster Horror,Drama,Fantasy,Horror;Finland,Sweden,Norway,Belgium;Hatching
+tt0086619;Yentl;Yentl;16000;1983;Barbra Streisand;Drama,Musical,Romance;United Kingdom,United States;Yentl
+tt5198890;Eileen;Eileen;16000;2023;William Oldroyd;Period Drama,Prison Drama,Psychological Drama,Psychological Thriller,Workplace Drama,Drama,Mystery,Romance,Thriller;United States,United Kingdom,South Korea;Eileen
+tt0119375;Insomnia;Insomnia;16000;1997;Erik Skjoldbjærg;Crime,Mystery,Thriller;Norway;Insomnia
+tt8178486;L'Oiseau-tempête;Earthquake Bird;16000;2019;Wash Westmoreland;Psychological Thriller,Crime,Drama,Mystery,Romance,Thriller;United Kingdom,Japan,United States;Earthquake Bird
+tt13397574;Mothers' Instinct;Mothers' Instinct;15000;2024;Benoît Delhomme;Drama,Thriller;United States,Belgium,France,United Kingdom;Mothers' Instinct
+tt0074749;The Killing of a Chinese Bookie;The Killing of a Chinese Bookie;15000;1976;John Cassavetes;Crime,Drama,Thriller;United States;The Killing of a Chinese Bookie
+tt14176542;Bardo, Fausse chronique de quelques vérités;Bardo, falsa crónica de unas cuantas verdades;15000;2022;Alejandro G. Iñárritu;Dark Comedy,Comedy,Drama;Mexico;Bardo: False Chronicle of a Handful of Truths
+tt12349832;Cuckoo;Cuckoo;15000;2024;Tilman Singer;Teen Horror,Horror,Mystery,Thriller;Germany,United States;Cuckoo
+tt6920356;The Souvenir;The Souvenir;15000;2019;Joanna Hogg;Drama,Romance;United Kingdom,United States;The Souvenir
+tt0274546;Hellraiser VI: Hellseeker;Hellraiser: Hellseeker;15000;2002;Rick Bota;Horror,Mystery,Thriller;Canada,United States;Hellraiser: Hellseeker
+tt19652910;EO;Eo;15000;2022;Jerzy Skolimowski;Psychological Drama,Drama;Poland,Italy;EO
+tt21113540;Le Comte;El conde;15000;2023;Pablo Larraín;Dark Comedy,Satire,Comedy,Fantasy,History,Horror;Chile;El Conde
+tt0037865;Péché mortel;Leave Her to Heaven;15000;1945;John M. Stahl;Film Noir,Drama,Romance,Thriller;United States;Leave Her to Heaven
+tt0102592;Un faux mouvement;One False Move;15000;1991;Carl Franklin;Police Procedural,Crime,Drama,Thriller;United States;One False Move
+tt26350277;Ballerine;Ballerina;14000;2023;Chung-Hyun Lee;One-Person Army Action,Action,Thriller;South Korea;Ballerina
+tt19760052;La passion de Dodin Bouffant;La passion de Dodin Bouffant;14000;2023;Anh Hung Tran;Feel-Good Romance,Period Drama,Drama,History,Romance;France,Belgium;The Taste of Things
+tt15893750;Rye Lane;Rye Lane;14000;2023;Raine Allen-Miller;Comedy,Drama,Romance;United Kingdom;Rye Lane
+tt0092654;Big Easy, le flic de mon coeur;The Big Easy;14000;1986;Jim McBride;Comedy,Crime,Drama,Mystery,Romance,Thriller;United States;The Big Easy
+tt0040536;Lettre d'une inconnue;Letter from an Unknown Woman;14000;1948;Max Ophüls;Tragedy,Drama,Romance;United States;Letter from an Unknown Woman
+tt0075265;Une étoile est née;A Star Is Born;14000;1976;Frank Pierson;Drama,Music,Romance;United States;A Star Is Born
+tt0091341;Kin-dza-dza!;Kin-dza-dza!;14000;1986;Georgiy Daneliya;Satire,Comedy,Drama,Sci-Fi;Soviet Union;Kin-dza-dza!
+tt5690810;Ophélie;Ophelia;14000;2018;Claire McCarthy;Drama,Romance,Thriller;United Kingdom,United States;Ophelia
+tt14561712;La Chimère;La chimera;13000;2023;Alice Rohrwacher;Period Drama,Adventure,Comedy,Fantasy,Romance;Italy,France,Switzerland,Turkey;La Chimera
+tt0106471;Boxing Helena;Boxing Helena;13000;1993;Jennifer Lynch;Erotic Thriller,Drama,Mystery,Romance,Thriller;United States;Boxing Helena
+tt9005184;Dual;Dual;13000;2022;Riley Stearns;Psychological Thriller,Comedy,Drama,Sci-Fi,Thriller;United States,Finland,Canada,United Kingdom;Dual
+tt16252698;Passages;Passages;13000;2023;Ira Sachs;Drama,Romance;France,Germany;Passages
+tt0079672;Opening Night;Opening Night;13000;1977;John Cassavetes;Psychological Drama,Drama;United States;Opening Night
+tt1314652;The Housemaid;Hanyeo;13000;2010;Im Sang-soo;Erotic Thriller,Drama,Thriller;South Korea;The Housemaid
+tt0037415;La Falaise mystérieuse;The Uninvited;13000;1944;Lewis Allen;Fantasy,Horror,Mystery,Romance;United States;The Uninvited
+tt0354623;Hellraiser VIII: Hellworld;Hellraiser: Hellworld;13000;2005;Rick Bota;Slasher Horror,Teen Horror,Horror;Romania,United States;Hellraiser: Hellworld
+tt11540726;Resurrection;Resurrection;12000;2022;Andrew Semans;Psychological Drama,Psychological Horror,Psychological Thriller,Crime,Drama,Horror,Mystery,Thriller;United States;Resurrection
+tt0084628;Sans soleil;Sans soleil;12000;1983;Chris Marker;Documentary,Drama;France;Sans Soleil
+tt13649036;Help;Help;12000;2021;Marc Munden;Medical Drama,Drama;United Kingdom;Help
+tt14813212;The Munsters;The Munsters;12000;2022;Rob Zombie;Comedy,Family,Fantasy,Horror,Music,Mystery,Sci-Fi,Thriller;United States,Hungary;The Munsters
+tt0076683;La sentinelle des maudits;The Sentinel;12000;1977;Michael Winner;Supernatural Horror,Horror;United States;The Sentinel
+tt0062952;Faces;Faces;12000;1968;John Cassavetes;Drama;United States;Faces
+tt0337636;Hellraiser VII: Deader;Hellraiser: Deader;12000;2005;Rick Bota;Horror,Mystery,Thriller;Romania,United States;Hellraiser: Deader
+tt13880104;L'Événement;L'événement;12000;2021;Audrey Diwan;Drama;France;Happening
+tt10199640;Une grande fille;Dylda;12000;2019;Kantemir Balagov;Period Drama,Psychological Drama,Tragedy,Drama,War;Russia;Beanpole
+tt8399288;Memoria;Memoria;12000;2021;Apichatpong Weerasethakul;Drama,Mystery,Sci-Fi;Colombia,Thailand,France,Germany,Mexico,Qatar,United Kingdom,China,United States,Switzerland;Memoria
+tt8296030;You Won't Be Alone;You Won't Be Alone;12000;2022;Goran Stolevski;Supernatural Horror,Drama,Fantasy,Horror;Australia,United Kingdom,Serbia;You Won't Be Alone
+tt0247613;Peppermint Candy;Bakhasatang;11000;1999;Lee Chang-dong;Drama;South Korea,Japan;Peppermint Candy
+tt10199586;Atlantique;Atlantique;11000;2019;Mati Diop;Drama,Fantasy,Mystery,Romance;France,Senegal,Belgium;Atlantics
+tt0100024;Life Is Sweet;Life Is Sweet;11000;1990;Mike Leigh;Comedy,Drama;United Kingdom;Life Is Sweet
+tt0269743;Bouvier des Flandres;Flandersui gae;11000;2000;Bong Joon Ho;Dark Comedy,Slapstick,Comedy;South Korea;Barking Dogs Never Bite
+tt8258502;Le Remplaçant;Foe;11000;2023;Garth Davis;Psychological Thriller,Drama,Romance,Sci-Fi,Thriller;United States,Australia,United Kingdom;Foe
+tt18257464;Polite Society;Polite Society;11000;2023;Nida Manzoor;Martial Arts,Action,Comedy;United Kingdom;Polite Society
+tt12137964;Anything for Jackson;Anything for Jackson;11000;2020;Justin G. Dyck;Supernatural Horror,Horror,Mystery;Canada;Anything for Jackson
+tt1716747;Hellraiser: Revelations;Hellraiser: Revelations;10000;2011;Víctor Garcia;Horror;United States;Hellraiser: Revelations
+tt1777606;Rosaline;Rosaline;10000;2022;Karen Maine;High-Concept Comedy,Comedy,Romance;United States;Rosaline
+tt0156729;Last Night;Last Night;10000;1998;Don McKellar;Dark Comedy,Satire,Comedy,Drama,Romance;Canada,France;Last Night
+tt0058997;Bunny Lake a disparu;Bunny Lake Is Missing;10000;1965;Otto Preminger;Drama,Mystery,Thriller;United Kingdom,United States;Bunny Lake Is Missing
+tt1663321;Poulet aux prunes;Poulet aux prunes;10000;2011;Vincent Paronnaud;Comedy,Drama;France,Germany,Belgium;Chicken with Plums
+tt0384814;Demande à la poussière;Ask the Dust;10000;2006;Robert Towne;Drama,Romance;Germany,United States;Ask the Dust
+tt0070531;Phase IV;Phase IV;9900;1974;Saul Bass;Horror,Sci-Fi,Thriller;United Kingdom,United States;Phase IV
+tt0092576;Bloody Bird;Deliria;9700;1987;Michele Soavi;Slasher Horror,Horror,Thriller;Italy;StageFright
+tt15364972;Sanctuary;Sanctuary;9600;2022;Zachary Wigon;Psychological Thriller,Drama,Thriller;United States,France,Russia;Sanctuary
+tt13507778;Inside Ted: Dans la tête du serial killer;No Man of God;9500;2021;Amber Sealey;Serial Killer,True Crime,Biography,Crime,Drama,Mystery;United States;No Man of God
+tt0244870;Uzumaki;Uzumaki;9400;2000;Higuchinsky;Body Horror,Drama,Fantasy,Horror;Japan;Spiral
+tt1121948;The Killer;The Killer;9300;2024;John Woo;Action;United States,Canada,South Korea;The Killer
+tt0094860;Sanctuaire;La chiesa;9300;1989;Michele Soavi;Horror;Italy;The Church
+tt19719836;Retour à Séoul;Retour à Séoul;9200;2022;Davy Chou;Drama;France,Germany,Belgium,South Korea,Romania,Cambodia,Qatar;Return to Seoul
+tt0354668;Save the Green Planet!;Jigureul jikyeora!;8900;2003;Joon-Hwan Jang;Alien Invasion,Dark Comedy,Satire,Comedy,Crime,Drama,Horror,Sci-Fi,Thriller;South Korea;Save the Green Planet!
+tt0011237;Le Golem;Der Golem, wie er in die Welt kam;8800;1920;Paul Wegener;Fantasy,Horror;Germany;The Golem
+tt0036261;Le fantôme de l'opéra;Phantom of the Opera;8600;1943;Arthur Lubin;Dark Romance,Drama,Horror,Music,Romance,Thriller;United States;Phantom of the Opera
+tt1371630;Air Doll;Kûki ningyô;8500;2009;Hirokazu Koreeda;Drama,Fantasy,Romance;Japan;Air Doll
+tt0043879;La maison dans l'ombre;On Dangerous Ground;8400;1951;Nicholas Ray;Film Noir,Psychological Drama,Teen Drama,Tragedy,Drama;United States;On Dangerous Ground
+tt0049010;Derrière le miroir;Bigger Than Life;8400;1956;Nicholas Ray;Medical Drama,Psychological Drama,Drama;United States;Bigger Than Life
+tt5476182;Hellraiser: Judgment;Hellraiser: Judgment;8300;2018;Gary J. Tunnicliffe;Horror;United Kingdom,United States;Hellraiser: Judgment
+tt0086355;Star 80;Star 80;8300;1983;Bob Fosse;Biography,Drama;United States;Star 80
+tt0087981;Razorback;Razorback;8100;1984;Russell Mulcahy;Monster Horror,Horror,Thriller;Australia;Razorback
+tt28490044;Le mal n'existe pas;Aku wa sonzai shinai;8000;2023;Ryûsuke Hamaguchi;Drama;Japan;Evil Does Not Exist
+tt1727516;Livide;Livide;7900;2011;Alexandre Bustillo;Vampire Horror,Fantasy,Horror;France;Livid
+tt22004344;Snack Shack;Snack Shack;7900;2024;Adam Rehmeier;Comedy;United States;Snack Shack
+tt9000302;Perempuan Tanah Jahanam;Perempuan tanah jahanam;7900;2019;Joko Anwar;Folk Horror,Horror,Mystery,Thriller;Indonesia,South Korea,United States;Impetigore
+tt19623228;Godland;Vanskabte land;7800;2022;Hlynur Pálmason;Drama;Denmark,Iceland,France,Sweden;Godland
+tt14852624;Stopmotion;Stopmotion;7800;2023;Robert Morgan;Psychological Horror,Horror;United Kingdom;Stopmotion
+tt0078771;L'amour en fuite;L'amour en fuite;7700;1979;François Truffaut;Comedy,Drama,Romance;France;Love on the Run
+tt1340773;Elektra Luxx;Elektra Luxx;7700;2010;Sebastian Gutierrez;Parody,Comedy,Drama;United States;Elektra Luxx
+tt9143112;Falling;Falling;7300;2020;Viggo Mortensen;Drama;United Kingdom,Canada,United States;Falling
+tt7323600;Incantations;Hagazussa;7300;2017;Lukas Feigelfeld;Folk Horror,Drama,Horror;Austria,Germany;Hagazussa
+tt13648224;We're All Going to the World's Fair;We're All Going to the World's Fair;7200;2021;Jane Schoenbrun;Drama,Horror;United States;We're All Going to the World's Fair
+tt9048804;Birth/Rebirth;Birth/Rebirth;7200;2023;Laura Moss;Drama,Horror,Thriller;United States;Birth/Rebirth
+tt0283283;Millennium Mambo;Qian xi man bo;7200;2001;Hsiao-Hsien Hou;Drama,Romance;Taiwan,France;Millennium Mambo
+tt6689014;She Came to Me;She Came to Me;7100;2023;Rebecca Miller;Quirky Comedy,Romantic Comedy,Comedy,Drama,Music,Romance;United States;She Came to Me
+tt0059821;La tombe de Ligeia;The Tomb of Ligeia;7100;1964;Roger Corman;Drama,Horror,Thriller;United States,United Kingdom;The Tomb of Ligeia
+tt14905650;Hellbender;Hellbender;7000;2021;John Adams;Folk Horror,Horror;United States;Hellbender
+tt4978710;Marjorie Prime;Marjorie Prime;7000;2017;Michael Almereyda;Drama,Mystery,Romance,Sci-Fi;United States;Marjorie Prime
+tt21397580;Suitable Flesh;Suitable Flesh;6900;2023;Joe Lynch;Body Horror,Horror,Thriller;United States;Suitable Flesh
+tt5265960;La Région sauvage;La región salvaje;6900;2016;Amat Escalante;Drama,Horror,Mystery,Romance,Sci-Fi,Thriller;Mexico,Denmark,France,Germany,Norway,Switzerland;The Untamed
+tt10651230;La jeune fille et les paysans;Chlopi;6800;2023;DK Welchman;Hand-Drawn Animation,Period Drama,Animation,Drama,History;Poland,Serbia,Lithuania;The Peasants
+tt19719976;Joyland;Joyland;6800;2022;Saim Sadiq;Comedy,Crime,Drama;Pakistan,United States;Joyland
+tt21810682;The End We Start From;The End We Start From;6700;2023;Mahalia Belo;Drama,Thriller;United Kingdom,United States;The End We Start From
+tt2771800;Geung see;Geung see;6600;2013;Juno Mak;Action,Fantasy,Horror;Hong Kong;Rigor Mortis
+tt12447796;Unwelcome;Unwelcome;6600;2022;Jon Wright;Comedy,Horror;United Kingdom,Ireland;Unwelcome
+tt11698630;Fou de toi;Loco por ella;6600;2021;Dani de la Orden;Comedy,Romance;Spain;Crazy About Her
+tt0459102;Import/Export;Import Export;6400;2007;Ulrich Seidl;Drama;Austria,France,Germany;Import Export
+tt0063293;Le mercenaire;Il mercenario;6300;1968;Sergio Corbucci;Spaghetti Western,Comedy,Western;Italy,Spain,United States;The Mercenary
+tt13321244;Origin;Origin;6300;2023;Ava DuVernay;Drama,History;United States;Origin
+tt0348529;Anatomie de l'enfer;Anatomie de l'enfer;6300;2004;Catherine Breillat;Drama;France,Portugal;Anatomy of Hell
+tt10406596;Samhain;You Are Not My Mother;6200;2021;Kate Dolan;Folk Horror,Drama,Horror;Ireland;You Are Not My Mother
+tt7527682;Out of Darkness;Out of Darkness;6200;2022;Andrew Cumming;Monster Horror,Survival,Horror,Thriller;United Kingdom;Out of Darkness
+tt0058743;Madame croque-maris;What a Way to Go!;6100;1964;J. Lee Thompson;Dark Comedy,Romantic Comedy,Satire,Comedy,Romance;United States;What a Way to Go!
+tt13923216;Showing Up;Showing Up;6100;2022;Kelly Reichardt;Comedy,Drama;United States;Showing Up
+tt0115012;Shanghai Triad;Yao a yao, yao dao wai po qiao;6100;1995;Yimou Zhang;Crime,Drama,History,Romance,Thriller;France,China;Shanghai Triad
+tt0150980;La servante;Hanyeo;6100;1960;Kim Ki-young;Crime,Drama,Horror,Thriller;South Korea;The Housemaid
+tt8760670;Mona Lisa and the Blood Moon;Mona Lisa and the Blood Moon;5900;2021;Ana Lily Amirpour;Fantasy,Thriller;United States;Mona Lisa and the Blood Moon
+tt1221141;La femme sans tête;La mujer sin cabeza;5900;2008;Lucrecia Martel;Drama,Mystery,Thriller;Argentina,France,Italy,Spain;The Headless Woman
+tt0077714;Crazy Day;I Wanna Hold Your Hand;5800;1978;Robert Zemeckis;Dark Comedy,Comedy,Music,Romance;United States;I Wanna Hold Your Hand
+tt22042742;Christmas Bloody Christmas;Christmas Bloody Christmas;5800;2022;Joe Begos;Slasher Horror,Holiday,Horror;United States;Christmas Bloody Christmas
+tt18550182;R.M.N;R.M.N.;5700;2022;Cristian Mungiu;Drama;Romania,France,Belgium,Sweden;R.M.N.
+tt0026685;La marque du vampire;Mark of the Vampire;5700;1935;Tod Browning;Horror,Mystery;United States;Mark of the Vampire
+tt8649344;Blue Jean;Blue Jean;5400;2022;Georgia Oakley;Psychological Drama,Drama,History;United Kingdom;Blue Jean
+tt13391708;Les cinq diables;Les cinq diables;5300;2022;Léa Mysius;Drama,Fantasy,Romance;France;The Five Devils
+tt8765496;May the Devil Take You;Sebelum Iblis Menjemput;5200;2018;Timo Tjahjanto;Horror,Mystery,Thriller;Indonesia;May the Devil Take You
+tt0070297;Les 7 Vampires d'or;The Legend of the 7 Golden Vampires;5100;1974;Roy Ward Baker;B-Action,B-Horror,Martial Arts,Vampire Horror,Action,Horror;United Kingdom,Hong Kong;The Legend of the 7 Golden Vampires
+tt0043899;Pandora;Pandora and the Flying Dutchman;4900;1951;Albert Lewin;Drama,Fantasy,Mystery,Romance;United Kingdom;Pandora and the Flying Dutchman
+tt0051959;Meurtre sous contrat;Murder by Contract;4500;1958;Irving Lerner;Film Noir,Crime,Drama,Thriller;United States;Murder by Contract
+tt3513054;Les derniers jours dans le désert;Last Days in the Desert;4500;2015;Rodrigo García;Drama,Fantasy,History;United States;Last Days in the Desert
+tt6992978;The Souvenir: Part II;The Souvenir: Part II;4500;2021;Joanna Hogg;Coming-of-Age,Tragic Romance,Workplace Drama,Drama,Romance;United Kingdom,Ireland,United States;The Souvenir: Part II
+tt30180830;Sasquatch Sunset;Sasquatch Sunset;4300;2024;David Zellner;Action,Adventure,Comedy;United States;Sasquatch Sunset
+tt0070820;Touki Bouki;Touki bouki;4300;1973;Djibril Diop Mambéty;Drama;Senegal;Touki Bouki
+tt0064873;Les gens de la pluie;The Rain People;4200;1969;Francis Ford Coppola;Drama;United States;The Rain People
+tt31800329;La merveilleuse histoire de Henry Sugar et trois autres contes;The Wonderful Story of Henry Sugar and Three More;4100;2024;Wes Anderson;Comedy,Drama,Fantasy;United States;The Wonderful Story of Henry Sugar and Three More
+tt10737918;Shin Ultraman;Shin Ultraman;4100;2022;Shinji Higuchi;Superhero,Action,Adventure,Drama,Fantasy,Sci-Fi;Japan;Shin Ultraman
+tt0081291;Out of the Blue - Garçonne;Out of the Blue;4100;1980;Dennis Hopper;Drama;United States;Out of the Blue
+tt0044103;Les contes d'Hoffmann;The Tales of Hoffmann;4100;1951;Michael Powell;Fantasy,Music,Musical,Romance;United Kingdom;The Tales of Hoffmann
+tt10354106;Stars at Noon;Stars at Noon;4000;2022;Claire Denis;Drama,Romance,Thriller;France,Panama,United States;Stars at Noon
+tt0059440;À minuit, je possèderai ton âme;À Meia Noite Levarei Sua Alma;4000;1964;José Mojica Marins;Supernatural Horror,Horror;Brazil;At Midnight I'll Take Your Soul
+tt0167147;Evil Dead Trap;Shiryô no wana;4000;1988;Toshiharu Ikeda;Slasher Horror,Horror;Japan;Evil Dead Trap
+tt10738906;The Feast;Gwledd;4000;2021;Lee Haven Jones;Folk Horror,Drama,Horror,Mystery,Thriller;United Kingdom;The Feast
+tt0267116;Wild Zero;Wild Zero;3900;1999;Tetsuro Takeuchi;Parody,Satire,Comedy,Horror,Music,Sci-Fi,Thriller;Japan;Wild Zero
+tt0106559;Green Snake;Ching se;3800;1993;Hark Tsui;Drama,Fantasy,Romance;Hong Kong;Green Snake
+tt1881109;Zeroville;Zeroville;3700;2019;James Franco;Comedy,Drama,Mystery;United States;Zeroville
+tt11698800;Enys Men;Enys Men;3700;2022;Mark Jenkin;Psychological Horror,Fantasy,Horror,Mystery;United Kingdom;Enys Men
+tt0068657;Le Grand Duel;Il grande duello;3600;1972;Giancarlo Santi;Spaghetti Western,Action,Drama,Mystery,Western;Italy,Germany,France,Monaco;The Grand Duel
+tt10375396;God's Creatures;God's Creatures;3600;2022;Saela Davis;Psychological Drama,Drama;Ireland,United Kingdom,United States;God's Creatures
+tt0079980;Série noire;Série noire;3600;1979;Alain Corneau;Crime,Drama;France;Serie Noire
+tt29141112;The Devil's Bath;Des Teufels Bad;3500;2024;Severin Fiala;Folk Horror,Period Drama,Drama,History,Horror,Thriller;Austria,Germany;The Devil's Bath
+tt13702796;Pacifiction;Pacifiction;3500;2022;Albert Serra;Drama,Thriller;France,Spain,Germany,Portugal,France;Pacifiction
+tt11151336;Broadcast Signal Intrusion;Broadcast Signal Intrusion;3400;2021;Jacob Gentry;Conspiracy Thriller,Crime,Drama,Horror,Mystery,Thriller;United States;Broadcast Signal Intrusion
+tt15010292;Flux Gourmet;Flux Gourmet;3300;2022;Peter Strickland;Dark Comedy,Quirky Comedy,Comedy,Drama,Horror;United Kingdom,Hungary,United States;Flux Gourmet
+tt11559472;Ali & Ava;Ali & Ava;3200;2021;Clio Barnard;Drama,Romance;United Kingdom;Ali & Ava
+tt14379088;Shin Kamen Rider;Shin Kamen Raidâ;3200;2023;Hideaki Anno;Artificial Intelligence,Superhero,Action,Adventure,Drama,Fantasy,Sci-Fi;Japan;Shin Kamen Rider
+tt18162096;N'attendez pas trop de la fin du monde;Nu astepta prea mult de la sfârsitul lumii;3200;2023;Radu Jude;Comedy;Romania,Luxembourg,France,Croatia,Switzerland,United Kingdom;Do Not Expect Too Much from the End of the World
+tt8191502;Microhabitat;Sogongnyeo;3200;2017;Jeon Go-Woon;Drama,Romance;South Korea;Microhabitat
+tt8591526;Fremont;Fremont;3100;2023;Babak Jalali;Drama;United States;Fremont
+tt1925493;Random Acts of Violence;Random Acts of Violence;3100;2019;Jay Baruchel;Horror;United States,Canada;Random Acts of Violence
+tt0122111;Ikarie XB 1;Ikarie XB 1;3100;1963;Jindrich Polák;Sci-Fi;Czechoslovakia;Voyage to the End of the Universe
+tt17521612;Starve Acre;Starve Acre;3000;2023;Daniel Kokotajlo;Folk Horror,Drama,Horror;United Kingdom;Starve Acre
+tt11771006;Birds of Paradise;Birds of Paradise;3000;2021;Sarah Adina Smith;Drama;United States;Birds of Paradise
+tt0080827;L'exorciste chinois;Gui da gui;2900;1980;Sammo Kam-Bo Hung;Wuxia,Action,Comedy,Fantasy,Horror;Hong Kong;Encounter of the Spooky Kind
+tt10229982;La promesse d'un été;My First Summer;2900;2020;Katie Found;Drama,Romance;Australia;My First Summer
+tt7012864;Lowlife;Lowlife;2800;2017;Ryan Prows;Dark Comedy,Comedy,Crime,Drama,Horror,Thriller;United States;Lowlife
+tt10563420;The Deeper You Dig;The Deeper You Dig;2800;2019;John Adams;Drama,Horror;United States;The Deeper You Dig
+tt0058263;Pour l'exemple;King and Country;2600;1964;Joseph Losey;Drama,War;United Kingdom;King & Country
+tt0021818;L'opéra de quat'sous;Die 3 Groschen-Oper;2600;1931;Georg Wilhelm Pabst;Satire,Comedy,Crime,Drama,Musical;Germany,United States;The Threepenny Opera
+tt14336174;Peter von Kant;Peter von Kant;2600;2022;François Ozon;Drama;France,Belgium;Peter von Kant
+tt16431882;Brooklyn 45;Brooklyn 45;2500;2023;Ted Geoghegan;Drama,History,Horror;United States;Brooklyn 45
+tt11052678;The Silent Twins;The Silent Twins;2500;2022;Agnieszka Smoczynska;Docudrama,Biography,Drama;Poland,United Kingdom,United States;The Silent Twins
+tt0119819;Office Killer;Office Killer;2400;1997;Cindy Sherman;Dark Comedy,Comedy,Crime,Horror,Thriller;United States;Office Killer
+tt20114976;The Sacrifice Game;The Sacrifice Game;2400;2023;Jenn Wexler;Horror;United States;The Sacrifice Game
+tt0040829;L'incroyable Monsieur X;The Amazing Mr. X;2300;1948;Bernard Vorhaus;Film Noir,Horror,Thriller;United States;The Amazing Mr. X
+tt1257562;Hadewijch;Hadewijch;2100;2009;Bruno Dumont;Drama;France;Hadewijch
+tt0409860;Cutie Honey;Kyûtî Hanî;2000;2004;Hideaki Anno;Adventure,Comedy,Sci-Fi;Japan;Cutie Honey
+tt2576522;Haewon et les hommes;Nugu-ui ttal-do anin Hae-won;1900;2013;Hong Sang-soo;Drama,Romance;South Korea;Nobody's Daughter Haewon
+tt10928086;Knocking;Knackningar;1800;2021;Frida Kempff;Horror,Mystery,Thriller;Sweden;Knocking
+tt8478554;Je voulais me cacher;Volevo nascondermi;1800;2020;Giorgio Diritti;Biography,Drama;Italy;Hidden Away
+tt7884368;Destroy All Neighbors;Destroy All Neighbors;1800;2024;Josh Forbes;Dark Comedy,Supernatural Horror,Comedy,Horror;United States;Destroy All Neighbors
+tt0064727;Le Trône de feu;Il trono di fuoco;1600;1970;Jesús Franco;Biography,Horror;Italy,Germany,Spain,Liechtenstein;Night of the Blood Monster
+tt10441822;The Nowhere Inn;The Nowhere Inn;1600;2020;Bill Benz;Comedy,Drama,Music,Thriller;United States;The Nowhere Inn
+tt10062338;Earwig;Earwig;1600;2021;Lucile Hadzihalilovic;Drama,Horror;United Kingdom,France,Belgium;Earwig
+tt7575046;Riddle of Fire;Riddle of Fire;1500;2023;Weston Razooli;Action,Adventure,Comedy;United States,France;Riddle of Fire
+tt10399622;L'arbre aux papillons d'or;Bên trong vo kén vàng;1500;2023;Thien An Pham;Drama;Vietnam,Singapore,France,Spain;Inside the Yellow Cocoon Shell
+tt6337816;Monica;Monica;1500;2022;Andrea Pallaoro;Drama;United States,Italy;Monica
+tt5478456;We Are Zombies;We Are Zombies;1400;2023;François Simard;Comedy,Horror;Canada,France;We Are Zombies
+tt1714878;Oki's movie;Ok-hui-ui yeonghwa;1400;2010;Hong Sang-soo;Comedy,Drama;South Korea;Oki's Movie
+tt18469872;Amanda;Amanda;1300;2022;Carolina Cavalli;Drama;Italy,France;Amanda
+tt2418372;Abus de faiblesse;Abus de faiblesse;1300;2013;Catherine Breillat;Drama;France,Belgium,Germany;Abuse of Weakness
+tt18180926;The New Boy;The New Boy;1300;2023;Warwick Thornton;Drama,Fantasy,History;Australia;The New Boy
+tt22528178;Kokomo City;Kokomo City;1300;2023;D. Smith;Documentary;United States;Kokomo City
+tt21651430;The People's Joker;The People's Joker;1300;2022;Vera Drew;Comedy;United States;The People's Joker
+tt18561446;Moon Garden;Moon Garden;1200;2022;Ryan Stevens Harris;Body Horror,Dark Fantasy,Medical Drama,Monster Horror,Psychological Drama,Psychological Horror,Supernatural Fantasy,Supernatural Horror,Drama,Fantasy;United States;Moon Garden
+tt0047505;La bête s'éveille;The Sleeping Tiger;1200;1954;Joseph Losey;Drama,Thriller;United Kingdom,United States;The Sleeping Tiger
+tt11534720;All Dirt Roads Taste of Salt;All Dirt Roads Taste of Salt;1200;2023;Raven Jackson;Drama;United States;All Dirt Roads Taste of Salt
+tt6039372;Ghosts of Love;Rökkur;1200;2017;Erlingur Thoroddsen;Psychological Horror,Suspense Mystery,Drama,Horror,Mystery,Thriller;Iceland,United States;Rift
+tt7117594;To Dust;To Dust;1200;2018;Shawn Snyder;Comedy,Drama;United States;To Dust
+tt12715472;Inexorable;Inexorable;1200;2021;Fabrice du Welz;Thriller;Belgium,France;Inexorable
+tt14661252;Revealer;Revealer;1100;2022;Luke Boyce;Horror;United States;Revealer
+tt28494031;Gasoline Rainbow;Gasoline Rainbow;1100;2023;Bill Ross IV;Adventure,Drama;United States;Gasoline Rainbow
+tt30835128;Spermworld;Spermworld;1100;2024;Lance Oppenheim;Documentary;United States;Spermworld
+tt0064073;Liens d'amour et de sang;Beatrice Cenci;1100;1969;Lucio Fulci;Drama,History,Horror;Italy;The Conspiracy of Torture
+tt10243676;After Blue (Paradis sale);After Blue (Paradis sale);1100;2021;Bertrand Mandico;Fantasy,Sci-Fi;France;After Blue
+tt0090145;Game of survival;Tenement;1100;1985;Roberta Findlay;Action,Crime,Horror,Thriller;United States;Tenement
+tt27722061;La vie selon Ann;The Feeling That the Time for Doing Something Has Passed;1000;2023;Joanna Arnow;Comedy;United States;The Feeling That the Time for Doing Something Has Passed
+tt23572542;My Animal;My Animal;950;2023;Jacqueline Castel;Horror,Romance;Canada;My Animal
+tt8943224;Brooklyn Secret;Lingua Franca;941;2019;Isabel Sandoval;Drama;United States,Philippines;Lingua Franca
+tt0083609;Bakuretsu toshi;Bakuretsu toshi;937;1982;Gakuryû Ishii;Cyberpunk,Action,Drama,Music,Sci-Fi;Japan;Burst City
+tt28639049;We Grown Now;We Grown Now;891;2023;Minhal Baig;Drama;United States;We Grown Now
+tt26681671;Where the Devil Roams;Where the Devil Roams;857;2023;John Adams;Horror;United States;Where the Devil Roams
+tt1721683;La belle endormie;La belle endormie;837;2010;Catherine Breillat;Adventure,Drama,Fantasy,Romance;France;The Sleeping Beauty
+tt10103028;Blindfire;Blindfire;792;2020;Michael Nell;Crime,Drama,Thriller;United States;Blindfire
+tt27562761;All You Need Is Death;All You Need Is Death;727;2023;Paul Duane;Horror;Ireland;All You Need Is Death
+tt16090596;Conann;Conann;684;2023;Bertrand Mandico;Action,Fantasy;Luxembourg,France,Belgium;She Is Conann
+tt11175956;Poser;Poser;619;2021;Noah Dixon;Drama,Music;United States;Poser
+tt26254622;Sidonie au Japon;Sidonie au Japon;584;2023;Élise Girard;Drama,Romance;France,Germany,Switzerland,Japan;Sidonie in Japan
+tt0163716;Litan;Litan;535;1982;Jean-Pierre Mocky;Dark Fantasy,Folk Horror,Fantasy,Horror,Thriller;France;Litan
+tt0125434;The aimed School;Nerawareta gakuen;528;1981;Nobuhiko Ôbayashi;Fantasy,Sci-Fi;Japan;School in the Crosshairs
+tt9729206;Diner;Diner;513;2019;Mika Ninagawa;Crime;Japan;Diner
+tt15846876;Trim Season;Trim Season;512;2023;Ariel Vida;Supernatural Horror,Horror,Thriller;United States;Trim Season
+tt10406466;It Is in Us All;It Is in Us All;449;2022;Antonia Campbell-Hughes;Drama;Ireland;It Is in Us All
+tt7128316;Awaken;Awaken;424;2018;Tom Löwe;Drama,Music;United Arab Emirates,United States;Awaken
+tt0091871;Le Roi des roses;Der Rosenkönig;296;1986;Werner Schroeter;Drama,Musical;Germany,Portugal,France,Netherlands;The Rose King
+tt28352066;Once Within a Time;Once Within a Time;178;2022;Godfrey Reggio;Comedy,Fantasy;United States;Once Within a Time
+tt0087167;Dorian Gray im Spiegel der Boulevardpresse;Dorian Gray im Spiegel der Boulevardpresse;164;1984;Ulrike Ottinger;Drama,Horror;Germany;Dorian Gray in the Mirror of the Yellow Press
+tt15560714;Yige he sige;Yige he sige;121;2021;Jigme Trinley;Drama,Thriller;China;One and Four
+tt22752692;T Blockers;T Blockers;110;2023;Alice Maio Mackay;Horror;Australia;T Blockers
+tt10728214;Songs for a Sloth;Songs for a Sloth;103;2021;Bradley Hasse;Comedy,Drama,Music;United States;Songs for a Sloth
+tt2167432;Shinpan;Shinpan;73;1975;Shûji Terayama;Sci-Fi,Short;Japan;Trial
+tt2983504;Issun-bôshi o kijutsu suru kokoromi;Issun-bôshi o kijutsu suru kokoromi;40;1977;Shûji Terayama;Short;Japan;An Attempt to Describe the Measure of a Man

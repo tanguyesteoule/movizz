@@ -351,12 +351,12 @@ $("#link-share").click(function () {
     $("#reset_all_year").click(function () {
         //console.log('reset')
         $('#year1').val(1900).change()
-        $('#year2').val(2022).change()
+        $('#year2').val(2025).change()
     });
 
     $("#reset_all_year_img").click(function () {
         $('#year1_img').val(1900).change()
-        $('#year2_img').val(2022).change()
+        $('#year2_img').val(2025).change()
     });
 
     $("#reset_all_popularity").click(function () {
@@ -387,7 +387,7 @@ $("#link-share").click(function () {
         $('#timer_nb_debrief').val(3)
         $('input.genrecbx:checkbox').prop( "checked", true ).first()
         $('#year1').val(1970)
-        $('#year2').val(2022)
+        $('#year2').val(2025)
         $('#country-sel').val("c-1");
         $('#preselect-sel').val("-1");
         $('#popularity').val(200).change()
@@ -396,7 +396,7 @@ $("#link-share").click(function () {
     $('#preset-all').click(function() {
         $('input.genrecbx:checkbox').prop( "checked", true ).first()
         $('#year1').val(1900)
-        $('#year2').val(2022)
+        $('#year2').val(2025)
         $('#country-sel').val("c-1");
         $('#preselect-sel').val("-1");
         $('#popularity').val('').change()
@@ -636,19 +636,19 @@ $("#link-share").click(function () {
       <legend><b>{% trans "Years" %}</b> (<span class="clickable-link" id="reset_all_year">{% trans "Reset" %}</span>)</legend>
       {% if request.session.year1 or request.session.year2 %}
       <div class="input-field">
-          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1 }}">
+          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2025" size="5" value="{{ request.session.year1 }}">
       </div>
       <div class="input-field">
-          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2 }}">
+          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2025" size="5" value="{{ request.session.year2 }}">
           <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
       {% else %}
       <div class="input-field">
-          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2022" size="5" value="1970">
+          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2025" size="5" value="1970">
       </div>
       <div class="input-field">
-          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2022" size="5" value="2022">
+          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2025" size="5" value="2025">
           <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
@@ -809,7 +809,7 @@ $("#link-share").click(function () {
       <div class="switch center">
         <label>
           <b>Off</b>
-          <input {% if request.session.nsfw_filter == 1 or 'nsfw_filter' not in request.session %} checked {% endif %} type="checkbox" id="nsfw" class="update-reset">
+          <input {% if request.session.nsfw_filter == 1 %} checked {% endif %} type="checkbox" id="nsfw" class="update-reset">
           <span class="lever" style="background-color: #545454d4"></span>
           <b>On</b>
         </label>
@@ -824,19 +824,19 @@ $("#link-share").click(function () {
       <legend><b>{% trans "Years" %}</b> (<span class="clickable-link" id="reset_all_year_img">{% trans "Reset" %}</span>)</legend>
       {% if request.session.year1_img or request.session.year2_img %}
       <div class="input-field">
-          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year1_img }}">
+          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2025" size="5" value="{{ request.session.year1_img }}">
       </div>
       <div class="input-field">
-          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="{{ request.session.year2_img }}">
+          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2025" size="5" value="{{ request.session.year2_img }}">
           <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
       {% else %}
       <div class="input-field">
-          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2022" size="5" value="1900">
+          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2025" size="5" value="1900">
       </div>
       <div class="input-field">
-          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2022" size="5" value="2022">
+          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2025" size="5" value="2025">
           <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
       </div>
       <br />
