@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-28 08:10+0000\n"
+"POT-Creation-Date: 2024-11-21 20:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,29 +88,33 @@ msgstr "Sujet"
 msgid "Send"
 msgstr "Envoyer"
 
-#: quizz/templates/quizz/editor.html:62
+#: quizz/templates/quizz/editor.html:31
+msgid "The list has been successfully created"
+msgstr "La liste a été créée avec succès"
+
+#: quizz/templates/quizz/editor.html:60
 msgid "Preselection editor"
 msgstr "Editeur de présélection"
 
-#: quizz/templates/quizz/editor.html:65
+#: quizz/templates/quizz/editor.html:63
 msgid "editor-intro"
 msgstr ""
 "Personnalisez votre propre liste de film et partagez la avec la communauté !"
 
-#: quizz/templates/quizz/editor.html:71
+#: quizz/templates/quizz/editor.html:69
 #: quizz/templates/quizz/room_play_image.html:359
 msgid "Movie name"
 msgstr "Nom du film"
 
-#: quizz/templates/quizz/editor.html:72
+#: quizz/templates/quizz/editor.html:70
 msgid "At least 3 movies"
 msgstr "Au moins 3 films"
 
-#: quizz/templates/quizz/editor.html:88
+#: quizz/templates/quizz/editor.html:86
 msgid "List name"
 msgstr "Nom de la liste"
 
-#: quizz/templates/quizz/editor.html:95
+#: quizz/templates/quizz/editor.html:93
 msgid "Save"
 msgstr "Sauvegarder"
 
@@ -192,7 +196,7 @@ msgstr "Copier le lien d'invitation"
 msgid "Copied !"
 msgstr "Copié !"
 
-#: quizz/templates/quizz/room.html:429 quizz/templates/quizz/room_play.html:379
+#: quizz/templates/quizz/room.html:429 quizz/templates/quizz/room_play.html:393
 #: quizz/templates/quizz/room_play_image.html:389
 msgid "Players list"
 msgstr "Liste des joueurs"
@@ -428,17 +432,17 @@ msgstr "Créer"
 msgid "Current game"
 msgstr "Partie en cours"
 
-#: quizz/templates/quizz/room_play.html:163
+#: quizz/templates/quizz/room_play.html:177
 #: quizz/templates/quizz/room_play_image.html:209
 #: quizz/templates/quizz/room_play_image.html:395
 msgid "you"
 msgstr "vous"
 
-#: quizz/templates/quizz/room_play.html:368
+#: quizz/templates/quizz/room_play.html:382
 msgid "Next"
 msgstr "Suivant"
 
-#: quizz/templates/quizz/room_play.html:400
+#: quizz/templates/quizz/room_play.html:414
 msgid "The host has been disconnected, the game is over."
 msgstr "L'hôte a été déconnecté, la partie est terminée."
 
