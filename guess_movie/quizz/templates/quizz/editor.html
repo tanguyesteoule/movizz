@@ -7,10 +7,12 @@
 {% block javascript %}
 <script>
 $(document).ready(function(){
+  dict_movie = {}
   dict_data = {}
-
-
-  {% for movie in list_movie %} dict_data["{{ movie|safe }}"] = null; {% endfor %}
+  {% for movie, imdb_id in dict_movies.items %}
+      dict_movie["{{ movie|safe }}"] = "{{ imdb_id|safe }}";
+      dict_data["{{ movie|safe }}"] = null;
+  {% endfor %}
 
   list_m = [];
 
@@ -28,14 +30,12 @@ $(document).ready(function(){
           },
           dataType: 'json',
           success: function (data) {
-            $('#message-save').html('La liste "<b>' + name + '</b>" a bien été créée.')
+            $('#message-save').html('{% trans "The list has been successfully created" %}')
             console.log('OK')
           }
       });
     }
   });
-  
-
 
 
 
@@ -44,7 +44,7 @@ $(document).ready(function(){
     onAutocomplete: function(movie_name) {
       $('#list-movie').append(movie_name + '<br />')
       $('#name-input').val('').focus();
-      list_m.push(movie_name);
+      list_m.push(dict_movie[movie_name]);
       delete dict_data[movie_name];
 
     },

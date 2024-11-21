@@ -631,21 +631,19 @@ def editor(request):
     movies = Movie.objects.filter(has_quote=1)
     if request.LANGUAGE_CODE == 'fr':
         list_movie = [m.name + f' ({m.year})' for m in movies]
-        dict_m = {(m.name + f' ({m.year})'): 'null' for m in movies}
+        dict_m = {(m.name + f' ({m.year})'): m.imdb_id for m in movies}
     else:
         list_movie = [m.en_name + f' ({m.year})' for m in movies]
-        dict_m = {(m.en_name + f' ({m.year})'): 'null' for m in movies}
+        dict_m = {(m.en_name + f' ({m.year})'): m.imdb_id for m in movies}
     context['list_movie'] = list_movie
-    context['dict_m'] = mark_safe(json.dumps(dict_m))
+    context['dict_movies'] = dict_m
     return render(request, 'quizz/editor.html', context)
 
 
 def save_preset(request):
     name = request.POST.get('name')
-    list_movie_str = json.loads(request.POST.get('list_movie'))
-    list_movie = [get_object_or_404(Movie, name=movie_str[:-7], year=int(movie_str[-5:-1])).id for movie_str in
-                  list_movie_str]
-
+    list_imdb_id = json.loads(request.POST.get('list_movie'))
+    list_movie = [get_object_or_404(Movie, imdb_id=imdb_id).id for imdb_id in list_imdb_id]
     list_movie_str = ",".join(list(map(str, list_movie)))
 
     if 'user_id' not in request.session:
