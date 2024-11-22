@@ -81,6 +81,7 @@
       {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}">{% trans "History" %}</a></li>{% endblock %}
       {% block nav-about %}<li><a href="{% url 'quizz:about' %}">{% trans "About" %}</a></li>{% endblock %}
       {% block nav-contact %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
+      {% block nav-news %}<li><a href="{% url 'quizz:news' %}">{% trans "News" %}</a></li>{% endblock %}
 
 
 
@@ -106,6 +107,7 @@
       {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}">{% trans "History" %}</a></li>{% endblock %}
       {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}">{% trans "About" %}</a></li>{% endblock %}
       {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
+      {% block nav-news2 %}<li><a href="{% url 'quizz:news' %}">{% trans "News" %}</a></li>{% endblock %}
       {% block nav-lyrizz2 %}<li style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">{% trans "Test Lyrizz" %}</a></li>{% endblock %}
         {% if LANGUAGE_CODE == 'en' %}
             <li class="center"><a href="{% url 'quizz:switch_language_mobile' %}"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></a></li>

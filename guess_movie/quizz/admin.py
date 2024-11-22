@@ -3,7 +3,7 @@ from django.db.models import IntegerField, Value as V
 from django.db.models.functions import Cast, StrIndex, Substr
 
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, GamePlayer, Preselect, \
-    QuestionImage, AnswerImage, Screenshot, Contact, Country, MovieCountry
+    QuestionImage, AnswerImage, Screenshot, Contact, Country, MovieCountry, News
 from django.urls import path
 from django.db import models
 from django.shortcuts import get_object_or_404, render
@@ -198,6 +198,10 @@ def history_image_view(request, game_name):
 
     return render(request, 'quizz/admin/history_image_admin.html', context)
 
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('date', 'title_en')
 
 # Register your models here.
 admin.site.register(Game)

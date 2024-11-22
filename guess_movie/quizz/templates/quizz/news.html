@@ -1,0 +1,33 @@
+{% extends "quizz/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block nav-news %}<li class="active"><a href="{% url 'quizz:news' %}"><b>{% trans "News" %}</b></a></li>{% endblock %}
+{% block nav-news2 %}<li class="active"><a href="{% url 'quizz:news' %}"><b>{% trans "News" %}</b></a></li>{% endblock %}
+
+{% block content %}
+
+<div style="margin-left: 1em;">
+
+<div class="center">
+<h5 style="color:#C3073F">News</h5>
+</div>
+<ul>
+    {% for item in news %}
+      <li>
+        <h6><b>{{ item.date|date:"d M Y" }}</b></h6>
+        <p>
+        {% if LANGUAGE_CODE == 'en' %}
+            {{ item.content_en|linebreaks }}
+        {% else %}
+            {{ item.content_fr|linebreaks }}
+        {% endif %}
+        </p>
+      </li>
+      <br />
+    {% endfor %}
+  </ul>
+
+</div>
+
+{% endblock %}
