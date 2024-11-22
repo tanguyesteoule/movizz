@@ -15,6 +15,7 @@ urlpatterns = [
     path('room/', views.room_index, name='room_index'),
     path('editor/', views.editor, name='editor'),
     path('save_preset/', views.save_preset, name='save_preset'),
+    path('news/', views.news, name='news'),
     # path('exploration/', views.exploration, name='exploration'),
     path('history/<str:game_name>/', views.history, name='history'),
     path('history_image/<str:game_name>/', views.history_image, name='history_image'),

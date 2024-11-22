@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from .forms import ContactForm
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, Country, MovieCountry, GamePlayer, \
-    Preselect, Screenshot, QuestionImage, AnswerImage
+    Preselect, Screenshot, QuestionImage, AnswerImage, News
 import random
 import numpy as np
 from django.db.models import Max, Min
@@ -1007,6 +1007,12 @@ def game(request):
     context['movies'] = [question.movie1, question.movie2, question.movie3]
 
     return render(request, 'quizz/game.html', context)
+
+
+def news(request):
+    news = News.objects.all().order_by("-date")
+    context = {'news': news}
+    return render(request, 'quizz/news.html', context)
 
 # def guess(request):
 #     if 'score' not in request.session and 'score_total' not in request.session:

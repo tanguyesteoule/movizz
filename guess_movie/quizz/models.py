@@ -160,3 +160,13 @@ class MovieCountry(models.Model):
 
     def __str__(self):
         return f'{self.movie.id}_{self.country.id}'
+
+
+class News(models.Model):
+    title_en = models.CharField(max_length=200)  # Only for admin
+    content_fr = models.TextField()
+    content_en = models.TextField()
+    date = models.DateTimeField()
+
+    class Meta:
+        ordering = ['-date']
