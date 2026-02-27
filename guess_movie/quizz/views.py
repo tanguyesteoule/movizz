@@ -840,7 +840,7 @@ def update_selection(request):
 
                 list_movie_id = list(set(list_movie_id_genre).intersection(list_movie_id_country))
 
-                if (year1 != 1900 or year2 != 2025):
+                if (year1 != 1900 or year2 != 2026):
                     if language == 'fr':
                         list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, id__in=list_movie_id,
                                                           has_quote=1).order_by('name')
@@ -853,7 +853,7 @@ def update_selection(request):
                     else:
                         list_movie = Movie.objects.filter(id__in=list_movie_id, has_quote_en=1).order_by('name')
             else:
-                if (year1 != 1900 or year2 != 2025):
+                if (year1 != 1900 or year2 != 2026):
                     if language == 'fr':
                         list_movie = Movie.objects.filter(year__gte=year1, year__lte=year2, has_quote=1).order_by(
                             'name')
@@ -879,7 +879,7 @@ def update_selection(request):
         dict_param = {'has_image': 1}
         if year1_img != 1900:
             dict_param['year__gte'] = year1_img
-        if year2_img != 2025:
+        if year2_img != 2026:
             dict_param['year__lte'] = year2_img
         if nsfw_filter == 1:
             dict_param['check_image'] = 1
