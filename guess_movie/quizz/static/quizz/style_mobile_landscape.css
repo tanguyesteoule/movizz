@@ -1,86 +1,64 @@
-/*
-#container-quote {
-    color: red !important;
-}
-*/
-.container-div:hover .overlay {
-}
+/* Mobile landscape (max-width: 900px, max-height: 500px, orientation: landscape) */
 
 img.movie-img {
-    height: 35vh;
-    border: solid 5px var(--border-img-color);
+  height: 32vh;
+  width: auto;
+  display: block;
 }
 
-.text {
-  font-size: 1.00rem;
-}
+.container-div { height: 32vh; }
 
-#quote-text {
-    font-size: 1.20rem;
-}
+.text { font-size: 0.82rem; }
+
+#quote-text { font-size: 1.05rem; }
 
 #img-container {
-}
-
-/*
-#container-button-next {
-    position: absolute;
-    left: 50%;
-    bottom: 10%;
-}
-
-#next_question {
-    position: relative;
-    left: -50%;
-}
-*/
-
-#container-button-next {
-    height: 10vh;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-#next_question {
-}
-
-.container-div {
-    height: 35vh;
+  height: 36vh;
 }
 
 #container-quote {
+  height: 16vh;
+  padding: 0 1rem;
+  gap: 0.5rem;
+}
+
+.guillemet { font-size: 2rem; }
+
+#container-button-next {
+  height: 8vh;
 }
 
 #display-user {
-    /*bottom:10%;*/
-    left: 1%;
-    /*position: absolute;*/
-    /*background-color: var(--border-img-color);
-    padding: 8px;*/
+  top: 4rem;
+  left: 0.5rem;
+  position: fixed;
 }
 
-#timer, #timer-debrief{
-    color: #CCC;
-    font-weight: bold;
-    font-size: 1.5rem;
-    position: absolute;
-    top: 20px;
-    /* left: 0; */
-    right: 20px;
-    margin: auto;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  #cont-screenshot {
-    display: inline-block;
-    max-width:80%;
-    height:auto;
-    width:auto;
-  }
-
-.centered-contact{
-    margin-left: auto;
-    margin-right: auto;
+#timer {
+  font-size: 1.2rem;
+  top: 4px;
+  right: 20px;
+  left: auto;
 }
+
+#timer-debrief {
+  font-size: 1rem;
+  top: 30px;
+  right: 20px;
+  left: auto;
+}
+
+#counter-question {
+  font-size: 0.72rem;
+  top: 0.5rem;
+  right: 5.5rem;
+}
+
+#cont-screenshot {
+  display: inline-block;
+  max-width: 82%;
+  height: auto;
+  width: auto;
+}
+
+.centered-contact { margin-left: auto; margin-right: auto; }

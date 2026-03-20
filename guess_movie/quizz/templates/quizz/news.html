@@ -2,32 +2,34 @@
 {% load i18n %}
 {% load static %}
 
-{% block nav-news %}<li class="active"><a href="{% url 'quizz:news' %}"><b>{% trans "News" %}</b></a></li>{% endblock %}
-{% block nav-news2 %}<li class="active"><a href="{% url 'quizz:news' %}"><b>{% trans "News" %}</b></a></li>{% endblock %}
+{% block nav-news %}<li class="active"><a href="{% url 'quizz:news' %}" class="nav-link">{% trans "News" %}</a></li>{% endblock %}
+{% block nav-news2 %}<li class="active"><a href="{% url 'quizz:news' %}" class="nav-link-mobile">{% trans "News" %}</a></li>{% endblock %}
 
 {% block content %}
+<div class="max-w-2xl mx-auto px-6 py-10">
 
-<div style="margin-left: 1em;">
+  <h1 class="text-2xl font-bold mb-8">
+    <span style="color:var(--accent)">News</span>
+  </h1>
 
-<div class="center">
-<h5 style="color:#C3073F">News</h5>
-</div>
-<ul>
+  {% if news %}
+  <div class="flex flex-col gap-6">
     {% for item in news %}
-      <li>
-        <h6><b>{{ item.date|date:"d M Y" }}</b></h6>
-        <p>
+    <article class="card-panel">
+      <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-3">{{ item.date|date:"d M Y" }}</p>
+      <div class="text-sm text-text leading-relaxed">
         {% if LANGUAGE_CODE == 'en' %}
-            {{ item.content_en|linebreaks }}
+          {{ item.content_en|linebreaks }}
         {% else %}
-            {{ item.content_fr|linebreaks }}
+          {{ item.content_fr|linebreaks }}
         {% endif %}
-        </p>
-      </li>
-      <br />
+      </div>
+    </article>
     {% endfor %}
-  </ul>
+  </div>
+  {% else %}
+    <p class="text-muted text-sm">{% trans "No news yet." %}</p>
+  {% endif %}
 
 </div>
-
 {% endblock %}

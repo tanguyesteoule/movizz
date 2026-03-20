@@ -1,17 +1,16 @@
 {% extends "quizz/base.html" %}
 {% load static %}
 
-{% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
-{% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
+{% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}" class="nav-link">Contact</a></li>{% endblock %}
+{% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}" class="nav-link-mobile">Contact</a></li>{% endblock %}
 
 {% block content %}
-
-<br /><br />
-<div style="margin-left: 1em; margin-right: 1em;">
-   <h5 class="title-about center">Contact</h5>
-   <div class="center">
-      Le message a bien été envoyé, merci pour votre retour !
-   </div>
+<div class="min-h-[calc(100vh-3.5rem)] flex items-center justify-center px-4">
+  <div class="card-panel text-center max-w-sm w-full">
+    <div class="text-4xl mb-4">✉️</div>
+    <h2 class="text-accent font-semibold text-base mb-2">Message envoyé !</h2>
+    <p class="text-muted text-sm">Merci pour votre retour, je vous répondrai dès que possible.</p>
+    <a href="{% url 'quizz:home' %}" class="btn-primary mt-6 inline-block">Retour à l'accueil</a>
+  </div>
 </div>
-
 {% endblock %}

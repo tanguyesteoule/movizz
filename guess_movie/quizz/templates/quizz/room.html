@@ -2,13 +2,12 @@
 {% load i18n %}
 {% load quizz_extras %}
 
-{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>{% trans "Play" %}</b></a></li>{% endblock %}
-{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>{% trans "Play" %}</b></a></li>{% endblock %}
+{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}" class="nav-link">{% trans "Play" %}</a></li>{% endblock %}
+{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}" class="nav-link-mobile">{% trans "Play" %}</a></li>{% endblock %}
 
 {% block javascript %}
-
 <script>
-$(document).ready ( function () {
+$(document).ready(function() {
 
 const toNumbers = arr => arr.map(Number);
 
@@ -20,848 +19,659 @@ const toNumbers = arr => arr.map(Number);
 
 ALREADY_CREATED = 0
 
-setTimeout(() => {
-    $('#start-link').removeClass('disabled');
-}, 2000);
+setTimeout(() => { $('#start-link').removeClass('disabled'); }, 2000);
 
-
+// ── WebSocket helpers ──────────────────────────────────────────────────
 connect_socket = function(url) {
   var connectionTries = 1;
   var ws = new WebSocket(url);
   ws.addEventListener("error", e => {
-  // readyState === 3 is CLOSED
-  if (e.target.readyState === 3) {
-    this.connectionTries--;
-
-    if (this.connectionTries > 0) {
-      setTimeout(() => this.connect(url), 5000);
-    } else {
-      $('#bug-text').html('{% trans "room-error" %}')
-      $('#bug').css('visibility','visible');
-      throw "Maximum number of connection trials has been reached";
+    if (e.target.readyState === 3) {
+      this.connectionTries--;
+      if (this.connectionTries > 0) {
+        setTimeout(() => this.connect(url), 5000);
+      } else {
+        $('#bug-text').html('{% trans "room-error" %}')
+        $('#bug').css('visibility','visible');
+        throw "Maximum number of connection trials has been reached";
+      }
     }
-
-  }
   });
-
   return ws;
-
 }
 
+if (window.location.protocol == 'https:') { wsProtocol = 'wss://'; }
+else { wsProtocol = 'ws://'; }
 
-if (window.location.protocol == 'https:') {
-  wsProtocol = 'wss://'
-} else {
-  wsProtocol = 'ws://'
-}
-
-{% if request.session.game_master == room_name%}
+{% if request.session.game_master == room_name %}
   const url_socket_game = wsProtocol + window.location.host + '/ws/room/m/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
   const gameSocket = new WebSocket(url_socket_game);
-
-  <!--  gameSocket.onclose = changer le game_master -->
-  <!--  gameSocket.send = Démarrer la partie -->
-
 {% endif %}
-  const url_socket_user = wsProtocol + window.location.host + '/ws/room/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
-  // const userSocket = new WebSocket(url_socket_user);
-  const userSocket = connect_socket(url_socket_user);
 
-  var dict_user = {};
+const url_socket_user = wsProtocol + window.location.host + '/ws/room/' + '{{room_name}}' + '/' + '{{request.session.user_id}}' + '/';
+const userSocket = connect_socket(url_socket_user);
 
-  userSocket.onmessage = function(e) {
-      const data = JSON.parse(e.data);
-      dict_user = data['dict_user'];
+var dict_user = {};
 
-      if(data['code'] == 'refresh'){
-        
-        setTimeout(() => location.reload(), 1000);
-      }
-      
-      if(data['code'] == 'event_start'){
-      
-      list_user = data['list_user']
-        $.ajax({
-            type: "POST",
-            url: '/save_info_game/',
-            data: {
-              'list_user': JSON.stringify(list_user),
-              'game_name': data['game_name'],
-              'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            dataType: 'json',
-            success: function (data2) {
-              
-              if (data['mode'] == 'quote') {
-                url_redir = window.location.protocol +'//'+window.location.host + '/room/play/' + '{{room_name}}' + '/' + data['game_name'] + '/'
-              } else {
-                url_redir = window.location.protocol +'//'+window.location.host + '/room/play_image/' + '{{room_name}}' + '/' + data['game_name'] + '/'
-              }
-              location.replace(url_redir)
-            }
-        });
+userSocket.onmessage = function(e) {
+  const data = JSON.parse(e.data);
+  dict_user = data['dict_user'];
 
+  if (data['code'] == 'refresh') {
+    setTimeout(() => location.reload(), 1000);
+  }
 
-
-
-      }
-      if ('list_user_id' in data){
-          var list_user_html = '<ul>'
-          for (i=0; i < Math.min(data['list_user_id'].length, 7); i++) {
-            u_id = data['list_user_id'][i]
-            if(u_id == '{{request.session.user_id}}'){
-                list_user_html += '<b><li>' + dict_user[u_id] +'</li></b>'
-            } else {
-                list_user_html += '<li>' + dict_user[u_id] +'</li>'
-            }
-          }
-          if(data['list_user_id'].length > 7){
-            list_user_html += '<li>...</li>'
-          }
-          list_user_html += '</ul>'
-
-          $("#list-user").html(list_user_html)
-          $("#nb-user").text(data['list_user_id'].length)
-      }
-
-  };
-  <!--  userSocket.onclose = pas d'usage ? -->
-  <!--  userSocket.send = pas d'usage ? -->
-
-
-
-    $("#start-link").click(function () {
-      if (ALREADY_CREATED == 0) {
-        ALREADY_CREATED = 1
-        if (MODE == 'quote') {
-          var nb_question = $("#nb-question").val()
+  if (data['code'] == 'event_start') {
+    list_user = data['list_user']
+    $.ajax({
+      type: "POST",
+      url: '/save_info_game/',
+      data: {
+        'list_user': JSON.stringify(list_user),
+        'game_name': data['game_name'],
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      dataType: 'json',
+      success: function(data2) {
+        if (data['mode'] == 'quote') {
+          url_redir = window.location.protocol + '//' + window.location.host + '/room/play/' + '{{room_name}}' + '/' + data['game_name'] + '/'
         } else {
-          var nb_question = $("#nb-question-img").val()
+          url_redir = window.location.protocol + '//' + window.location.host + '/room/play_image/' + '{{room_name}}' + '/' + data['game_name'] + '/'
         }
-        
-        $.ajax({
-            type: "POST",
-            url: '/create_game/',
-            data: {
-              'room_name':'{{ room_name }}',
-              'nb_question': nb_question,
-              'dict_user': JSON.stringify(dict_user),
-              'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            dataType: 'json',
-            success: function (data) {
-              game_name = data['game_name']
-              gameSocket.send(JSON.stringify({
-                'game_name': game_name,
-                'nb_question': nb_question,
-                'message': 'go',
-                'mode': MODE
-              }));
-
-            }
-        });
+        location.replace(url_redir)
       }
     });
+  }
 
-var changeTimerName = false;
+  if ('list_user_id' in data) {
+    var list_user_html = '<ul style="list-style:none;margin:0;padding:0;">'
+    for (var i = 0; i < Math.min(data['list_user_id'].length, 7); i++) {
+      var u_id = data['list_user_id'][i]
+      if (u_id == '{{request.session.user_id}}') {
+        list_user_html += '<li style="padding:0.2rem 0;font-size:0.875rem;"><strong style="color:var(--accent)">' + dict_user[u_id] + '</strong> <span style="color:var(--muted);font-size:0.75rem">({% trans "you" %})</span></li>'
+      } else {
+        list_user_html += '<li style="padding:0.2rem 0;font-size:0.875rem;color:var(--muted)">' + dict_user[u_id] + '</li>'
+      }
+    }
+    if (data['list_user_id'].length > 7) {
+      list_user_html += '<li style="color:var(--muted);font-size:0.75rem">…</li>'
+    }
+    list_user_html += '</ul>'
+    $("#list-user").html(list_user_html)
+    $("#nb-user").text(data['list_user_id'].length)
+  }
+};
 
-$("#user-name").keyup(function(){
-        if(changeTimerName !== false) clearTimeout(changeTimerName);
-        changeTimerName = setTimeout(function(){
-          var user_name = $("#user-name").val()
-          $.ajax({
-              url: '/change_user_name/',
-              data: {
-                'user_name':user_name
-              },
-              dataType: 'json',
-              success: function (data) {
-                context = {'user_name': user_name}
-                userSocket.send(JSON.stringify(context));
-
-              }
-          });
-
-            changeTimerName = false;
-        },300);
+$('#start-link').click(function() {
+  if (ALREADY_CREATED == 0) {
+    ALREADY_CREATED = 1
+    var nb_question = (MODE == 'quote') ? $("#nb-question").val() : $("#nb-question-img").val();
+    $.ajax({
+      type: "POST",
+      url: '/create_game/',
+      data: {
+        'room_name': '{{ room_name }}',
+        'nb_question': nb_question,
+        'dict_user': JSON.stringify(dict_user),
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      dataType: 'json',
+      success: function(data) {
+        game_name = data['game_name']
+        gameSocket.send(JSON.stringify({
+          'game_name': game_name,
+          'nb_question': nb_question,
+          'message': 'go',
+          'mode': MODE
+        }));
+      }
+    });
+  }
 });
 
-function copyStringToClipboard (str) {
-   // Create new element
-   var el = document.createElement('textarea');
-   // Set value (string to be copied)
-   el.value = str;
-   // Set non-editable to avoid focus and move outside of view
-   el.setAttribute('readonly', '');
-   el.style = {position: 'absolute', left: '-9999px'};
-   document.body.appendChild(el);
-   // Select text inside element
-   el.select();
-   // Copy text to clipboard
-   document.execCommand('copy');
-   // Remove temporary element
-   document.body.removeChild(el);
+var changeTimerName = false;
+$('#user-name').keyup(function() {
+  if (changeTimerName !== false) clearTimeout(changeTimerName);
+  changeTimerName = setTimeout(function() {
+    var user_name = $('#user-name').val()
+    $.ajax({
+      url: '/change_user_name/',
+      data: { 'user_name': user_name },
+      dataType: 'json',
+      success: function(data) {
+        userSocket.send(JSON.stringify({'user_name': user_name}));
+      }
+    });
+    changeTimerName = false;
+  }, 300);
+});
+
+function copyStringToClipboard(str) {
+  var el = document.createElement('textarea');
+  el.value = str;
+  el.setAttribute('readonly', '');
+  el.style = { position: 'absolute', left: '-9999px' };
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
 }
 
-$("#link-share").click(function () {
-  $("#status-copy").css('visibility','visible');
-  url_copy = window.location.protocol +'//'+window.location.host + '/room/' + '{{room_name}}' + '/'
+$('#link-share').click(function() {
+  $('#status-copy').css('visibility', 'visible');
+  url_copy = window.location.protocol + '//' + window.location.host + '/room/' + '{{room_name}}' + '/'
   copyStringToClipboard(url_copy)
 });
 
-<!--  Selection -->
-{% if request.session.game_master == room_name%}
+{% if request.session.game_master == room_name %}
 
-    update_data = function(reset_selected) {
-        $('#nb_movies').removeClass('normal-selection').addClass('waiting-selection');
-        var list_m = $("input.genrecbx:checked").map(function(){return 'genre_'+$(this).attr("name");}).get();
-        var list_m_img = $("input.genrecbx_img:checked").map(function(){return 'genreimg_'+$(this).attr("name");}).get();
+update_data = function(reset_selected) {
+  $('#nb_movies').removeClass('normal-selection').addClass('waiting-selection');
+  var list_m     = $("input.genrecbx:checked").map(function(){ return 'genre_' + $(this).attr("name"); }).get();
+  var list_m_img = $("input.genrecbx_img:checked").map(function(){ return 'genreimg_' + $(this).attr("name"); }).get();
 
-        //genre
-        data_g = {'select':1}
-        for (i=0; i < list_m.length; i++) {
-            data_g[list_m[i]] = 1
-        }
-        // genre image
-        for (i=0; i < list_m_img.length; i++) {
-            data_g[list_m_img[i]] = 1
-        }
+  data_g = { 'select': 1 }
+  for (var i = 0; i < list_m.length; i++)     { data_g[list_m[i]] = 1 }
+  for (var i = 0; i < list_m_img.length; i++) { data_g[list_m_img[i]] = 1 }
 
-        data_g['selected_movies'] = JSON.stringify(toNumbers($('#selected-movies').val()))
+  data_g['selected_movies']  = JSON.stringify(toNumbers($('#selected-movies').val()))
+  data_g['presel']           = $('#preselect-sel').val()
+  data_g['nb_question']      = $('#nb-question').val()
+  data_g['nb_question_img']  = $('#nb-question-img').val()
+  data_g['year1']            = $('#year1').val()
+  data_g['year2']            = $('#year2').val()
+  data_g['popularity']       = $('#popularity').val()
+  data_g['popularity_img']   = $('#popularity_img').val()
+  data_g['country']          = $('#country-sel').val()
+  data_g['country_img']      = $('#country-sel_img').val()
+  data_g['year1_img']        = $('#year1_img').val()
+  data_g['year2_img']        = $('#year2_img').val()
+  data_g['nsfw_filter']      = $("input#nsfw").is(":checked") ? 1 : 0
 
-        presel = $('#preselect-sel').val()
-        data_g['presel'] = presel
+  if ($('#mode_image').is(':checked')) {
+    MODE = 'image'; data_g['mode'] = 'image';
+    $('#ul-image').css('display', 'block');
+    $('#ul-quote').css('display', 'none');
+  } else {
+    MODE = 'quote'; data_g['mode'] = 'quote';
+    $('#ul-quote').css('display', 'block');
+    $('#ul-image').css('display', 'none');
+  }
 
-        data_g['nb_question'] = $('#nb-question').val()
-        data_g['nb_question_img'] = $('#nb-question-img').val()
-        data_g['year1'] = $('#year1').val()
-        data_g['year2'] = $('#year2').val()
-        data_g['popularity'] = $('#popularity').val()
-        data_g['popularity_img'] = $('#popularity_img').val()
-        data_g['country'] = $('#country-sel').val()
-        data_g['country_img'] = $('#country-sel_img').val()
-        data_g['year1_img'] = $('#year1_img').val()
-        data_g['year2_img'] = $('#year2_img').val()
-        if ($("input#nsfw").is(":checked")) {
-            data_g['nsfw_filter'] = 1
+  data_g['game_mode']        = $('#game_mode_chill').is(':checked') ? 'chill' : $('#timer_nb').val()
+  data_g['game_mode_debrief'] = $('#game_mode_debrief_chill').is(':checked') ? 'chill' : $('#timer_nb_debrief').val()
+  data_g['csrfmiddlewaretoken'] = '{{ csrf_token }}'
+  data_g['reset'] = reset_selected ? 1 : 0
+
+  $.ajax({
+    type: "POST",
+    url: '/update_selection/',
+    data: data_g,
+    dataType: 'json',
+    success: function(data) {
+      $("#nb_movies").text(data['nb_movies_sel'])
+      $('#nb_movies').removeClass('waiting-selection').addClass('normal-selection');
+      $("#nb_movies_img").text(data['nb_movies_sel_img'])
+      $('#nb_movies_img').removeClass('waiting-selection').addClass('normal-selection');
+
+      if (reset_selected) {
+        list_movie_sel_name = data['list_movie_sel_name']
+        list_movie_sel = data['list_movie_sel']
+        var str_html = "<select id='selected-movies' class='update-without-reset' multiple>"
+        if (list_movie_sel.length <= 200) {
+          for (var i = 0; i < list_movie_sel.length; i++) {
+            str_html += "<option value='" + list_movie_sel[i] + "' selected>" + list_movie_sel_name[i] + "</option>"
+          }
         } else {
-           data_g['nsfw_filter'] = 0
+          str_html += "<option value='' disabled>{% trans "Too many films for customization" %}</option>"
         }
-
-        if ($('#mode_image').is(':checked')) {
-            MODE = 'image'
-            data_g['mode'] = 'image'
-            $('#ul-image').css('display','block');
-            $('#ul-quote').css('display','none');
-            {% comment %} $('#ul-image').open();
-            $('#ul-quote').close(); {% endcomment %}
-
-        } else {
-            MODE = 'quote'
-            data_g['mode'] = 'quote'
-            $('#ul-quote').css('display','block');
-            $('#ul-image').css('display','none');
-            {% comment %} $('#ul-image').close();
-            $('#ul-quote').open(); {% endcomment %}
-        }
-
-        if ($('#game_mode_chill').is(':checked')) {
-            data_g['game_mode'] = 'chill'
-        } else {
-            data_g['game_mode'] = $('#timer_nb').val()
-        }
-
-        if ($('#game_mode_debrief_chill').is(':checked')) {
-            data_g['game_mode_debrief'] = 'chill'
-        } else {
-            data_g['game_mode_debrief'] = $('#timer_nb_debrief').val()
-        }
-        data_g['csrfmiddlewaretoken'] = '{{ csrf_token }}'
-        if (reset_selected) {
-          data_g['reset'] = 1
-        } else {
-          data_g['reset'] = 0
-        }
-
-         
-        //console.log(data_g)
-        $.ajax({
-            type: "POST",
-            url: '/update_selection/',
-            data: data_g,
-            dataType: 'json',
-            success: function (data) {
-                $("#nb_movies").text(data['nb_movies_sel'])
-                $('#nb_movies').removeClass('waiting-selection').addClass('normal-selection');
-
-                $("#nb_movies_img").text(data['nb_movies_sel_img'])
-                $('#nb_movies_img').removeClass('waiting-selection').addClass('normal-selection');
-
-                if (reset_selected) {
-                  list_movie_sel_name = data['list_movie_sel_name']
-                  list_movie_sel = data['list_movie_sel']
-                  str_html = "<select id='selected-movies' class='update-without-reset' multiple>"
-                  if (list_movie_sel.length <= 200 ) {
-                    for (var i = 0; i < list_movie_sel.length; i++) {
-                        str_html += "<option value='" + list_movie_sel[i] + "' selected>" + list_movie_sel_name[i] + "</option>"
-                    }
-                  } else {
-                    str_html += "<option value='' disabled>{% trans "Too many films for customization" %}</option>"
-                  }
-                  str_html += "</select>"
-                  $('#div-selected-movies').html(str_html)
-                  $('select').formSelect();
-
-                }
-
-            }
-        });
+        str_html += "</select>"
+        $('#div-selected-movies').html(str_html)
+      }
     }
+  });
+}
 
-    $(document.body).on('change','.update-reset', function() {
-     // Requete ajax et mettre à jour liste (avec reset)
-      update_data(reset_selected=true)
-    });
+$(document.body).on('change', '.update-reset',         function() { update_data(true);  });
+$(document.body).on('change', '.update-without-reset', function() { update_data(false); });
 
-    $(document.body).on('change','.update-without-reset', function() {
-    //$(".update-without-reset").change(function() {
-     // Requete ajax et mettre à jour liste (sans reset selected)
-      update_data(reset_selected=false)
-    });
+$('#select_all_cbx').click(function()     { $('input.genrecbx:checkbox').prop("checked", true).first().change(); });
+$('#select_all_cbx_img').click(function() { $('input.genrecbx_img:checkbox').prop("checked", true).first().change(); });
+$('#reset_all_cbx').click(function()      { $('input.genrecbx:checkbox').prop("checked", false).first().change(); });
+$('#reset_all_cbx_img').click(function()  { $('input.genrecbx_img:checkbox').prop("checked", false).first().change(); });
 
-    $("#select_all_cbx").click(function () {
-        $('input.genrecbx:checkbox').prop( "checked", true ).first().change();
+$('#reset_all_year').click(function()          { $('#year1').val(1900).change(); $('#year2').val(2026).change(); });
+$('#reset_all_year_img').click(function()      { $('#year1_img').val(1900).change(); $('#year2_img').val(2026).change(); });
+$('#reset_all_popularity').click(function()    { $('#popularity').val('').change(); });
+$('#reset_all_popularity_img').click(function(){ $('#popularity_img').val('').change(); });
 
-    });
+$('#popularity').trigger('change');
 
-    $("#select_all_cbx_img").click(function () {
-        $('input.genrecbx_img:checkbox').prop( "checked", true ).first().change();
+$('#preset-default').click(function() {
+  $('#game_mode_chill').prop("checked", true);
+  $('#game_mode_debrief_timer').prop("checked", true);
+  $('#nb-question').val(10);
+  $('#timer_nb_debrief').val(3);
+  $('input.genrecbx:checkbox').prop("checked", true).first();
+  $('#year1').val(1970); $('#year2').val(2026);
+  $('#country-sel').val("c-1");
+  $('#preselect-sel').val("-1");
+  $('#popularity').val(200).change();
+});
 
-    });
-
-    $("#reset_all_cbx").click(function () {
-        $('input.genrecbx:checkbox').prop( "checked", false ).first().change();
-    });
-
-    $("#reset_all_cbx_img").click(function () {
-        $('input.genrecbx_img:checkbox').prop( "checked", false ).first().change();
-    });
-
-
-    $("#reset_all_year").click(function () {
-        //console.log('reset')
-        $('#year1').val(1900).change()
-        $('#year2').val(2026).change()
-    });
-
-    $("#reset_all_year_img").click(function () {
-        $('#year1_img').val(1900).change()
-        $('#year2_img').val(2026).change()
-    });
-
-    $("#reset_all_popularity").click(function () {
-        $('#popularity').val('').change()
-    });
-
-    $("#reset_all_popularity_img").click(function () {
-        $('#popularity_img').val('').change()
-    });
-
-    $('#popularity').trigger('change');
-
-
-    $(document).ready(function(){
-        $('.collapsible').collapsible();
-        $('select').formSelect();
-<!--        $('input#user-name').characterCounter();-->
-    });
-
-
-    $('#preset-default').click(function() {
-        $('#game_mode_chill').prop( "checked", true ).first();
-        $('#game_mode_timer').prop( "checked", false ).first();
-        $('#game_mode_debrief_chill').prop( "checked", false ).first();
-        $('#game_mode_debrief_timer').prop( "checked", true ).first();
-
-        $('#nb-question').val(10)
-        $('#timer_nb_debrief').val(3)
-        $('input.genrecbx:checkbox').prop( "checked", true ).first()
-        $('#year1').val(1970)
-        $('#year2').val(2026)
-        $('#country-sel').val("c-1");
-        $('#preselect-sel').val("-1");
-        $('#popularity').val(200).change()
-    });
-
-    $('#preset-all').click(function() {
-        $('input.genrecbx:checkbox').prop( "checked", true ).first()
-        $('#year1').val(1900)
-        $('#year2').val(2026)
-        $('#country-sel').val("c-1");
-        $('#preselect-sel').val("-1");
-        $('#popularity').val('').change()
-
-    });
-
+$('#preset-all').click(function() {
+  $('input.genrecbx:checkbox').prop("checked", true).first();
+  $('#year1').val(1900); $('#year2').val(2026);
+  $('#country-sel').val("c-1");
+  $('#preselect-sel').val("-1");
+  $('#popularity').val('').change();
+});
 
 {% endif %}
-
-
-
 
 });
 </script>
 {% endblock %}
 
 {% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
 
-<div id="room-img-container">
-<div style="text-align:center">
-    <div class="input-field"><input type="text" id="user-name" name="user-name" value="{{request.session.user_name}}" maxlength="25">
-    <label for="user-name">{% trans "Username" %}</label></div>
-<!--    <a id="button-change-name" class="btn waves-effect btn-color">Renommer</a><br /><br />-->
-    <a id="link-share" class="btn waves-effect btn-color">{% trans "Copy the invitation link" %}</a><br />
-    <span style="visibility:hidden" id="status-copy"> {% trans "Copied !" %}</span><br />
-</div>
-  <div style="text-align:center">
-    <h6 style="color:#C3073F; font-weight:bold;">{% trans "Players list" %} (<span id="nb-user"></span>)</h6>
-    <div id="list-user"></div>
+  <!-- Room header -->
+  <div class="card-panel mb-6">
+    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
 
-</div>
-</div>
+      <!-- Username -->
+      <div class="flex-1">
+        <label class="form-label" for="user-name">{% trans "Username" %}</label>
+        <input type="text" id="user-name" name="user-name"
+               value="{{ request.session.user_name }}"
+               maxlength="25" class="form-input" />
+      </div>
 
+      <!-- Share -->
+      <div class="flex flex-col items-start gap-1">
+        <a id="link-share" class="btn-secondary text-sm cursor-pointer">
+          📋 {% trans "Copy invitation link" %}
+        </a>
+        <span id="status-copy" style="visibility:hidden;" class="text-xs text-good">{% trans "Copied !" %}</span>
+      </div>
+    </div>
 
-{% if request.session.game_master == room_name%}
-
-<br />
-  <div class="center">
-    {% if request.session.mode == 'image'%}
-      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" checked /><span>{% trans "Image Mode" %}</span></label>
-      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote"/><span>{% trans "Quote Mode" %}</span></label>
-    {% else %}
-      <label><input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" /><span>{% trans "Image Mode" %}</span></label>
-      <label><input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote" checked/><span>{% trans "Quote Mode" %}</span></label>
-    {% endif %}
+    <!-- Players -->
+    <div class="mt-4 pt-4 border-t border-border">
+      <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">
+        {% trans "Players" %} (<span id="nb-user">—</span>)
+      </p>
+      <div id="list-user" class="text-sm text-muted">—</div>
+    </div>
   </div>
-  <br />
 
-  <ul id="ul-quote" class="collapsible" style="width:90%;margin: 0 auto;">
-    <li>
-      <div class="collapsible-header">{% trans "Game settings" %} ({% trans "Quote Mode" %})<i class="material-icons">expand_more</i></div>
-      <div class="collapsible-body">
-        <h5 class="title-about">{% trans "Basic configuration" %}</h5>
-      <fieldset>
-          <legend><b>{% trans "Preselections" %}</b> </legend>
-          <div id="preset-container" style="text-align:center;">
-            <a id="preset-default" title="Par défaut" class="btn waves-effect btn-color">{% trans "Default (easy)" %}</a>
-            <a id="preset-all" title="Tous les films" class="btn waves-effect btn-color">{% trans "All movies" %}</a>
+  {% if request.session.game_master == room_name %}
+
+  <!-- Mode selector -->
+  <div class="card-panel mb-4">
+    <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-3">{% trans "Game mode" %}</p>
+    <div class="flex gap-6">
+      {% if request.session.mode == 'image' %}
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" checked />
+          <span class="text-sm">📸 {% trans "Image Mode" %}</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote" />
+          <span class="text-sm">💬 {% trans "Quote Mode" %}</span>
+        </label>
+      {% else %}
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input class="update-without-reset" name="mode" id="mode_image" type="radio" value="image" />
+          <span class="text-sm">📸 {% trans "Image Mode" %}</span>
+        </label>
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input class="update-without-reset" name="mode" id="mode_quote" type="radio" value="quote" checked />
+          <span class="text-sm">💬 {% trans "Quote Mode" %}</span>
+        </label>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ── QUOTE MODE SETTINGS ── -->
+  <div id="ul-quote">
+    <details class="settings-section mb-4" open>
+      <summary>
+        <span>⚙️ {% trans "Game settings" %} — {% trans "Quote Mode" %}</span>
+        <svg class="chevron w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </summary>
+      <div class="settings-body flex flex-col gap-5">
+
+        <!-- Presets -->
+        <fieldset>
+          <legend>{% trans "Preselections" %}</legend>
+          <div class="flex gap-2 flex-wrap mt-2">
+            <a id="preset-default" class="btn-secondary text-xs cursor-pointer">{% trans "Default (easy)" %}</a>
+            <a id="preset-all"     class="btn-secondary text-xs cursor-pointer">{% trans "All movies" %}</a>
           </div>
-      </fieldset>
-    <br />
-    <fieldset>
-          <legend><b>{% trans "Community preselections" %}</b> </legend>
-       <div class="input-field col m6">
-    <select class="update-reset" name="preselect-sel" id="preselect-sel">
+        </fieldset>
 
-    {% if not request.session.presel or request.session.presel == -1 %}
-      <option value="-1" selected>{% trans "No preselection" %}</option>
-    {% else %}
-      <option value="-1">{% trans "No preselection" %}</option>
-    {% endif %}
-
-    {% for p in preselect %}
-      {% if request.session.presel == p.id %}
-        <option value="{{ p.id }}" selected>{{ p.name }}</option>
-      {% else %}
-        <option value="{{ p.id }}">{{ p.name }}</option>
-      {% endif %}
-    {% endfor %}
-
-    </select>
-    <span class="helper-text" data-error="wrong" data-success="right">{% trans "room-presel" %}</span>
-
-  </div>
-
-      </fieldset>
-      <h5 class="title-about">{% trans "Advanced configuration" %}</h5>
-    <br />
-    <fieldset>
-      <legend><b>{% trans "Reflection time" %}</b> </legend>
-          <div class="mode-img-container">
-     <div>
-        <label>
-            {% if 'game_mode' not in request.session or request.session.game_mode == 'chill' %}
-            <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" checked />
+        <!-- Community presets -->
+        <fieldset>
+          <legend>{% trans "Community preselections" %}</legend>
+          <select class="update-reset mt-2" name="preselect-sel" id="preselect-sel">
+            {% if not request.session.presel or request.session.presel == -1 %}
+              <option value="-1" selected>{% trans "No preselection" %}</option>
             {% else %}
-            <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" />
+              <option value="-1">{% trans "No preselection" %}</option>
             {% endif %}
-            <span>{% trans "Unlimited (by host)" %}</span>
-        </label>
-     </div>
-     <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
-     <div>
-        <label>
-            {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
-            <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" checked />
-            {% else %}
-            <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" />
-            {% endif %}
-
-            <span>{% trans "Automatic" %}</span>
-        </label>
-     </div>
-     <div class="input-field" style="width:20%;">
-        <label for="timer_nb">{% trans "Reflection time" %}</label>
-         {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
-            <input class='update-without-reset' type="number" min="5" max="15" id="timer_nb" name="timer_nb" value="{{ request.session.game_mode }}"><br />
-        {% else %}
-            <input class='update-without-reset' type="number" min="5" max="15" id="timer_nb" name="timer_nb" value="10"><br />
-        {% endif %}
-
-        <span class="helper-text" data-error="wrong" data-success="right">{% trans "Must be between 5 and 15s" %}</span>
-    </div>
-      </div>
-  </fieldset>
-<br />
-    <fieldset>
-      <legend><b>{% trans "Change of question" %}</b> </legend>
-          <div class="mode-img-container">
-     <div>
-        <label>
-            {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief == 'chill' %}
-            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" checked />
-            {% else %}
-            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" />
-            {% endif %}
-            <span>{% trans "Manual (by host)" %}</span>
-        </label>
-     </div>
-     <div style="width:1px; height:90%; border-right: 1px solid threedface;"><br /><br /><br /><br /></div>
-     <div>
-        <label>
-            {% if 'game_mode_debrief' not in request.session or request.session.game_mode_debrief != 'chill' %}
-            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" checked />
-            {% else %}
-            <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" />
-            {% endif %}
-
-            <span>{% trans "Automatic" %}</span>
-        </label>
-     </div>
-     <div class="input-field" style="width:20%;">
-        <label for="timer_nb_debrief">{% trans "Waiting time" %}</label>
-         {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief != 'chill' %}
-            <input class='update-without-reset' type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief" value="{{ request.session.game_mode_debrief }}"><br />
-        {% else %}
-            <input class='update-without-reset' type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief" value="3"><br />
-        {% endif %}
-
-        <span class="helper-text" data-error="wrong" data-success="right">{% trans "Must be between 2 and 10s" %}</span>
-    </div>
-      </div>
-  </fieldset>
-
-<br />
-  <fieldset>
-      <legend><b>{% trans "Number of questions" %}</b> </legend>
-      <div class="input-field">
-    <label for="nb-question">{% trans "Number of questions" %}</label>
-    {% if request.session.nb_question %}
-      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="{{ request.session.nb_question }}"><br />
-    {% else %}
-      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question" name="nb-question" value="10"><br />
-    {% endif %}
-      </div>
-  </fieldset>
-    <p>{% trans "room-filter-msg" %}</p>
-
-  <b>{% trans "Number of selected movies:" %} </b>
-  <div style="color:#C3073F; font-weight: bold; display: inline;">
-  {% if request.session.list_movie_sel %}
-  <span class="normal-selection" id="nb_movies">{{ request.session.list_movie_sel|length }}</span> {% trans "movies" %}
-  {% else %}
-  <span class="normal-selection" id="nb_movies">{{ nb_movies_tot }}</span> {% trans "movies" %}
-  {% endif %}
-  </div>
-    <br /><br />
-  <fieldset>
-      <input id="select" name="select" type="hidden" value="1">
-      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx">{% trans "Check all" %}</span> / <span class="clickable-link" id="reset_all_cbx">{% trans "Uncheck all" %}</span>)</legend>
-
-
-      <ul class="checkbox">
-      {% for genre in genres %}
-      {% if request.session.list_genre %}
-          {% if genre.id in request.session.list_genre %}
-
-      <li><label class="label-for-check" for='idcbx{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
-          {% else %}
-          <li><label class="label-for-check" for='idcbx{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1"><span>{{ genre.name }}</span></label></li>
-          {% endif %}
-      {% else %}
-          <li><label class="label-for-check" for='idcbx{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx" id='idcbx{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
-      {% endif %}
-      {% endfor %}
-      </ul>
-
-  </fieldset>
-  <br />
-
-  <fieldset>
-  <legend><b>{% trans "Countries" %}</b></legend>
-  <div class="input-field col m6">
-    <select class="update-reset" name="country-sel" id="country-sel">
-<!--      <option value="" disabled selected>Choose your option</option>-->
-      {% if not request.session.country_selected or request.session.country_selected == -1 %}
-        <option value="c-1" selected="selected">{% trans "All countries" %}</option>
-      {% else %}
-        <option value="c-1">{% trans "All countries" %}</option>
-      {% endif%}
-
-      {% for country in countries %}
-        {% if request.session.country_selected == country.id%}
-            <option value="c{{ country.id }}" selected="selected">{{ country.name }}</option>
-        {% else %}
-            <option value="c{{ country.id }}">{{ country.name }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-<!--    <label>Materialize Select</label>-->
-  </div>
-
-  </fieldset>
-
-  <br />
-  <fieldset>
-      <legend><b>{% trans "Years" %}</b> (<span class="clickable-link" id="reset_all_year">{% trans "Reset" %}</span>)</legend>
-      {% if request.session.year1 or request.session.year2 %}
-      <div class="input-field">
-          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2026" size="5" value="{{ request.session.year1 }}">
-      </div>
-      <div class="input-field">
-          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2026" size="5" value="{{ request.session.year2 }}">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
-      </div>
-      <br />
-      {% else %}
-      <div class="input-field">
-          <label for="year1">{% trans "From" %}</label><input class="update-reset" type="number" id="year1" name="year1" maxlength="4" min="1900" max="2026" size="5" value="1970">
-      </div>
-      <div class="input-field">
-          <label for="year2">{% trans "to" %}</label><input class="update-reset" type="number" id="year2" name="year2" maxlength="4" min="1900" max="2026" size="5" value="2026">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
-      </div>
-      <br />
-      {% endif %}
-
-
-  </fieldset>
-
-      <br />
-  <fieldset>
-      <legend><b>{% trans "Popularity" %}</b> (<span class="clickable-link" id="reset_all_popularity">{% trans "Reset" %}</span>)</legend>
-      {% if request.session.popularity != None %}
-      <div class="input-field">
-          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="{{ request.session.popularity }}">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
-      </div>
-      {% else %}
-      <div class="input-field">
-          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000" maxlength="10" size="5" value="200">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
-      </div>
-      {% endif %}
-    <br />
-  </fieldset>
-  <br />
-
-  <fieldset>
-      <legend><b>{% trans "Selected movies" %}</b></legend>
-
-      <div class="input-field col s12">
-        <div id="div-selected-movies">
-          <select id="selected-movies" class="update-without-reset" multiple>
-
-            {% if request.session.list_movie_sel|length <= 200 %}
-              {% for m_name in request.session.list_movie_sel_name %}
-                {% if request.session.list_movie_sel|index:forloop.counter0 in request.session.list_movie_sel_real %}
-                  <option value="{{ request.session.list_movie_sel|index:forloop.counter0 }}" selected>{{ m_name }}</option>
-                {% else %}
-                  <option value="{{ request.session.list_movie_sel|index:forloop.counter0 }}">{{ m_name }}</option>
-                {% endif %}
-              {% endfor %}
-            {% else %}
-              <option value="" disabled>{% trans "Too many films for customization" %}</option>
-            {% endif %}
-
+            {% for p in preselect %}
+              {% if request.session.presel == p.id %}
+                <option value="{{ p.id }}" selected>{{ p.name }}</option>
+              {% else %}
+                <option value="{{ p.id }}">{{ p.name }}</option>
+              {% endif %}
+            {% endfor %}
           </select>
-        </div>
+          <span class="helper-text">{% trans "room-presel" %}</span>
+        </fieldset>
 
-        <span class="helper-text" data-error="wrong" data-success="right">{% trans "room-selected-msg" %}</span>
-      </div>
+        <!-- Timing -->
+        <fieldset>
+          <legend>{% trans "Reflection time" %}</legend>
+          <div class="mode-img-container mt-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+              {% if 'game_mode' not in request.session or request.session.game_mode == 'chill' %}
+                <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" checked />
+              {% else %}
+                <input class="update-without-reset" name="game_mode" id="game_mode_chill" type="radio" value="chill" />
+              {% endif %}
+              <span class="text-sm">{% trans "Unlimited (by host)" %}</span>
+            </label>
+            <span class="mode-divider"></span>
+            <label class="flex items-center gap-2 cursor-pointer">
+              {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
+                <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" checked />
+              {% else %}
+                <input class="update-without-reset" name="game_mode" id="game_mode_timer" type="radio" value="timer" />
+              {% endif %}
+              <span class="text-sm">{% trans "Automatic" %}</span>
+            </label>
+            <div style="width:100px;">
+              <input class="update-without-reset" type="number" min="5" max="15" id="timer_nb" name="timer_nb"
+                {% if 'game_mode' in request.session and request.session.game_mode != 'chill' %}
+                  value="{{ request.session.game_mode }}"
+                {% else %}
+                  value="10"
+                {% endif %} />
+              <span class="helper-text">{% trans "Must be between 5 and 15s" %}</span>
+            </div>
+          </div>
+        </fieldset>
 
-    <br />
-  </fieldset>
+        <!-- Question transition -->
+        <fieldset>
+          <legend>{% trans "Change of question" %}</legend>
+          <div class="mode-img-container mt-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+              {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief == 'chill' %}
+                <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" checked />
+              {% else %}
+                <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_chill" type="radio" value="chill" />
+              {% endif %}
+              <span class="text-sm">{% trans "Manual (by host)" %}</span>
+            </label>
+            <span class="mode-divider"></span>
+            <label class="flex items-center gap-2 cursor-pointer">
+              {% if 'game_mode_debrief' not in request.session or request.session.game_mode_debrief != 'chill' %}
+                <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" checked />
+              {% else %}
+                <input class="update-without-reset" name="game_mode_debrief" id="game_mode_debrief_timer" type="radio" value="timer" />
+              {% endif %}
+              <span class="text-sm">{% trans "Automatic" %}</span>
+            </label>
+            <div style="width:100px;">
+              <input class="update-without-reset" type="number" min="2" max="10" id="timer_nb_debrief" name="timer_nb_debrief"
+                {% if 'game_mode_debrief' in request.session and request.session.game_mode_debrief != 'chill' %}
+                  value="{{ request.session.game_mode_debrief }}"
+                {% else %}
+                  value="3"
+                {% endif %} />
+              <span class="helper-text">{% trans "Must be between 2 and 10s" %}</span>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Nb questions -->
+        <fieldset>
+          <legend>{% trans "Number of questions" %}</legend>
+          <input class="update-without-reset" type="number" min="2" max="50" id="nb-question" name="nb-question"
+            value="{% if request.session.nb_question %}{{ request.session.nb_question }}{% else %}10{% endif %}"
+            style="width:80px;" />
+        </fieldset>
+
+        <!-- Movie count -->
+        <p class="text-sm">
+          {% trans "Number of selected movies:" %}
+          <strong class="normal-selection" id="nb_movies">
+            {% if request.session.list_movie_sel %}{{ request.session.list_movie_sel|length }}{% else %}{{ nb_movies_tot }}{% endif %}
+          </strong> {% trans "movies" %}
+        </p>
+        <p class="text-xs text-muted">{% trans "room-filter-msg" %}</p>
+
+        <!-- Genres -->
+        <fieldset>
+          <legend>
+            Genres —
+            <span class="clickable-link" id="select_all_cbx">{% trans "Check all" %}</span> /
+            <span class="clickable-link" id="reset_all_cbx">{% trans "Uncheck all" %}</span>
+          </legend>
+          <ul class="checkbox mt-2">
+            {% for genre in genres %}
+              <li>
+                <label for="idcbx{{ genre.id }}">
+                  <input type="checkbox" class="check-with-label update-reset genrecbx" id="idcbx{{ genre.id }}" name="{{ genre.id }}" value="1"
+                    {% if request.session.list_genre %}{% if genre.id in request.session.list_genre %}checked{% endif %}{% else %}checked{% endif %}>
+                  <span>{{ genre.name }}</span>
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </fieldset>
+
+        <!-- Country -->
+        <fieldset>
+          <legend>{% trans "Countries" %}</legend>
+          <select class="update-reset mt-2" name="country-sel" id="country-sel" style="max-width:280px;">
+            {% if not request.session.country_selected or request.session.country_selected == -1 %}
+              <option value="c-1" selected>{% trans "All countries" %}</option>
+            {% else %}
+              <option value="c-1">{% trans "All countries" %}</option>
+            {% endif %}
+            {% for country in countries %}
+              {% if request.session.country_selected == country.id %}
+                <option value="c{{ country.id }}" selected>{{ country.name }}</option>
+              {% else %}
+                <option value="c{{ country.id }}">{{ country.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </fieldset>
+
+        <!-- Years -->
+        <fieldset>
+          <legend>{% trans "Years" %} — <span class="clickable-link" id="reset_all_year">{% trans "Reset" %}</span></legend>
+          <div class="flex gap-4 flex-wrap mt-2">
+            <div>
+              <label class="form-label">{% trans "From" %}</label>
+              <input class="update-reset" type="number" id="year1" name="year1" min="1900" max="2026"
+                value="{% if request.session.year1 %}{{ request.session.year1 }}{% else %}1970{% endif %}" style="width:90px;" />
+            </div>
+            <div>
+              <label class="form-label">{% trans "to" %}</label>
+              <input class="update-reset" type="number" id="year2" name="year2" min="1900" max="2026"
+                value="{% if request.session.year2 %}{{ request.session.year2 }}{% else %}2026{% endif %}" style="width:90px;" />
+            </div>
+          </div>
+          <span class="helper-text">{% trans "Format: YYYY (Bounds are included)" %}</span>
+        </fieldset>
+
+        <!-- Popularity -->
+        <fieldset>
+          <legend>{% trans "Popularity" %} — <span class="clickable-link" id="reset_all_popularity">{% trans "Reset" %}</span></legend>
+          <input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000"
+            value="{% if request.session.popularity != None %}{{ request.session.popularity }}{% else %}200{% endif %}"
+            style="width:100px;margin-top:0.5rem;" />
+          <span class="helper-text">{% trans "Leave empty to not filter by popularity" %}</span>
+        </fieldset>
+
+        <!-- Selected movies -->
+        <fieldset>
+          <legend>{% trans "Selected movies" %}</legend>
+          <div id="div-selected-movies" class="mt-2">
+            <select id="selected-movies" class="update-without-reset" multiple style="height:140px;">
+              {% if request.session.list_movie_sel|length <= 200 %}
+                {% for m_name in request.session.list_movie_sel_name %}
+                  {% if request.session.list_movie_sel|index:forloop.counter0 in request.session.list_movie_sel_real %}
+                    <option value="{{ request.session.list_movie_sel|index:forloop.counter0 }}" selected>{{ m_name }}</option>
+                  {% else %}
+                    <option value="{{ request.session.list_movie_sel|index:forloop.counter0 }}">{{ m_name }}</option>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                <option value="" disabled>{% trans "Too many films for customization" %}</option>
+              {% endif %}
+            </select>
+          </div>
+          <span class="helper-text">{% trans "room-selected-msg" %}</span>
+        </fieldset>
+
+        <p class="text-xs text-muted italic">{% trans "room-note-msg" %}</p>
+
+      </div><!-- /settings-body -->
+    </details>
+  </div><!-- /ul-quote -->
 
 
-  <br />
-  <i>{% trans "room-note-msg" %}</i>
+  <!-- ── IMAGE MODE SETTINGS ── -->
+  <div id="ul-image">
+    <details class="settings-section mb-4" open>
+      <summary>
+        <span>⚙️ {% trans "Game settings" %} — {% trans "Image Mode" %}</span>
+        <svg class="chevron w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </summary>
+      <div class="settings-body flex flex-col gap-5">
 
-      </div>
-    </li>
-  </ul>
+        <!-- Nb questions -->
+        <fieldset>
+          <legend>{% trans "Number of questions" %}</legend>
+          <input class="update-without-reset" type="number" min="2" max="50" id="nb-question-img" name="nb-question"
+            value="{% if request.session.nb_question_img %}{{ request.session.nb_question_img }}{% else %}10{% endif %}"
+            style="width:80px;" />
+        </fieldset>
 
-  <!-- IMAGE PARAMETERS -->
+        <!-- Movie count -->
+        <p class="text-sm">
+          {% trans "Number of selected movies:" %}
+          <strong class="normal-selection" id="nb_movies_img">
+            {% if request.session.list_movie_sel_img %}{{ request.session.list_movie_sel_img|length }}{% else %}{{ nb_movies_tot_img }}{% endif %}
+          </strong> {% trans "movies" %}
+        </p>
 
-  <ul id="ul-image" class="collapsible" style="width:90%;margin: 0 auto;">
-    <li>
-      <div class="collapsible-header">{% trans "Game settings" %} ({% trans "Image Mode" %})<i class="material-icons">expand_more</i></div>
-      <div class="collapsible-body">
-      <br />
+        <!-- Genres (image) -->
+        <fieldset>
+          <legend>
+            Genres —
+            <span class="clickable-link" id="select_all_cbx_img">{% trans "Check all" %}</span> /
+            <span class="clickable-link" id="reset_all_cbx_img">{% trans "Uncheck all" %}</span>
+          </legend>
+          <ul class="checkbox mt-2">
+            {% for genre in genres %}
+              <li>
+                <label for="idcbx_img{{ genre.id }}">
+                  <input type="checkbox" class="check-with-label update-reset genrecbx_img" id="idcbx_img{{ genre.id }}" name="{{ genre.id }}" value="1"
+                    {% if request.session.list_genre_img %}{% if genre.id in request.session.list_genre_img %}checked{% endif %}{% else %}checked{% endif %}>
+                  <span>{{ genre.name }}</span>
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </fieldset>
 
+        <!-- Country (image) -->
+        <fieldset>
+          <legend>{% trans "Countries" %}</legend>
+          <select class="update-reset mt-2" name="country-sel_img" id="country-sel_img" style="max-width:280px;">
+            {% if not request.session.country_selected_img or request.session.country_selected_img == -1 %}
+              <option value="c-1" selected>{% trans "All countries" %}</option>
+            {% else %}
+              <option value="c-1">{% trans "All countries" %}</option>
+            {% endif %}
+            {% for country in countries %}
+              {% if request.session.country_selected_img == country.id %}
+                <option value="c{{ country.id }}" selected>{{ country.name }}</option>
+              {% else %}
+                <option value="c{{ country.id }}">{{ country.name }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </fieldset>
 
-  <fieldset>
-      <legend><b>{% trans "Number of questions" %}</b> </legend>
-      <div class="input-field">
-    <label for="nb-question">{% trans "Number of questions" %}</label>
-    {% if request.session.nb_question_img %}
-      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question-img" name="nb-question" value="{{ request.session.nb_question_img }}"><br />
-    {% else %}
-      <input class='update-without-reset' type="number" min="2" max="50" id="nb-question-img" name="nb-question" value="10"><br />
-    {% endif %}
-      </div>
+        <!-- Popularity (image) -->
+        <fieldset>
+          <legend>{% trans "Popularity" %} — <span class="clickable-link" id="reset_all_popularity_img">{% trans "Reset" %}</span></legend>
+          <input class="update-reset mt-2" type="number" id="popularity_img" name="popularity" min="3" max="4000"
+            value="{% if request.session.popularity_img != None %}{{ request.session.popularity_img }}{% else %}500{% endif %}"
+            style="width:100px;" />
+          <span class="helper-text">{% trans "Leave empty to not filter by popularity" %}</span>
+        </fieldset>
 
-  </fieldset>
-          <br />
-  <b>{% trans "Number of selected movies:" %} </b>
-  <div style="color:#C3073F; font-weight: bold; display: inline;">
-  {% if request.session.list_movie_sel_img %}
-  <span class="normal-selection" id="nb_movies_img">{{ request.session.list_movie_sel_img|length }}</span> {% trans "movies" %}
+        <!-- NSFW filter -->
+        <fieldset>
+          <legend>{% trans "NSFW image filter" %}</legend>
+          <label class="toggle-switch mt-2">
+            <input type="checkbox" id="nsfw" class="update-reset" {% if request.session.nsfw_filter == 1 %}checked{% endif %} />
+            <span class="text-sm">{% trans "Filter explicit images" %}</span>
+          </label>
+          <span class="helper-text mt-1">{% trans "room-nsfw-msg" %}</span>
+        </fieldset>
+
+        <!-- Years (image) -->
+        <fieldset>
+          <legend>{% trans "Years" %} — <span class="clickable-link" id="reset_all_year_img">{% trans "Reset" %}</span></legend>
+          <div class="flex gap-4 flex-wrap mt-2">
+            <div>
+              <label class="form-label">{% trans "From" %}</label>
+              <input class="update-reset" type="number" id="year1_img" name="year1_img" min="1900" max="2026"
+                value="{% if request.session.year1_img %}{{ request.session.year1_img }}{% else %}1900{% endif %}" style="width:90px;" />
+            </div>
+            <div>
+              <label class="form-label">{% trans "to" %}</label>
+              <input class="update-reset" type="number" id="year2_img" name="year2_img" min="1900" max="2026"
+                value="{% if request.session.year2_img %}{{ request.session.year2_img }}{% else %}2026{% endif %}" style="width:90px;" />
+            </div>
+          </div>
+          <span class="helper-text">{% trans "Format: YYYY (Bounds are included)" %}</span>
+        </fieldset>
+
+      </div><!-- /settings-body -->
+    </details>
+  </div><!-- /ul-image -->
+
+  <!-- Start game -->
+  <div class="text-center py-4">
+    <a id="start-link" class="btn-primary disabled">{% trans "Start game" %} →</a>
+  </div>
+
   {% else %}
-  <span class="normal-selection" id="nb_movies_img">{{ nb_movies_tot_img }}</span> {% trans "movies" %}
+  <!-- Waiting (non-host) -->
+  <div class="card-panel text-center py-10">
+    <div class="spinner mx-auto mb-4"></div>
+    <p class="text-muted text-sm">{% trans "room-msg-waiting" %}</p>
+  </div>
   {% endif %}
-  </div>
-    <br /><br />
-  <fieldset>
-      <legend><b>Genres</b> (<span class="clickable-link" id="select_all_cbx_img">{% trans "Check all" %}</span> / <span class="clickable-link" id="reset_all_cbx_img">{% trans "Uncheck all" %}</span>)</legend>
 
-
-      <ul class="checkbox">
-      {% for genre in genres %}
-      {% if request.session.list_genre_img %}
-          {% if genre.id in request.session.list_genre_img %}
-
-      <li><label class="label-for-check" for='idcbx_img{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx_img" id='idcbx_img{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
-          {% else %}
-          <li><label class="label-for-check" for='idcbx_img{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx_img" id='idcbx_img{{ genre.id }}' name="{{ genre.id }}" value="1"><span>{{ genre.name }}</span></label></li>
-          {% endif %}
-      {% else %}
-          <li><label class="label-for-check" for='idcbx_img{{ genre.id }}'><input type="checkbox" class="check-with-label update-reset genrecbx_img" id='idcbx_img{{ genre.id }}' name="{{ genre.id }}" value="1" checked><span>{{ genre.name }}</span></label></li>
-      {% endif %}
-      {% endfor %}
-      </ul>
-
-  </fieldset>
-  <br />
-
-  <fieldset>
-  <legend><b>{% trans "Countries" %}</b></legend>
-  <div class="input-field col m6">
-    <select class="update-reset" name="country-sel_img" id="country-sel_img">
-<!--      <option value="" disabled selected>Choose your option</option>-->
-      {% if not request.session.country_selected_img or request.session.country_selected_img == -1 %}
-        <option value="c-1" selected="selected">{% trans "All countries" %}</option>
-      {% else %}
-        <option value="c-1">{% trans "All countries" %}</option>
-      {% endif%}
-
-      {% for country in countries %}
-        {% if request.session.country_selected_img == country.id%}
-            <option value="c{{ country.id }}" selected="selected">{{ country.name }}</option>
-        {% else %}
-            <option value="c{{ country.id }}">{{ country.name }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-<!--    <label>Materialize Select</label>-->
-  </div>
-
-  </fieldset>
-          <br />
-  <fieldset>
-      <legend><b>{% trans "Popularity" %} ({% trans "Number of votes on IMDb" %})</b> (<span class="clickable-link" id="reset_all_popularity_img">{% trans "Reset" %}</span>)</legend>
-      {% if request.session.popularity_img != None %}
-      <div class="input-field">
-          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="{{ request.session.popularity_img }}">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
-      </div>
-      {% else %}
-      <div class="input-field">
-          <label for="popularity">{% trans "Number of movies filtered by popularity" %}</label><input class="update-reset" type="number" id="popularity_img" name="popularity" min="3" max="4000" maxlength="10" size="5" value="500">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Leave empty to not filter by popularity" %}</span>
-      </div>
-      {% endif %}
-  </fieldset>
-  <br />
-  <fieldset>
-      <legend><b>{% trans "NSFW image filter" %}</b></legend>
-
-      <div class="switch center">
-        <label>
-          <b>Off</b>
-          <input {% if request.session.nsfw_filter == 1 %} checked {% endif %} type="checkbox" id="nsfw" class="update-reset">
-          <span class="lever" style="background-color: #545454d4"></span>
-          <b>On</b>
-        </label>
-      </div>
-      <br />
-      <span class="helper-text" style="font-size: 12px">{% trans "room-nsfw-msg" %}</span>
-
-  </fieldset>
-
-  <br />
-  <fieldset>
-      <legend><b>{% trans "Years" %}</b> (<span class="clickable-link" id="reset_all_year_img">{% trans "Reset" %}</span>)</legend>
-      {% if request.session.year1_img or request.session.year2_img %}
-      <div class="input-field">
-          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2026" size="5" value="{{ request.session.year1_img }}">
-      </div>
-      <div class="input-field">
-          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2026" size="5" value="{{ request.session.year2_img }}">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
-      </div>
-      <br />
-      {% else %}
-      <div class="input-field">
-          <label for="year1_img">{% trans "From" %}</label><input class="update-reset" type="number" id="year1_img" name="year1_img" maxlength="4" min="1900" max="2026" size="5" value="1900">
-      </div>
-      <div class="input-field">
-          <label for="year2_img">{% trans "to" %}</label><input class="update-reset" type="number" id="year2_img" name="year2_img" maxlength="4" min="1900" max="2026" size="5" value="2026">
-          <span class="helper-text" data-error="wrong" data-success="right">{% trans "Format: YYYY (Bounds are included)" %}</span>
-      </div>
-      <br />
-      {% endif %}
-
-
-  </fieldset>
-
-      </div>
-    </li>
-  </ul>
-
-
-<br /><br />
-<div style="text-align:center;">
-    <a id="start-link" class="btn waves-effect btn-color disabled">{% trans "Start game" %}</a>
+  <div id="bug"><span id="bug-text"></span></div>
 
 </div>
-<br />
-
-{% else %}
-<div class="center">{% trans "room-msg-waiting" %}</div>
-
-{% endif %}
-
-<div id='bug'><span id="bug-text"></span></div>
-
 {% endblock %}

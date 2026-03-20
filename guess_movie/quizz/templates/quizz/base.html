@@ -4,16 +4,14 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 <!DOCTYPE html>
-
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-BGJ7SV34ND"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-BGJ7SV34ND', { 'send_page_view': false });
   </script>
 
@@ -22,104 +20,166 @@
   <meta name="description" content="Jeu en ligne sur les répliques de film">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1"/>
   <link rel="shortcut icon" type="image/jpg" href="{% static 'quizz/favicon.png' %}"/>
-  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+
+  <!-- Inter font + Material Icons (kept for legacy templates) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection">
-  <link rel="stylesheet" type="text/css" href="{% static 'quizz/style.css' %}">
-  <link rel="stylesheet" type="text/css" media="screen and (max-width: 500px) and (orientation: portrait)" href="{% static 'quizz/style_mobile.css' %}" />
-  <link rel="stylesheet" type="text/css" media="screen and (max-width: 900px) and (max-height: 500px) and (orientation: landscape)" href="{% static 'quizz/style_mobile_landscape.css' %}" />
-  <link rel="stylesheet" type="text/css" media="screen and (min-width: 501px) and (min-height: 500px)" href="{% static 'quizz/style_normal.css' %}" />
 
-</head>
-
-<body>
-  <script src="{% static 'quizz/jquery-3.5.1.min.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-      $(document).ready(function(){
- 		  $('.sidenav').sidenav();
-
-
-          $('#switch-language').click(function() {
-              $.ajax({
-                  type: "POST",
-                  url: '/switch_language/',
-                  data: {
-                      'csrfmiddlewaretoken': '{{ csrf_token }}',
-                  },
-                  dataType: 'json',
-                  success: function (data) {
-                      window.location.reload();
-                  }
-              });
-          });
-
-      });
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg:          '#0d0d12',
+            surface:     '#15151e',
+            surface2:    '#1e1e2b',
+            accent:      '#e63950',
+            'accent-dark': '#7a1a27',
+            border:      '#25253a',
+            muted:       '#7a7a90',
+            good:        '#4ade80',
+            bad:         '#f87171',
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
   </script>
 
-{% block javascript %}
-{% endblock %}
+  <!-- Custom styles -->
+  <link rel="stylesheet" type="text/css" href="{% static 'quizz/style.css' %}">
+  <link rel="stylesheet" type="text/css" media="screen and (max-width: 500px) and (orientation: portrait)"            href="{% static 'quizz/style_mobile.css' %}" />
+  <link rel="stylesheet" type="text/css" media="screen and (max-width: 900px) and (max-height: 500px) and (orientation: landscape)" href="{% static 'quizz/style_mobile_landscape.css' %}" />
+  <link rel="stylesheet" type="text/css" media="screen and (min-width: 501px) and (min-height: 500px)"              href="{% static 'quizz/style_normal.css' %}" />
+</head>
 
+<body class="bg-bg text-text antialiased min-h-screen">
+
+  <!-- jQuery -->
+  <script src="{% static 'quizz/jquery-3.5.1.min.js' %}"></script>
+  <!-- jQuery UI (for autocomplete in image mode) -->
+  <script src="{% static 'quizz/jquery-ui.min.js' %}"></script>
+
+  <script>
+    // ── Polyfills for removed Materialize methods ──────────────────────
+    $.fn.formSelect  = function() { return this; };
+    $.fn.sidenav     = function() { return this; };
+    // $.fn.autocomplete kept for jQuery UI (loaded above)
+    // $.fn.collapsible replaced by event delegation below
+
+    $(document).ready(function() {
+
+      // ── Mobile menu ────────────────────────────────────────────────
+      $('#menu-btn').click(function() {
+        var $menu = $('#mobile-menu');
+        var $iconOpen  = $('#menu-icon-open');
+        var $iconClose = $('#menu-icon-close');
+        $menu.toggleClass('hidden');
+        $iconOpen.toggleClass('hidden');
+        $iconClose.toggleClass('hidden');
+      });
+
+      // ── Custom collapsible (replaces Materialize) ─────────────────
+      // Open any active li on load
+      $('.collapsible li.active > .collapsible-body').show();
+
+      // Toggle on header click
+      $(document).on('click', '.collapsible-header', function() {
+        var $li = $(this).closest('li');
+        $li.toggleClass('active');
+        $li.find('> .collapsible-body').slideToggle(180);
+      });
+
+      // Make $.fn.collapsible a no-op (templates may still call it)
+      $.fn.collapsible = function() { return this; };
+
+      // ── Language switcher ──────────────────────────────────────────
+      $('#switch-language').click(function() {
+        $.ajax({
+          type: 'POST',
+          url: '/switch_language/',
+          data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+          dataType: 'json',
+          success: function() { window.location.reload(); }
+        });
+      });
+    });
+  </script>
+
+{% block javascript %}{% endblock %}
 
 {% block nav %}
 
+<nav class="nav-bar fixed top-0 w-full z-50">
+  <div class="max-w-screen-xl mx-auto px-4 h-14 flex items-center">
 
-<!--<nav class="red" style="padding:0px 10px; position: fixed;">-->
-<nav>
-	<div class="nav-wrapper">
+    <!-- Brand -->
+    <a href="{% url 'quizz:home' %}" class="brand mr-6">MOVIZZ</a>
 
-		<a href="#" class="sidenav-trigger" data-target="nav-mobile">
-			<i class="material-icons">menu</i>
-		</a>
-
-		<ul class="left hide-on-small-only "  >
-      {% block nav-home %}<li><a href="{% url 'quizz:home' %}">{% trans "Home" %}</a></li>{% endblock %}
-      {% block nav-play %}<li><a href="{% url 'quizz:room_index' %}">{% trans "Play" %}</a></li>{% endblock %}
+    <!-- Desktop nav links -->
+    <ul class="hidden md:flex items-center gap-0.5 flex-1 list-none m-0 p-0">
+      {% block nav-home %}<li><a href="{% url 'quizz:home' %}" class="nav-link">{% trans "Home" %}</a></li>{% endblock %}
+      {% block nav-play %}<li><a href="{% url 'quizz:room_index' %}" class="nav-link">{% trans "Play" %}</a></li>{% endblock %}
       {% block nav-current-game %}{% endblock %}
-      {% block nav-editor %}<li><a href="{% url 'quizz:editor' %}">{% trans "Editor" %}</a></li>{% endblock %}
+      {% block nav-editor %}<li><a href="{% url 'quizz:editor' %}" class="nav-link">{% trans "Editor" %}</a></li>{% endblock %}
       {% block nav-exploration %}{% endblock %}
-      {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}">{% trans "History" %}</a></li>{% endblock %}
-      {% block nav-about %}<li><a href="{% url 'quizz:about' %}">{% trans "About" %}</a></li>{% endblock %}
-      {% block nav-contact %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
-      {% block nav-news %}<li><a href="{% url 'quizz:news' %}">{% trans "News" %}</a></li>{% endblock %}
+      {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}" class="nav-link">{% trans "History" %}</a></li>{% endblock %}
+      {% block nav-about %}<li><a href="{% url 'quizz:about' %}" class="nav-link">{% trans "About" %}</a></li>{% endblock %}
+      {% block nav-contact %}<li><a href="{% url 'quizz:contact' %}" class="nav-link">{% trans "Contact" %}</a></li>{% endblock %}
+      {% block nav-news %}<li><a href="{% url 'quizz:news' %}" class="nav-link">{% trans "News" %}</a></li>{% endblock %}
+    </ul>
 
+    <!-- Right side -->
+    <div class="hidden md:flex items-center gap-3 ml-4">
+      {% block nav-lyrizz %}<a href="{% url 'lyrizz:home' %}" class="lyrizz-btn">Lyrizz ↗</a>{% endblock %}
+      {% if LANGUAGE_CODE == 'en' %}
+        <img id="switch-language" src="{% static 'quizz/fr.png' %}" class="lang-flag" alt="FR" />
+      {% else %}
+        <img id="switch-language" src="{% static 'quizz/en.png' %}" class="lang-flag" alt="EN" />
+      {% endif %}
+    </div>
 
+    <!-- Mobile hamburger -->
+    <button id="menu-btn" class="md:hidden ml-auto p-2 text-muted hover:text-text transition-colors" aria-label="Menu">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path id="menu-icon-open"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        <path id="menu-icon-close" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" class="hidden"/>
+      </svg>
+    </button>
+  </div>
 
-		</ul>
-        <ul class="navbar-nav ml-auto hide-on-small-only">
-            {% block nav-lyrizz %}<li class="right" style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">{% trans "Test Lyrizz" %}</a></li>{% endblock %}
-            {% if LANGUAGE_CODE == 'en' %}
-                <li class="right"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></li>
-            {% else %}
-                <li class="right"><img id="switch-language" src="{% static 'quizz/en.png' %}" /></li>
-            {% endif %}
-        </ul>
-	</div>
+  <!-- Mobile dropdown -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-surface">
+    <ul class="px-4 py-3 flex flex-col gap-0.5 list-none m-0 p-0">
+      {% block nav-home2 %}<li><a href="{% url 'quizz:home' %}" class="nav-link-mobile">{% trans "Home" %}</a></li>{% endblock %}
+      {% block nav-play2 %}<li><a href="{% url 'quizz:room_index' %}" class="nav-link-mobile">{% trans "Play" %}</a></li>{% endblock %}
+      {% block nav-current-game2 %}{% endblock %}
+      {% block nav-editor2 %}<li><a href="{% url 'quizz:editor' %}" class="nav-link-mobile">{% trans "Editor" %}</a></li>{% endblock %}
+      {% block nav-exploration2 %}{% endblock %}
+      {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}" class="nav-link-mobile">{% trans "History" %}</a></li>{% endblock %}
+      {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}" class="nav-link-mobile">{% trans "About" %}</a></li>{% endblock %}
+      {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}" class="nav-link-mobile">{% trans "Contact" %}</a></li>{% endblock %}
+      {% block nav-news2 %}<li><a href="{% url 'quizz:news' %}" class="nav-link-mobile">{% trans "News" %}</a></li>{% endblock %}
+      {% block nav-lyrizz2 %}<li><a href="{% url 'lyrizz:home' %}" class="nav-link-mobile" style="color:#fb923c;">Lyrizz ↗</a></li>{% endblock %}
+      {% if LANGUAGE_CODE == 'en' %}
+        <li class="pt-1"><a href="{% url 'quizz:switch_language_mobile' %}"><img src="{% static 'quizz/fr.png' %}" class="h-6" alt="FR"/></a></li>
+      {% else %}
+        <li class="pt-1"><a href="{% url 'quizz:switch_language_mobile' %}"><img src="{% static 'quizz/en.png' %}" class="h-6" alt="EN"/></a></li>
+      {% endif %}
+    </ul>
+  </div>
 </nav>
 
-
-<ul class="sidenav sidenav-style" id="nav-mobile">
-      {% block nav-home2 %}<li><a href="{% url 'quizz:home' %}">{% trans "Home" %}</a></li>{% endblock %}
-      {% block nav-play2 %}<li><a href="{% url 'quizz:room_index' %}">{% trans "Play" %}</a></li>{% endblock %}
-      {% block nav-current-game2 %}{% endblock %}
-      {% block nav-editor2 %}<li><a href="{% url 'quizz:editor' %}">{% trans "Editor" %}</a></li>{% endblock %}
-      {% block nav-exploration2 %}{% endblock %}
-      {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}">{% trans "History" %}</a></li>{% endblock %}
-      {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}">{% trans "About" %}</a></li>{% endblock %}
-      {% block nav-contact2 %}<li><a href="{% url 'quizz:contact' %}">{% trans "Contact" %}</a></li>{% endblock %}
-      {% block nav-news2 %}<li><a href="{% url 'quizz:news' %}">{% trans "News" %}</a></li>{% endblock %}
-      {% block nav-lyrizz2 %}<li style="background-color: #cc6600;"><a href="{% url 'lyrizz:home' %}">{% trans "Test Lyrizz" %}</a></li>{% endblock %}
-        {% if LANGUAGE_CODE == 'en' %}
-            <li class="center"><a href="{% url 'quizz:switch_language_mobile' %}"><img id="switch-language" src="{% static 'quizz/fr.png' %}" /></a></li>
-        {% else %}
-            <li class="center"><a href="{% url 'quizz:switch_language_mobile' %}"><img id="switch-language" src="{% static 'quizz/en.png' %}" /></a></li>
-        {% endif %}
-</ul>
+<!-- Fixed nav spacer -->
+<div class="h-14"></div>
 
 {% endblock %}
 
-{% block content %}
-{% endblock %}
+{% block content %}{% endblock %}
 
 </body>
 </html>
