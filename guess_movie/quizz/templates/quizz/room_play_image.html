@@ -267,11 +267,11 @@ $(document).ready(function() {
       <div id="right-answer-div"></div>
     </div>
 
-    <!-- Thumbnails -->
-    <div class="flex justify-center gap-2 mt-3">
-      <img id="thumb1" style="visibility:hidden;" class="screenshot-thumb" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" style="height:60px;" />
-      <img id="thumb2" style="visibility:hidden;" class="screenshot-thumb" alt="" style="height:60px;" />
-      <img id="thumb3" style="visibility:hidden;" class="screenshot-thumb" alt="" style="height:60px;" />
+    <!-- Thumbnails (navigation entre les images déjà révélées) -->
+    <div class="flex justify-center gap-3 mt-3">
+      <img id="thumb1" class="screenshot-thumb" style="visibility:hidden;" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" />
+      <img id="thumb2" class="screenshot-thumb" style="visibility:hidden;" alt="" />
+      <img id="thumb3" class="screenshot-thumb" style="visibility:hidden;" alt="" />
     </div>
   </div>
 
