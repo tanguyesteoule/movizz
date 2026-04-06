@@ -1,0 +1,35 @@
+User-agent: *
+
+# Sessions de jeu dynamiques (rooms temporaires)
+Disallow: /room/
+Disallow: /lyrizz/room/
+
+# Endpoints d'action (POST, AJAX)
+Disallow: /create_room/
+Disallow: /create_game/
+Disallow: /lyrizz/create_room/
+Disallow: /lyrizz/create_game/
+Disallow: /save_preset/
+Disallow: /save_info_game/
+Disallow: /lyrizz/save_info_game/
+Disallow: /guess_room/
+Disallow: /lyrizz/guess_room/
+Disallow: /guess_image/
+Disallow: /reveal_image/
+Disallow: /update_selection/
+Disallow: /lyrizz/update_selection/
+Disallow: /update_session_interruption/
+Disallow: /change_user_name/
+Disallow: /lyrizz/change_user_name/
+
+# Changement de langue (redirections)
+Disallow: /switch_language/
+Disallow: /switch_language_mobile/
+Disallow: /en/
+
+# Interface d'édition (réservée aux admins)
+Disallow: /editor/
+Disallow: /game/
+Disallow: /admin/
+
+Sitemap: https://movizz.fr/sitemap.xml

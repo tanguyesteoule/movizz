@@ -37,21 +37,8 @@ img.movie-img {
   position: fixed;
 }
 
-#timer {
-  font-size: 1.5rem;
-  top: 4px;
-}
-
-#timer-debrief {
-  font-size: 1.1rem;
-  top: 32px;
-}
-
-#counter-question {
-  font-size: 0.82rem;
-  top: 0.7rem;
-  right: 1.5rem;
-}
+#timer { font-size: 1.2rem; }
+#counter-question { right: calc(1rem + 68px); }
 
 #cont-screenshot {
   display: inline-block;

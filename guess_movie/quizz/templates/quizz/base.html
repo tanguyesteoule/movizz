@@ -31,6 +31,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      corePlugins: { preflight: false },
       theme: {
         extend: {
           colors: {
@@ -151,6 +152,8 @@
       </svg>
     </button>
   </div>
+
+  {% block nav-hud %}{% endblock %}
 
   <!-- Mobile dropdown -->
   <div id="mobile-menu" class="hidden md:hidden border-t border-border bg-surface">

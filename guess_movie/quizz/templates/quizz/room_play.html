@@ -224,18 +224,17 @@ $('#next_question').click(function() {
 </script>
 {% endblock %}
 
-{% block content %}
-
+{% block nav-hud %}
 {% if game.game_mode != 'chill' %}
 <div id="timer">{{ game.game_mode }}</div>
 {% endif %}
 {% if game.game_mode_debrief != 'chill' %}
 <div id="timer-debrief"></div>
 {% endif %}
+<div id="counter-question"><span id="nb-question">{{ current_question }}</span> / {{ game.nb_q }}</div>
+{% endblock %}
 
-<div id="counter-question">
-  <span id="nb-question">{{ current_question }}</span> / {{ game.nb_q }}
-</div>
+{% block content %}
 
 <!-- Movie cards -->
 <div id="img-container" question_id="{{ question.id }}">

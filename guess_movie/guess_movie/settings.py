@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'quizz.apps.QuizzConfig',
     'lyrizz.apps.LyrizzConfig',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

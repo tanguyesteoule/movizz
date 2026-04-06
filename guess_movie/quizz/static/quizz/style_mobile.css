@@ -43,21 +43,9 @@ img.movie-img {
   margin: 0.5rem;
 }
 
-#timer {
-  font-size: 1.1rem;
-  top: 2px;
-}
-
-#timer-debrief {
-  font-size: 0.9rem;
-  top: 26px;
-}
-
-#counter-question {
-  font-size: 0.72rem;
-  top: 0.5rem;
-  right: 0.75rem;
-}
+#timer { font-size: 0.85rem; min-width: 2.2rem; }
+#counter-question { font-size: 0.68rem; right: calc(0.75rem + 52px); }
+#timer-debrief { right: 0.75rem; }
 
 #cont-screenshot {
   display: inline-block;
@@ -66,6 +54,30 @@ img.movie-img {
   width: auto;
 }
 
-img.screenshot-thumb { height: 48px; max-width: 88px; }
+img.screenshot-thumb { height: 44px; max-width: 78px; }
 
 .centered-contact { margin-left: auto; margin-right: auto; }
+
+/* ── Image mode: portrait ── */
+#play-image-content {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  gap: 0.5rem;
+}
+
+#screenshot-main-wrap img.screenshot {
+  max-height: 46vh;
+  width: auto;
+  max-width: 100%;
+}
+
+#input-name-movie {
+  max-width: 100%;
+}
+
+#container-button-next {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}

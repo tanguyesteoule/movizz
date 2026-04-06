@@ -241,13 +241,15 @@ $(document).ready(function() {
 </script>
 {% endblock %}
 
-{% block content %}
-
+{% block nav-hud %}
 <div id="timer">30</div>
 <div id="timer-debrief"></div>
 <div id="counter-question"><span id="nb-question">{{ current_question }}</span> / {{ game.nb_q }}</div>
+{% endblock %}
 
-<div class="flex flex-col items-center gap-4 px-4 py-6">
+{% block content %}
+
+<div id="play-image-content" class="flex flex-col items-center gap-4 px-4 py-6">
 
   <!-- Waiting indicator (first question) -->
   {% if current_question == 1 %}
@@ -261,14 +263,16 @@ $(document).ready(function() {
 
   <!-- Screenshot display -->
   <div id="cont-screenshot" class="text-center">
-    <img id="screenshot-img" style="visibility:hidden;" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" />
-
-    <div id="cont-right-answer-div">
-      <div id="right-answer-div"></div>
+    <!-- Main image wrapper (overlay positioned relative to this) -->
+    <div id="screenshot-main-wrap">
+      <img id="screenshot-img" style="visibility:hidden;" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" />
+      <div id="cont-right-answer-div">
+        <div id="right-answer-div"></div>
+      </div>
     </div>
 
     <!-- Thumbnails (navigation entre les images déjà révélées) -->
-    <div class="flex justify-center gap-3 mt-3">
+    <div id="thumb-row" class="flex justify-center gap-3 mt-3">
       <img id="thumb1" class="screenshot-thumb" style="visibility:hidden;" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" />
       <img id="thumb2" class="screenshot-thumb" style="visibility:hidden;" alt="" />
       <img id="thumb3" class="screenshot-thumb" style="visibility:hidden;" alt="" />
@@ -277,12 +281,11 @@ $(document).ready(function() {
 
   <!-- Search input -->
   <div id="input-name-movie" style="visibility:hidden;" class="w-full max-w-sm">
-    <label class="form-label text-center block mb-1">{% trans "Movie name" %}</label>
     <input type="text" id="name-input" class="form-input" placeholder="{% trans 'Type to search…' %}" autocomplete="off" />
   </div>
 
-  <div id="result" class="text-sm font-medium min-h-5"></div>
-  <div id="reveal-div" class="text-sm font-medium"></div>
+  <div id="result"></div>
+  <div id="reveal-div"></div>
 
 </div>
 

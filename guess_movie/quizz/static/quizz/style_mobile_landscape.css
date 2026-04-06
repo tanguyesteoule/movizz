@@ -1,5 +1,6 @@
 /* Mobile landscape (max-width: 900px, max-height: 500px, orientation: landscape) */
 
+/* ── Quote mode ── */
 img.movie-img {
   height: 32vh;
   width: auto;
@@ -12,9 +13,7 @@ img.movie-img {
 
 #quote-text { font-size: 1.05rem; }
 
-#img-container {
-  height: 36vh;
-}
+#img-container { height: 36vh; }
 
 #container-quote {
   height: 16vh;
@@ -24,9 +23,7 @@ img.movie-img {
 
 .guillemet { font-size: 2rem; }
 
-#container-button-next {
-  height: 8vh;
-}
+#container-button-next { height: 8vh; }
 
 #display-user {
   top: 4rem;
@@ -34,31 +31,99 @@ img.movie-img {
   position: fixed;
 }
 
-#timer {
-  font-size: 1.2rem;
-  top: 4px;
-  right: 20px;
-  left: auto;
-}
-
-#timer-debrief {
-  font-size: 1rem;
-  top: 30px;
-  right: 20px;
-  left: auto;
-}
-
-#counter-question {
-  font-size: 0.72rem;
-  top: 0.5rem;
-  right: 5.5rem;
-}
+/* Timer & counter — inherited from main style.css (fixed top-right) */
+#timer        { font-size: 0.9rem; }
+#timer-debrief{ font-size: 0.72rem; }
+#counter-question { font-size: 0.68rem; right: calc(0.75rem + 52px); }
 
 #cont-screenshot {
-  display: inline-block;
   max-width: 82%;
   height: auto;
   width: auto;
 }
 
 .centered-contact { margin-left: auto; margin-right: auto; }
+
+
+/* ── Image mode: landscape — side-by-side layout ── */
+#play-image-content {
+  flex-direction: row !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  padding: 0.4rem !important;
+  gap: 0.5rem !important;
+  height: calc(100vh - 3.5rem);
+  overflow: hidden;
+}
+
+/* Waiting indicator floats as overlay, doesn't affect layout */
+#waiting {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  text-align: center;
+}
+
+/* Left block: main image + vertical thumbnails side by side */
+#cont-screenshot {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  max-width: none;
+  height: 100%;
+}
+
+#screenshot-main-wrap {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+#screenshot-main-wrap img.screenshot {
+  height: calc(100vh - 3.5rem - 0.8rem) !important;
+  width: auto !important;
+  max-width: 72vw;
+}
+
+/* Thumbnails as vertical strip to the right of the image */
+#thumb-row {
+  flex-direction: column !important;
+  gap: 0.35rem !important;
+  margin-top: 0 !important;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+img.screenshot-thumb {
+  height: 38px;
+  max-width: 68px;
+  width: auto;
+}
+
+/* Right block: search input + result */
+#input-name-movie {
+  flex: 1 !important;
+  max-width: none !important;
+  display: flex !important;
+  align-items: center;
+  padding: 0;
+}
+
+#input-name-movie .form-input {
+  width: 100%;
+}
+
+/* Next question button: fixed bottom-right in landscape */
+#container-button-next {
+  position: fixed;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  padding: 0 !important;
+}
+
+/* Result toast: lower on screen in landscape */
+#result { bottom: 4rem; }

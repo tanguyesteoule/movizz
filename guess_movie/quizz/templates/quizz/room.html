@@ -336,7 +336,7 @@ $('#preset-all').click(function() {
 
   <!-- ── QUOTE MODE SETTINGS ── -->
   <div id="ul-quote">
-    <details class="settings-section mb-4" open>
+    <details class="settings-section mb-4">
       <summary>
         <span>⚙️ {% trans "Game settings" %} — {% trans "Quote Mode" %}</span>
         <svg class="chevron w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -519,7 +519,7 @@ $('#preset-all').click(function() {
           <legend>{% trans "Popularity" %} — <span class="clickable-link" id="reset_all_popularity">{% trans "Reset" %}</span></legend>
           <input class="update-reset" type="number" id="popularity" name="popularity" min="0" max="6000"
             value="{% if request.session.popularity != None %}{{ request.session.popularity }}{% else %}200{% endif %}"
-            style="width:100px;margin-top:0.5rem;" />
+            style="width:100px;" />
           <span class="helper-text">{% trans "Leave empty to not filter by popularity" %}</span>
         </fieldset>
 
@@ -553,7 +553,7 @@ $('#preset-all').click(function() {
 
   <!-- ── IMAGE MODE SETTINGS ── -->
   <div id="ul-image">
-    <details class="settings-section mb-4" open>
+    <details class="settings-section mb-4">
       <summary>
         <span>⚙️ {% trans "Game settings" %} — {% trans "Image Mode" %}</span>
         <svg class="chevron w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
