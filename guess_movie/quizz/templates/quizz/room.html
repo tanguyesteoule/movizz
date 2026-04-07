@@ -354,7 +354,8 @@ $('#preset-all').click(function() {
           </div>
         </fieldset>
 
-        <!-- Community presets -->
+        <!-- Community presets (hidden) -->
+        {% comment %}
         <fieldset>
           <legend>{% trans "Community preselections" %}</legend>
           <select class="update-reset mt-2" name="preselect-sel" id="preselect-sel">
@@ -373,6 +374,7 @@ $('#preset-all').click(function() {
           </select>
           <span class="helper-text">{% trans "room-presel" %}</span>
         </fieldset>
+        {% endcomment %}
 
         <!-- Timing -->
         <fieldset>

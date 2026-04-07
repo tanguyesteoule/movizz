@@ -8,10 +8,69 @@
 {% block content %}
 <div class="max-w-2xl mx-auto px-6 py-10">
 
-  {% trans "(Only in french, sorry...)" as only_fr %}
   {% if LANGUAGE_CODE == 'en' %}
-  <p class="text-muted text-xs mb-6 italic">{{ only_fr }}</p>
-  {% endif %}
+
+  <h1 class="text-2xl font-bold mb-8">About <span style="color:var(--accent)">Movizz</span></h1>
+
+  <section class="mb-6">
+    <h2 class="title-about">A few words about Movizz</h2>
+    <p class="content-about">
+      Movizz is a mini-game where you have to guess which movie a quote comes from.
+      I had this idea in mind but couldn't find anything satisfying, so I decided to build it myself!
+      I do this in my spare time for fun.
+    </p>
+  </section>
+
+  <section class="mb-6">
+    <h2 class="title-about">How many movies?</h2>
+    <ul class="content-about list-none space-y-1">
+      <li>🎬 <strong class="text-text">Movies</strong>: {{ nb_movie }}</li>
+      <li>💬 <strong class="text-text">Quotes</strong>: {{ nb_quote }}</li>
+      <li>📸 <strong class="text-text">Screenshots</strong>: {{ nb_screenshot }}</li>
+      <li>❓ <strong class="text-text">Questions answered</strong>: {{ nb_question }}</li>
+    </ul>
+  </section>
+
+  <section class="mb-6">
+    <h2 class="title-about">Where does the data come from?</h2>
+    <ul class="content-about list-disc list-inside space-y-1">
+      <li>Quotes: subtitle files from <a href="https://www.opensubtitles.org/" class="clickable-link">OpenSubtitle</a></li>
+      <li>Movie data: <a href="https://www.imdb.com/" class="clickable-link">IMDb</a></li>
+      <li>Screenshots: <a href="https://film-grab.com/" class="clickable-link">FilmGrab</a></li>
+    </ul>
+  </section>
+
+  <section class="mb-6">
+    <h2 class="title-about">How are points counted in image mode?</h2>
+    <p class="content-about">
+      5 points on the first image, 3 points on the second, 1 point on the third.
+    </p>
+  </section>
+
+  <section class="mb-6">
+    <h2 class="title-about">Why are some quotes weird?</h2>
+    <p class="content-about">
+      Quotes are automatically extracted from .srt subtitle files. A filter is applied but some oddities may slip through.
+    </p>
+  </section>
+
+  <section class="mb-6">
+    <h2 class="title-about">How to help?</h2>
+    <p class="content-about">
+      Feedback, ideas, bugs — all welcome!<br>
+      Contact: moviz<!-- abc@def -->z@proton<!-- @abc.de -->mail.com
+    </p>
+  </section>
+
+  <section class="mb-6">
+    <h2 class="title-about">Source code</h2>
+    <a href="https://github.com/tanguyesteoule/movizz" class="inline-flex items-center gap-2 clickable-link text-sm">
+      <img style="width:20px" src="{% static 'lyrizz/github.png' %}" alt="GitHub" />
+      github.com/tanguyesteoule/movizz
+    </a>
+  </section>
+
+  {% else %}
 
   <h1 class="text-2xl font-bold mb-8">À propos de <span style="color:var(--accent)">Movizz</span></h1>
 
@@ -72,6 +131,8 @@
       github.com/tanguyesteoule/movizz
     </a>
   </section>
+
+  {% endif %}
 
 </div>
 {% endblock %}

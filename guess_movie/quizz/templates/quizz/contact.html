@@ -1,6 +1,10 @@
 {% extends "quizz/base.html" %}
 {% load i18n %}
 
+{% block javascript %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+
 {% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}" class="nav-link">Contact</a></li>{% endblock %}
 {% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}" class="nav-link-mobile">Contact</a></li>{% endblock %}
 
@@ -28,6 +32,13 @@
       <div>
         <label class="form-label">Message</label>
         {{ form.message }}
+      </div>
+
+      <div>
+        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        {% if captcha_error %}
+          <p class="text-bad text-sm mt-2">{% trans "Please confirm you are not a robot." %}</p>
+        {% endif %}
       </div>
 
       <div class="text-center pt-2">

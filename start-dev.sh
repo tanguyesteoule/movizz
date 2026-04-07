@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 sleep 10
+
+# Build Tailwind CSS
+tailwindcss \
+  -c /app/tailwind.config.js \
+  -i /app/tailwind-input.css \
+  -o /app/guess_movie/quizz/static/quizz/tailwind.css \
+  --minify
+
 cd guess_movie
 python manage.py collectstatic --noinput
 python manage.py makemigrations

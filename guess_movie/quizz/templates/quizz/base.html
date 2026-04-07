@@ -27,29 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      corePlugins: { preflight: false },
-      theme: {
-        extend: {
-          colors: {
-            bg:          '#0d0d12',
-            surface:     '#15151e',
-            surface2:    '#1e1e2b',
-            accent:      '#e63950',
-            'accent-dark': '#7a1a27',
-            border:      '#25253a',
-            muted:       '#7a7a90',
-            good:        '#4ade80',
-            bad:         '#f87171',
-          },
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
-        }
-      }
-    }
-  </script>
+  <!-- Tailwind CSS (compiled) -->
+  <link rel="stylesheet" href="{% static 'quizz/tailwind.css' %}">
 
   <!-- Custom styles -->
   <link rel="stylesheet" type="text/css" href="{% static 'quizz/style.css' %}">
@@ -116,7 +95,7 @@
 {% block nav %}
 
 <nav class="nav-bar fixed top-0 w-full z-50">
-  <div class="max-w-screen-xl mx-auto px-4 h-14 flex items-center">
+  <div class="max-w-screen-xl mx-auto px-4 h-16 flex items-center">
 
     <!-- Brand -->
     <a href="{% url 'quizz:home' %}" class="brand mr-6">MOVIZZ</a>
@@ -126,7 +105,7 @@
       {% block nav-home %}<li><a href="{% url 'quizz:home' %}" class="nav-link">{% trans "Home" %}</a></li>{% endblock %}
       {% block nav-play %}<li><a href="{% url 'quizz:room_index' %}" class="nav-link">{% trans "Play" %}</a></li>{% endblock %}
       {% block nav-current-game %}{% endblock %}
-      {% block nav-editor %}<li><a href="{% url 'quizz:editor' %}" class="nav-link">{% trans "Editor" %}</a></li>{% endblock %}
+      {% block nav-editor %}{% endblock %}
       {% block nav-exploration %}{% endblock %}
       {% block nav-history %}<li><a href="{% url 'quizz:history_index' %}" class="nav-link">{% trans "History" %}</a></li>{% endblock %}
       {% block nav-about %}<li><a href="{% url 'quizz:about' %}" class="nav-link">{% trans "About" %}</a></li>{% endblock %}
@@ -161,7 +140,7 @@
       {% block nav-home2 %}<li><a href="{% url 'quizz:home' %}" class="nav-link-mobile">{% trans "Home" %}</a></li>{% endblock %}
       {% block nav-play2 %}<li><a href="{% url 'quizz:room_index' %}" class="nav-link-mobile">{% trans "Play" %}</a></li>{% endblock %}
       {% block nav-current-game2 %}{% endblock %}
-      {% block nav-editor2 %}<li><a href="{% url 'quizz:editor' %}" class="nav-link-mobile">{% trans "Editor" %}</a></li>{% endblock %}
+      {% block nav-editor2 %}{% endblock %}
       {% block nav-exploration2 %}{% endblock %}
       {% block nav-history2 %}<li><a href="{% url 'quizz:history_index' %}" class="nav-link-mobile">{% trans "History" %}</a></li>{% endblock %}
       {% block nav-about2 %}<li><a href="{% url 'quizz:about' %}" class="nav-link-mobile">{% trans "About" %}</a></li>{% endblock %}
@@ -178,7 +157,7 @@
 </nav>
 
 <!-- Fixed nav spacer -->
-<div class="h-14"></div>
+<div class="h-16"></div>
 
 {% endblock %}
 

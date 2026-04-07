@@ -236,37 +236,41 @@ $('#next_question').click(function() {
 
 {% block content %}
 
-<!-- Movie cards -->
-<div id="img-container" question_id="{{ question.id }}">
-  {% for movie in movies %}
-  <div class="click-img image{{ forloop.counter }}" movie_id="{{ movie.id }}">
-    <div class="container-div">
-      <img class="movie-img image" id="img{{ movie.id }}" src="{{ MEDIA_URL }}{{ movie.image }}" alt="" />
-      <div class="overlay" id="ovl{{ movie.id }}">
-        <div class="text">
-          {% if LANGUAGE_CODE == 'en' %}{{ movie.en_name }}{% else %}{{ movie.name }}{% endif %}
+<div id="game-content">
+
+  <!-- Movie cards -->
+  <div id="img-container" question_id="{{ question.id }}">
+    {% for movie in movies %}
+    <div class="click-img image{{ forloop.counter }}" movie_id="{{ movie.id }}">
+      <div class="container-div">
+        <img class="movie-img image" id="img{{ movie.id }}" src="{{ MEDIA_URL }}{{ movie.image }}" alt="" />
+        <div class="overlay" id="ovl{{ movie.id }}">
+          <div class="text">
+            {% if LANGUAGE_CODE == 'en' %}{{ movie.en_name }}{% else %}{{ movie.name }}{% endif %}
+          </div>
         </div>
       </div>
     </div>
+    {% endfor %}
   </div>
-  {% endfor %}
-</div>
 
-<!-- Quote -->
-<div id="container-quote">
-  <div style="display:flex;align-items:center;gap:0.75rem;max-width:80%;">
-    <span class="guillemet">"</span>
-    <span id="quote-text">{{ question.quote.quote_text }}</span>
-    <span class="guillemet">"</span>
+  <!-- Quote -->
+  <div id="container-quote">
+    <div style="display:flex;align-items:center;gap:0.75rem;max-width:80%;">
+      <span class="guillemet">"</span>
+      <span id="quote-text">{{ question.quote.quote_text }}</span>
+      <span class="guillemet">"</span>
+    </div>
   </div>
-</div>
 
-<!-- Next button (host only, chill mode) -->
-{% if request.session.game_mode_debrief == 'chill' and request.session.game_master == room_name %}
-<div id="container-button-next">
-  <a id="next_question" class="btn-primary">{% trans "Next" %} →</a>
+  <!-- Next button (host only, chill mode) -->
+  {% if request.session.game_mode_debrief == 'chill' and request.session.game_master == room_name %}
+  <div id="container-button-next">
+    <a id="next_question" class="btn-primary">{% trans "Next" %} →</a>
+  </div>
+  {% endif %}
+
 </div>
-{% endif %}
 
 <!-- Player list (floating) -->
 <div id="display-user">
