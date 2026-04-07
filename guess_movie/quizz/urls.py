@@ -27,6 +27,7 @@ urlpatterns = [
     path('reveal_image/', views.reveal_image, name='reveal_image'),
     path('create_room/', views.create_room, name='create_room'),
     path('create_game/', views.create_game, name='create_game'),
+    path('img/<str:token>/', views.serve_screenshot, name='serve_screenshot'),
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),

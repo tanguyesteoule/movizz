@@ -5,7 +5,7 @@ from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 
 from .models import GamePlayer, Player
-from .views import Game, Question, Movie, Answer, QuestionImage, Screenshot, AnswerImage
+from .views import Game, Question, Movie, Answer, QuestionImage, Screenshot, AnswerImage, sign_img_path
 from django.db.models import F
 import numpy as np
 
@@ -426,7 +426,7 @@ class GameMasterConsumerImage(AsyncWebsocketConsumer):
         i = list(Screenshot.objects.filter(pk__in=q.list_image_id.split(',')))[current_q_image]
         context = {
             'q_id': q.id,
-            'image_url': str(i.image),
+            'image_url': sign_img_path(i.image),
             'list_user_id': self.list_id,
             'current_answer': json.dumps(self.dict_current_answer),
             'dict_user': json.dumps(self.dict_user)
