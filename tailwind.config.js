@@ -3,8 +3,6 @@ module.exports = {
   content: [
     './guess_movie/quizz/templates/**/*.html',
     './guess_movie/lyrizz/templates/**/*.html',
-    './guess_movie/quizz/static/**/*.js',
-    './guess_movie/lyrizz/static/**/*.js',
   ],
   theme: {
     extend: {

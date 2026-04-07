@@ -12,4 +12,15 @@ RUN curl -sLo /usr/local/bin/tailwindcss \
 
 WORKDIR /app
 
+# Build Tailwind CSS at image build time (baked into image for production)
+COPY tailwind.config.js tailwind-input.css ./
+COPY guess_movie/quizz/templates/ ./guess_movie/quizz/templates/
+COPY guess_movie/lyrizz/templates/ ./guess_movie/lyrizz/templates/
+RUN mkdir -p /app/guess_movie/quizz/static/quizz && \
+    tailwindcss \
+      -c /app/tailwind.config.js \
+      -i /app/tailwind-input.css \
+      -o /app/guess_movie/quizz/static/quizz/tailwind.css \
+      --minify
+
 CMD bash /app/start-dev.sh
