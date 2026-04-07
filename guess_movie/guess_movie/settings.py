@@ -27,6 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 
+# Google reCAPTCHA v2
+RECAPTCHA_SITE_KEY   = config("RECAPTCHA_SITE_KEY",   default="")
+RECAPTCHA_SECRET_KEY = config("RECAPTCHA_SECRET_KEY", default="")
+
 # SECURITY WARNING: don't run with debug turned on in production!
 
 if IS_PROD == 'True':
@@ -80,6 +84,7 @@ INSTALLED_APPS = [
     'quizz.apps.QuizzConfig',
     'lyrizz.apps.LyrizzConfig',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

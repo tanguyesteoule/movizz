@@ -15,6 +15,8 @@ from django.db.models import Max, Min
 import random, string
 import json
 import time
+import urllib.request
+import urllib.parse
 import operator
 import re
 from collections import Counter
@@ -477,7 +479,10 @@ def room_play_image(request, room_name, game_name):
         if game.current_q == -1 or game.current_q > game.nb_q - 1:
             return HttpResponseRedirect(reverse('quizz:room_index'))
 
-        question = QuestionImage.objects.filter(game_id=game.id).order_by('id')[game.current_q]
+        questions_qs = QuestionImage.objects.filter(game_id=game.id).order_by('id')
+        if game.current_q >= questions_qs.count():
+            return HttpResponseRedirect(reverse('quizz:room_index'))
+        question = questions_qs[game.current_q]
 
         list_image_id = question.list_image_id.split(',')
         image = list(Screenshot.objects.filter(pk__in=list_image_id))[0].image
@@ -614,15 +619,37 @@ def about(request):
 
 
 def contact(request):
+    from django.conf import settings as django_settings
+    captcha_error = None
     if request.method == 'POST':
+        # Verify reCAPTCHA
+        recaptcha_response = request.POST.get('g-recaptcha-response', '')
+        data = urllib.parse.urlencode({
+            'secret': django_settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response,
+        }).encode()
+        req = urllib.request.Request('https://www.google.com/recaptcha/api/siteverify', data=data)
+        try:
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                result = json.loads(resp.read().decode())
+            captcha_ok = result.get('success', False)
+        except Exception:
+            captcha_ok = False
+
         form = ContactForm(request.POST)
-        if form.is_valid():
+        if captcha_ok and form.is_valid():
             form.save()
             return render(request, 'quizz/contact_success.html')
         else:
-            return render(request, 'quizz/contact.html', {'form': form})
+            if not captcha_ok:
+                captcha_error = True
+            return render(request, 'quizz/contact.html', {
+                'form': form,
+                'captcha_error': captcha_error,
+                'recaptcha_site_key': django_settings.RECAPTCHA_SITE_KEY,
+            })
     form = ContactForm()
-    context = {'form': form}
+    context = {'form': form, 'recaptcha_site_key': django_settings.RECAPTCHA_SITE_KEY}
     return render(request, 'quizz/contact.html', context)
 
 
@@ -795,7 +822,7 @@ def update_selection(request):
             if request.POST.get(f'genreimg_{g.id}'):
                 list_genre_id_img.append(g.id)
 
-        presel_id = int(request.POST.get('presel'))
+        presel_id = int(request.POST.get('presel') or -1)
         year1 = int(request.POST.get('year1'))
         year2 = int(request.POST.get('year2'))
         nb_question = int(request.POST.get('nb_question'))

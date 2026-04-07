@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-21 20:26+0000\n"
+"POT-Creation-Date: 2026-04-06 19:55+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,41 +18,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: guess_movie/settings.py:227
+#: guess_movie/settings.py:232
 msgid "English"
 msgstr ""
 
-#: guess_movie/settings.py:228
+#: guess_movie/settings.py:233
 msgid "French"
 msgstr ""
 
 #: quizz/templates/quizz/about.html:5 quizz/templates/quizz/about.html:6
-#: quizz/templates/quizz/base.html:82 quizz/templates/quizz/base.html:107
+#: quizz/templates/quizz/base.html:111 quizz/templates/quizz/base.html:146
 msgid "About"
-msgstr "About (FR)"
-
-#: quizz/templates/quizz/about.html:11
-msgid "(Only in french, sorry...)"
 msgstr ""
 
-#: quizz/templates/quizz/base.html:76 quizz/templates/quizz/base.html:101
+#: quizz/templates/quizz/base.html:105 quizz/templates/quizz/base.html:140
 #: quizz/templates/quizz/home.html:4 quizz/templates/quizz/home.html:5
 msgid "Home"
 msgstr ""
 
-#: quizz/templates/quizz/base.html:77 quizz/templates/quizz/base.html:102
-#: quizz/templates/quizz/home.html:24 quizz/templates/quizz/room.html:5
+#: quizz/templates/quizz/base.html:106 quizz/templates/quizz/base.html:141
+#: quizz/templates/quizz/history_index.html:40
+#: quizz/templates/quizz/home.html:37 quizz/templates/quizz/room.html:5
 #: quizz/templates/quizz/room.html:6 quizz/templates/quizz/room_index.html:4
 #: quizz/templates/quizz/room_index.html:5
 msgid "Play"
 msgstr ""
 
-#: quizz/templates/quizz/base.html:79 quizz/templates/quizz/base.html:104
-#: quizz/templates/quizz/editor.html:4 quizz/templates/quizz/editor.html:5
-msgid "Editor"
-msgstr ""
-
-#: quizz/templates/quizz/base.html:81 quizz/templates/quizz/base.html:106
+#: quizz/templates/quizz/base.html:110 quizz/templates/quizz/base.html:145
 #: quizz/templates/quizz/history.html:5 quizz/templates/quizz/history.html:6
 #: quizz/templates/quizz/history_image.html:5
 #: quizz/templates/quizz/history_image.html:6
@@ -61,59 +53,67 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: quizz/templates/quizz/base.html:83 quizz/templates/quizz/base.html:108
+#: quizz/templates/quizz/base.html:112 quizz/templates/quizz/base.html:147
 msgid "Contact"
 msgstr ""
 
-#: quizz/templates/quizz/base.html:89 quizz/templates/quizz/base.html:109
-msgid "Test Lyrizz"
-msgstr "Test Lyrizz (FR)"
+#: quizz/templates/quizz/base.html:113 quizz/templates/quizz/base.html:148
+#: quizz/templates/quizz/news.html:5 quizz/templates/quizz/news.html:6
+msgid "News"
+msgstr ""
 
-#: quizz/templates/quizz/contact.html:22
+#: quizz/templates/quizz/contact.html:15
 msgid "intro-contact"
 msgstr ""
 "Don't hesitate to report any problem (bug, wrong movie name, ...) or to send "
 "us your remarks/ideas. Enter an email if you want a response.<br />Thanks to "
 "you, it will improve the game!"
 
-#: quizz/templates/quizz/contact.html:27
+#: quizz/templates/quizz/contact.html:23
 msgid "optional"
 msgstr ""
 
-#: quizz/templates/quizz/contact.html:30
+#: quizz/templates/quizz/contact.html:28
 msgid "title-contact"
 msgstr "Title"
 
-#: quizz/templates/quizz/contact.html:37
+#: quizz/templates/quizz/contact.html:40
+msgid "Please confirm you are not a robot."
+msgstr ""
+
+#: quizz/templates/quizz/contact.html:45
 msgid "Send"
 msgstr ""
 
-#: quizz/templates/quizz/editor.html:31
+#: quizz/templates/quizz/editor.html:4 quizz/templates/quizz/editor.html:5
+msgid "Editor"
+msgstr ""
+
+#: quizz/templates/quizz/editor.html:33
 msgid "The list has been successfully created"
 msgstr ""
 
-#: quizz/templates/quizz/editor.html:60
+#: quizz/templates/quizz/editor.html:62
 msgid "Preselection editor"
 msgstr ""
 
-#: quizz/templates/quizz/editor.html:63
+#: quizz/templates/quizz/editor.html:65
 msgid "editor-intro"
 msgstr "Customize your own movie list and share it with the community!"
 
-#: quizz/templates/quizz/editor.html:69
-#: quizz/templates/quizz/room_play_image.html:359
+#: quizz/templates/quizz/editor.html:71
 msgid "Movie name"
 msgstr ""
 
-#: quizz/templates/quizz/editor.html:70
+#: quizz/templates/quizz/editor.html:72
 msgid "At least 3 movies"
 msgstr ""
 
-#: quizz/templates/quizz/editor.html:86
+#: quizz/templates/quizz/editor.html:88
 msgid "List name"
 msgstr ""
 
-#: quizz/templates/quizz/editor.html:93
+#: quizz/templates/quizz/editor.html:95
 msgid "Save"
 msgstr ""
 
@@ -127,27 +127,35 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: quizz/templates/quizz/history_index.html:20
+#: quizz/templates/quizz/history_index.html:16
 msgid "Games history"
 msgstr ""
 
-#: quizz/templates/quizz/history_index.html:31
-msgid "QUOTES"
+#: quizz/templates/quizz/history_index.html:24
+msgid "QUOTE"
 msgstr ""
 
-#: quizz/templates/quizz/history_index.html:33
+#: quizz/templates/quizz/history_index.html:32
 msgid "by"
 msgstr ""
 
-#: quizz/templates/quizz/history_index.html:37
+#: quizz/templates/quizz/history_index.html:33
+msgid "questions"
+msgstr ""
+
+#: quizz/templates/quizz/history_index.html:39
 msgid "You have not played any games"
 msgstr ""
 
 #: quizz/templates/quizz/home.html:13
+msgid "The movie quote & screenshot game"
+msgstr ""
+
+#: quizz/templates/quizz/home.html:21
 msgid "Principle of Movizz"
 msgstr ""
 
-#: quizz/templates/quizz/home.html:14
+#: quizz/templates/quizz/home.html:23
 msgid "home-principle"
 msgstr ""
 "<p>Guess <span class='imp-word'>the movie</span> from which <span class='imp-"
@@ -158,11 +166,11 @@ msgstr ""
 "Screenshot mode, <span class='imp-word'>the faster you are</span>, <span "
 "class='imp-word'>the more points you will score</span>!</p>"
 
-#: quizz/templates/quizz/home.html:18
+#: quizz/templates/quizz/home.html:28
 msgid "How to play?"
 msgstr ""
 
-#: quizz/templates/quizz/home.html:19
+#: quizz/templates/quizz/home.html:30
 msgid "home-how"
 msgstr ""
 "<p>Create a room and play <span class='imp-word'>solo</span> or <span "
@@ -172,306 +180,307 @@ msgstr ""
 "seem unfamiliar to you, you can even <span class='imp-word'>filter by "
 "popularity</span> to take it easy.</p>"
 
-#: quizz/templates/quizz/room.html:39
+#: quizz/templates/quizz/news.html:31
+msgid "No news yet."
+msgstr ""
+
+#: quizz/templates/quizz/room.html:34
 msgid "room-error"
 msgstr ""
 "There is an ongoing problem with the server<br />Please try again later, "
 "sorry!"
 
-#: quizz/templates/quizz/room.html:311 quizz/templates/quizz/room.html:696
+#: quizz/templates/quizz/room.html:91 quizz/templates/quizz/room_play.html:136
+#: quizz/templates/quizz/room_play.html:295
+#: quizz/templates/quizz/room_play_image.html:170
+#: quizz/templates/quizz/room_play_image.html:319
+msgid "you"
+msgstr ""
+
+#: quizz/templates/quizz/room.html:226 quizz/templates/quizz/room.html:543
 msgid "Too many films for customization"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:423
+#: quizz/templates/quizz/room.html:285
 #: quizz/templates/quizz/room_results_image.html:17
 msgid "Username"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:425
-msgid "Copy the invitation link"
+#: quizz/templates/quizz/room.html:294
+msgid "Copy invitation link"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:426
+#: quizz/templates/quizz/room.html:296
 msgid "Copied !"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:429 quizz/templates/quizz/room_play.html:393
-#: quizz/templates/quizz/room_play_image.html:389
-msgid "Players list"
+#: quizz/templates/quizz/room.html:303 quizz/templates/quizz/room_play.html:284
+#: quizz/templates/quizz/room_play_image.html:308
+msgid "Players"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:441 quizz/templates/quizz/room.html:444
-#: quizz/templates/quizz/room.html:720
+#: quizz/templates/quizz/room.html:313
+msgid "Game mode"
+msgstr ""
+
+#: quizz/templates/quizz/room.html:318 quizz/templates/quizz/room.html:327
+#: quizz/templates/quizz/room.html:561
 msgid "Image Mode"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:442 quizz/templates/quizz/room.html:445
-#: quizz/templates/quizz/room.html:452
+#: quizz/templates/quizz/room.html:322 quizz/templates/quizz/room.html:331
+#: quizz/templates/quizz/room.html:341
 msgid "Quote Mode"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:452 quizz/templates/quizz/room.html:720
+#: quizz/templates/quizz/room.html:341 quizz/templates/quizz/room.html:561
 msgid "Game settings"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:454
-msgid "Basic configuration"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:456
+#: quizz/templates/quizz/room.html:350
 msgid "Preselections"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:458
+#: quizz/templates/quizz/room.html:352
 msgid "Default (easy)"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:459
+#: quizz/templates/quizz/room.html:353
 msgid "All movies"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:464
-msgid "Community preselections"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:469 quizz/templates/quizz/room.html:471
-msgid "No preselection"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:483
-msgid "room-presel"
-msgstr ""
-"Preselections are suggested by users in the Editor mode<br />(this field has "
-"priority over other settings)."
-
-#: quizz/templates/quizz/room.html:488
-msgid "Advanced configuration"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:491 quizz/templates/quizz/room.html:516
+#: quizz/templates/quizz/room.html:382
 msgid "Reflection time"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:500
+#: quizz/templates/quizz/room.html:390
 msgid "Unlimited (by host)"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:512 quizz/templates/quizz/room.html:550
+#: quizz/templates/quizz/room.html:399 quizz/templates/quizz/room.html:432
 msgid "Automatic"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:523
+#: quizz/templates/quizz/room.html:408
 msgid "Must be between 5 and 15s"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:529
+#: quizz/templates/quizz/room.html:415
 msgid "Change of question"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:538
+#: quizz/templates/quizz/room.html:423
 msgid "Manual (by host)"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:554
-msgid "Waiting time"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:561
+#: quizz/templates/quizz/room.html:441
 msgid "Must be between 2 and 10s"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:568 quizz/templates/quizz/room.html:570
-#: quizz/templates/quizz/room.html:726 quizz/templates/quizz/room.html:728
+#: quizz/templates/quizz/room.html:448 quizz/templates/quizz/room.html:570
 msgid "Number of questions"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:578
+#: quizz/templates/quizz/room.html:456 quizz/templates/quizz/room.html:578
+msgid "Number of selected movies:"
+msgstr ""
+
+#: quizz/templates/quizz/room.html:459 quizz/templates/quizz/room.html:581
+msgid "movies"
+msgstr ""
+
+#: quizz/templates/quizz/room.html:461
 msgid "room-filter-msg"
 msgstr ""
 "If you find the game too difficult or have specific tastes, you can filter "
 "the movies by genre, year and popularity."
 
-#: quizz/templates/quizz/room.html:580 quizz/templates/quizz/room.html:738
-msgid "Number of selected movies:"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:583 quizz/templates/quizz/room.html:585
-#: quizz/templates/quizz/room.html:741 quizz/templates/quizz/room.html:743
-msgid "movies"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:591 quizz/templates/quizz/room.html:748
+#: quizz/templates/quizz/room.html:467 quizz/templates/quizz/room.html:588
 msgid "Check all"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:591 quizz/templates/quizz/room.html:748
+#: quizz/templates/quizz/room.html:468 quizz/templates/quizz/room.html:589
 msgid "Uncheck all"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:613 quizz/templates/quizz/room.html:770
+#: quizz/templates/quizz/room.html:485 quizz/templates/quizz/room.html:606
 msgid "Countries"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:618 quizz/templates/quizz/room.html:620
-#: quizz/templates/quizz/room.html:775 quizz/templates/quizz/room.html:777
+#: quizz/templates/quizz/room.html:488 quizz/templates/quizz/room.html:490
+#: quizz/templates/quizz/room.html:609 quizz/templates/quizz/room.html:611
 msgid "All countries"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:638 quizz/templates/quizz/room.html:826
+#: quizz/templates/quizz/room.html:504 quizz/templates/quizz/room.html:644
 msgid "Years"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:638 quizz/templates/quizz/room.html:664
-#: quizz/templates/quizz/room.html:794 quizz/templates/quizz/room.html:826
+#: quizz/templates/quizz/room.html:504 quizz/templates/quizz/room.html:522
+#: quizz/templates/quizz/room.html:625 quizz/templates/quizz/room.html:644
 msgid "Reset"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:641 quizz/templates/quizz/room.html:650
-#: quizz/templates/quizz/room.html:829 quizz/templates/quizz/room.html:838
+#: quizz/templates/quizz/room.html:507 quizz/templates/quizz/room.html:647
 msgid "From"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:644 quizz/templates/quizz/room.html:653
-#: quizz/templates/quizz/room.html:832 quizz/templates/quizz/room.html:841
+#: quizz/templates/quizz/room.html:512 quizz/templates/quizz/room.html:652
 msgid "to"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:645 quizz/templates/quizz/room.html:654
-#: quizz/templates/quizz/room.html:833 quizz/templates/quizz/room.html:842
+#: quizz/templates/quizz/room.html:517 quizz/templates/quizz/room.html:657
 msgid "Format: YYYY (Bounds are included)"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:664 quizz/templates/quizz/room.html:794
+#: quizz/templates/quizz/room.html:522 quizz/templates/quizz/room.html:625
 msgid "Popularity"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:667 quizz/templates/quizz/room.html:672
-#: quizz/templates/quizz/room.html:797 quizz/templates/quizz/room.html:802
-msgid "Number of movies filtered by popularity"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:668 quizz/templates/quizz/room.html:673
-#: quizz/templates/quizz/room.html:798 quizz/templates/quizz/room.html:803
+#: quizz/templates/quizz/room.html:526 quizz/templates/quizz/room.html:629
 msgid "Leave empty to not filter by popularity"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:681
+#: quizz/templates/quizz/room.html:531
 msgid "Selected movies"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:702
+#: quizz/templates/quizz/room.html:547
 msgid "room-selected-msg"
 msgstr ""
 "You can remove movies from the list (if less than 200 movies). Any action on "
 "the other settings will reset the list."
 
-#: quizz/templates/quizz/room.html:710
+#: quizz/templates/quizz/room.html:550
 msgid "room-note-msg"
 msgstr "Note: If the number of movies is less than 3, all movies are selected."
 
-#: quizz/templates/quizz/room.html:794
-msgid "Number of votes on IMDb"
-msgstr ""
-
-#: quizz/templates/quizz/room.html:809
+#: quizz/templates/quizz/room.html:634
 msgid "NSFW image filter"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:820
+#: quizz/templates/quizz/room.html:637
+msgid "Filter explicit images"
+msgstr ""
+
+#: quizz/templates/quizz/room.html:639
 msgid "room-nsfw-msg"
 msgstr ""
 "If checked, only the films that have already been checked are proposed (Work "
 "in progress)"
 
-#: quizz/templates/quizz/room.html:857
+#: quizz/templates/quizz/room.html:666
 msgid "Start game"
 msgstr ""
 
-#: quizz/templates/quizz/room.html:863
+#: quizz/templates/quizz/room.html:673
 msgid "room-msg-waiting"
 msgstr "The host is choosing the game settings<br />Please wait"
 
-#: quizz/templates/quizz/room_index.html:28
+#: quizz/templates/quizz/room_index.html:31
 msgid "Join an existing room"
 msgstr ""
 
-#: quizz/templates/quizz/room_index.html:29
-msgid "Example:"
-msgstr ""
-
-#: quizz/templates/quizz/room_index.html:30
-msgid "Room ID"
-msgstr ""
-
-#: quizz/templates/quizz/room_index.html:31
-msgid "Join"
-msgstr ""
-
-#: quizz/templates/quizz/room_index.html:34
-msgid "Create a new room"
+#: quizz/templates/quizz/room_index.html:32
+msgid "Enter the room ID shared by your host."
 msgstr ""
 
 #: quizz/templates/quizz/room_index.html:35
+msgid "Room ID"
+msgstr ""
+
+#: quizz/templates/quizz/room_index.html:37
+msgid "Example:"
+msgstr ""
+
+#: quizz/templates/quizz/room_index.html:40
+msgid "Join"
+msgstr ""
+
+#: quizz/templates/quizz/room_index.html:46
+msgid "Create a new room"
+msgstr ""
+
+#: quizz/templates/quizz/room_index.html:47
+msgid "Start a game and invite your friends."
+msgstr ""
+
+#: quizz/templates/quizz/room_index.html:50
 msgid "Create"
 msgstr ""
 
-#: quizz/templates/quizz/room_play.html:3
 #: quizz/templates/quizz/room_play.html:4
+#: quizz/templates/quizz/room_play.html:5
 #: quizz/templates/quizz/room_play_image.html:5
 #: quizz/templates/quizz/room_play_image.html:6
-#: quizz/templates/quizz/room_results.html:4
 #: quizz/templates/quizz/room_results.html:5
-#: quizz/templates/quizz/room_results_image.html:4
+#: quizz/templates/quizz/room_results.html:6
 #: quizz/templates/quizz/room_results_image.html:5
+#: quizz/templates/quizz/room_results_image.html:6
 msgid "Current game"
 msgstr ""
 
-#: quizz/templates/quizz/room_play.html:177
-#: quizz/templates/quizz/room_play_image.html:209
-#: quizz/templates/quizz/room_play_image.html:395
-msgid "you"
-msgstr ""
-
-#: quizz/templates/quizz/room_play.html:382
+#: quizz/templates/quizz/room_play.html:269
 msgid "Next"
 msgstr ""
 
-#: quizz/templates/quizz/room_play.html:414
+#: quizz/templates/quizz/room_play.html:312
 msgid "The host has been disconnected, the game is over."
 msgstr ""
 
-#: quizz/templates/quizz/room_play_image.html:151
+#: quizz/templates/quizz/room_play_image.html:138
 msgid "is the right answer"
 msgstr ""
 
-#: quizz/templates/quizz/room_play_image.html:160
+#: quizz/templates/quizz/room_play_image.html:142
 msgid "is not the right answer"
 msgstr ""
 
-#: quizz/templates/quizz/room_play_image.html:332
+#: quizz/templates/quizz/room_play_image.html:257
 msgid "Waiting for other players"
 msgstr ""
 
-#: quizz/templates/quizz/room_play_image.html:376
+#: quizz/templates/quizz/room_play_image.html:284
+msgid "Type to search…"
+msgstr ""
+
+#: quizz/templates/quizz/room_play_image.html:295
 msgid "Next question"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:57
-#: quizz/templates/quizz/room_results_image.html:140
+#: quizz/templates/quizz/room_results.html:49
+#: quizz/templates/quizz/room_results_image.html:122
 msgid "Game is over !"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:99
-#: quizz/templates/quizz/room_results_image.html:153
+#: quizz/templates/quizz/room_results.html:50
+#: quizz/templates/quizz/room_results_image.html:123
+msgid "Here are the final scores."
+msgstr ""
+
+#: quizz/templates/quizz/room_results.html:58
+msgid "Player"
+msgstr ""
+
+#: quizz/templates/quizz/room_results.html:92
+#: quizz/templates/quizz/room_results_image.html:138
 msgid "Play again"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:102
-#: quizz/templates/quizz/room_results_image.html:155
+#: quizz/templates/quizz/room_results.html:94
+#: quizz/templates/quizz/room_results_image.html:140
 msgid "(Waiting for the host for a new game)"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:106
-#: quizz/templates/quizz/room_results_image.html:61
+#: quizz/templates/quizz/room_results.html:101
+#: quizz/templates/quizz/room_results_image.html:54
 msgid "Summary of questions"
 msgstr ""
+
+#~ msgid "room-presel"
+#~ msgstr ""
+#~ "Preselections are suggested by users in the Editor mode<br />(this field "
+#~ "has priority over other settings)."
+
+#~ msgid "Test Lyrizz"
+#~ msgstr "Test Lyrizz (FR)"

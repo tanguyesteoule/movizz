@@ -1,92 +1,54 @@
-/*
-#container-quote {
-    color: blue !important;
-}
-*/
+/* Desktop (min-width: 501px, min-height: 500px) */
+
 @media (hover: hover) and (pointer: fine) {
-    .container-div:hover .overlay {
-      opacity: 0.8;
-    }
+  .container-div:hover .overlay { opacity: 1; }
 }
 
 img.movie-img {
-    height: 35vh;
-    border: solid 5px var(--border-img-color);
+  height: 35vh;
+  width: auto;
+  display: block;
 }
 
-.text {
-  font-size: 1.80rem;
-}
+.text { font-size: 1.0rem; }
 
-#quote-text {
-    font-size: 2.92rem;
-}
+#quote-text { font-size: 1.8rem; }
 
-#img-container {
-    height: 50vh;
+#img-container { height: 40vh; }
+
+.container-div { height: 35vh; }
+
+#container-quote {
+  height: 22vh;
+  padding: 0 2rem;
+  gap: 0.75rem;
 }
 
 #container-button-next {
-    height: 10vh;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-#next_question {
-}
-
-.container-div {
-    height: 35vh;
-}
-
-#container-quote {
-    height: 20vh;
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #display-user {
-    top:10%;
-    left: 1%;
-    position: absolute;
-    /*background-color: var(--border-img-color);
-    padding: 8px;*/
+  top: 4.5rem;
+  left: 1rem;
+  position: fixed;
 }
 
-.collapsible-user {
-    padding-right:50px;
+#timer { font-size: 1.2rem; }
+#counter-question { right: calc(1rem + 68px); }
+
+#cont-screenshot {
+  display: inline-block;
+  max-width: 52%;
+  height: auto;
+  width: auto;
 }
 
-#timer, #timer-debrief{
-    color: #CCC;
-    font-weight: bold;
-    font-size: 1.5rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: auto;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-#counter-question {
-  color: #CCC;
-  font-weight: bold;
-  font-size: 1.5rem;
-  position: absolute;
-  right: 5%;
-  margin: auto;
-  text-align: center;
-  vertical-align: middle;
-}
-  #cont-screenshot {
-    display: inline-block;
-    max-width:50%;
-    height:auto;
-    width:auto;
-  }
-
-.centered-contact{
-    margin-left: auto;
-    margin-right: auto;
-    width: 1000px;
+.centered-contact {
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }

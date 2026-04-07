@@ -1,43 +1,51 @@
 {% extends "quizz/base.html" %}
 {% load i18n %}
-{% load static %}
 
-{% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
-{% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}"><b>Contact</b></a></li>{% endblock %}
+{% block javascript %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+
+{% block nav-contact %}<li class="active"><a href="{% url 'quizz:contact' %}" class="nav-link">Contact</a></li>{% endblock %}
+{% block nav-contact2 %}<li class="active"><a href="{% url 'quizz:contact' %}" class="nav-link-mobile">Contact</a></li>{% endblock %}
 
 {% block content %}
-<style>
-textarea {
- color: white;
- margin: 8px 0;
- height: 300px;
-}
+<div class="max-w-2xl mx-auto px-6 py-10">
 
+  <h1 class="text-2xl font-bold mb-2"><span style="color:var(--accent)">Contact</span></h1>
+  <p class="text-muted text-sm mb-8">{% trans "intro-contact" %}</p>
 
-</style>
-<br /><br />
-<div style="margin-left: 1em; margin-right: 1em;">
-   <h5 class="title-about center">Contact</h5>
-   <div class="centered-contact input-field">
-      {% trans "intro-contact" %}
-      <br /><br /><br />
-      <form action="" method="post">
-         {% csrf_token %}
-         {{ form.management_form }}
-         Email ({% trans "optional" %})
-          {{ form.email }}
-         <br /><br /><br />
-         {% trans "title-contact" %}
-          {{ form.subject }}
-         <br /><br /><br />
-         Message
-          {{ form.message }}
-         <br />
-         <div class="center">
-            <input type="submit" class="btn-large waves-effect btn-color" value='{% trans "Send" %}'>
-         <div/><br>
-      </form>
-   </div>
+  <div class="card-panel">
+    <form action="" method="post" class="flex flex-col gap-5">
+      {% csrf_token %}
+      {{ form.management_form }}
+
+      <div>
+        <label class="form-label">Email <span class="text-muted">({% trans "optional" %})</span></label>
+        {{ form.email }}
+      </div>
+
+      <div>
+        <label class="form-label">{% trans "title-contact" %}</label>
+        {{ form.subject }}
+      </div>
+
+      <div>
+        <label class="form-label">Message</label>
+        {{ form.message }}
+      </div>
+
+      <div>
+        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        {% if captcha_error %}
+          <p class="text-bad text-sm mt-2">{% trans "Please confirm you are not a robot." %}</p>
+        {% endif %}
+      </div>
+
+      <div class="text-center pt-2">
+        <input type="submit" class="btn-primary cursor-pointer" value='{% trans "Send" %}'>
+      </div>
+    </form>
+  </div>
+
 </div>
-
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -7,6 +8,7 @@ from django.conf.urls.static import static
 app_name = 'quizz'
 
 urlpatterns = [
+    path('robots.txt', TemplateView.as_view(template_name='quizz/robots.txt', content_type='text/plain')),
     path('room/results/<str:room_name>/<str:game_name>/', views.room_results, name='room_results'),
     path('room/results_image/<str:room_name>/<str:game_name>/', views.room_results_image, name='room_results_image'),
     path('room/play/<str:room_name>/<str:game_name>/', views.room_play, name='room_play'),

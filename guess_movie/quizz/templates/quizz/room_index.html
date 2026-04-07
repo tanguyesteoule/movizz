@@ -1,40 +1,56 @@
 {% extends "quizz/base.html" %}
 {% load i18n %}
 
-{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>{% trans "Play" %}</b></a></li>{% endblock %}
-{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}"><b>{% trans "Play" %}</b></a></li>{% endblock %}
+{% block nav-play %}<li class="active"><a href="{% url 'quizz:room_index' %}" class="nav-link">{% trans "Play" %}</a></li>{% endblock %}
+{% block nav-play2 %}<li class="active"><a href="{% url 'quizz:room_index' %}" class="nav-link-mobile">{% trans "Play" %}</a></li>{% endblock %}
 
 {% block javascript %}
 <script>
-$(document).ready ( function () {
-    $("#button-join").click(function () {
-      var room_name = $("#room_name").val()
-      if (room_name != ''){
-        window.location.replace(window.location.protocol +'//' + window.location.host + '/room/' + room_name + '/')
-      }
+$(document).ready(function() {
+  $('#button-join').click(function() {
+    var room_name = $('#room_name').val().trim();
+    if (room_name !== '') {
+      window.location.replace(window.location.protocol + '//' + window.location.host + '/room/' + room_name + '/');
+    }
+  });
 
-    });
-
+  $('#room_name').keydown(function(e) {
+    if (e.key === 'Enter') $('#button-join').click();
+  });
 });
 </script>
 {% endblock %}
 
 {% block content %}
+<div class="min-h-[calc(100vh-3.5rem)] flex items-center justify-center px-4 py-12">
+  <div class="grid md:grid-cols-2 gap-6 max-w-2xl w-full">
 
-<div style="height:15vh;"></div>
-<div class="row center">
-    <div class="col s12 m2"></div>
-    <div class="col s12 m4">
-        <h4 style="color:#C3073F">{% trans "Join an existing room" %}</h4><br />
-        <div class="input-field"><input class="update" placeholder='{% trans "Example:" %} eDseYNw0Zd' type="text" id="room_name" name="room_name">
-        <label for="room_name">{% trans "Room ID" %}</label></div>
-        <a id="button-join" class="btn-large waves-effect btn-color">{% trans "Join" %}</a><br>
+    <!-- Join -->
+    <div class="card-panel flex flex-col gap-5">
+      <div>
+        <h2 class="text-accent font-semibold text-base mb-1">{% trans "Join an existing room" %}</h2>
+        <p class="text-muted text-xs">{% trans "Enter the room ID shared by your host." %}</p>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-muted mb-1.5">{% trans "Room ID" %}</label>
+        <input type="text" id="room_name" name="room_name"
+               placeholder='{% trans "Example:" %} eDseYNw0Zd'
+               class="form-input w-full" />
+      </div>
+      <a id="button-join" class="btn-primary text-center w-full">{% trans "Join" %} →</a>
     </div>
-    <div class="col s12 m4">
-        <h4 style="color:#C3073F">{% trans "Create a new room" %}</h4>
-      <a href="{% url 'quizz:create_room' %}" class="btn-large waves-effect btn-color">{% trans "Create" %}</a><br>
+
+    <!-- Create -->
+    <div class="card-panel flex flex-col gap-5">
+      <div>
+        <h2 class="text-accent font-semibold text-base mb-1">{% trans "Create a new room" %}</h2>
+        <p class="text-muted text-xs">{% trans "Start a game and invite your friends." %}</p>
+      </div>
+      <div class="flex-1 flex items-end">
+        <a href="{% url 'quizz:create_room' %}" class="btn-primary text-center w-full">{% trans "Create" %} →</a>
+      </div>
     </div>
-    <div class="col s12 m2"></div>
+
+  </div>
 </div>
-
 {% endblock %}

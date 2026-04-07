@@ -1,27 +1,41 @@
 {% extends "quizz/base.html" %}
 {% load i18n %}
 
-{% block nav-home %}<li class="active"><a href="{% url 'quizz:home' %}"><b>{% trans "Home" %}</b></a></li>{% endblock %}
-{% block nav-home2 %}<li class="active"><a href="{% url 'quizz:home' %}"><b>{% trans "Home" %}</b></a></li>{% endblock %}
+{% block nav-home %}<li class="active"><a href="{% url 'quizz:home' %}" class="nav-link">{% trans "Home" %}</a></li>{% endblock %}
+{% block nav-home2 %}<li class="active"><a href="{% url 'quizz:home' %}" class="nav-link-mobile">{% trans "Home" %}</a></li>{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="min-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-center px-4 py-16">
 
-<div style="height:15vh;"></div>
-<div class="row">
-  <div class="col s12 m6">
-      <h4 class="center" style="color:#C3073F">{% trans "Principle of Movizz" %}</h4>
-    {% trans "home-principle" %}
+  <!-- Hero -->
+  <div class="text-center mb-14">
+    <h1 class="text-5xl md:text-6xl font-extrabold tracking-widest text-accent mb-3">MOVIZZ</h1>
+    <p class="text-muted text-sm tracking-widest uppercase">{% trans "The movie quote & screenshot game" %}</p>
   </div>
 
-    <div class="col s12 m6">
-      <h4 class="center" style="color:#C3073F">{% trans "How to play?" %}</h4>
-      {% trans "home-how" %}
+  <!-- Cards -->
+  <div class="grid md:grid-cols-2 gap-6 max-w-3xl w-full mb-12">
+
+    <div class="card-panel">
+      <h2 class="text-accent font-semibold text-base mb-3 flex items-center gap-2">
+        <span class="text-2xl">🎬</span> {% trans "Principle of Movizz" %}
+      </h2>
+      <p class="text-muted text-sm leading-relaxed">{% trans "home-principle" %}</p>
+    </div>
+
+    <div class="card-panel">
+      <h2 class="text-accent font-semibold text-base mb-3 flex items-center gap-2">
+        <span class="text-2xl">🎮</span> {% trans "How to play?" %}
+      </h2>
+      <p class="text-muted text-sm leading-relaxed">{% trans "home-how" %}</p>
+    </div>
+
   </div>
+
+  <!-- CTA -->
+  <a href="{% url 'quizz:room_index' %}" class="btn-primary text-base px-10 py-3">
+    {% trans "Play" %} →
+  </a>
+
 </div>
-
-  <div style="text-align: center;">
-    <a href="{% url 'quizz:room_index' %}" class="btn-large waves-effect btn-color">{% trans "Play" %}</a><br>
-  </div>
-
 {% endblock %}
