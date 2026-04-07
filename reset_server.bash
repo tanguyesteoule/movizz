@@ -15,8 +15,9 @@ tailwindcss \
   -o /home/tanguy/movizz/guess_movie/quizz/static/quizz/tailwind.css \
   --minify
 
-# Collect static files
+# Compile translations and collect static files
 cd /home/tanguy/movizz/guess_movie
+django-admin compilemessages --ignore=env
 python manage.py collectstatic --noinput
 cd /home/tanguy/movizz/
 
