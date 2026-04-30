@@ -39,6 +39,24 @@ $(document).ready(function() {
   $('#new-link').click(function() {
     gameSocket.send(JSON.stringify({'message': 'new_game'}));
   });
+
+  function buildShareText() {
+    const answers = {{ list_answer }};
+    const score = {{ score_user }};
+    const nb = {{ nb_question }};
+    const grid = answers.map(a => a === 1 ? '🟩' : '🟥').join('');
+    return '🎬 Movizz — {% trans "Quote mode" %}\n' + score + '/' + nb + ' {% trans "films found" %}\n' + grid + '\nmovizz.fr';
+  }
+
+  window.copyShare = function() {
+    const btn = document.getElementById('share-btn');
+    navigator.clipboard.writeText(buildShareText()).then(function() {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ {% trans "Copied!" %}';
+      btn.disabled = true;
+      setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+    });
+  };
 });
 </script>
 {% endblock %}
@@ -93,6 +111,8 @@ $(document).ready(function() {
     {% else %}
       <p class="text-muted text-sm">{% trans "(Waiting for the host for a new game)" %}</p>
     {% endif %}
+    <br class="mb-3">
+    <button id="share-btn" onclick="copyShare()" class="btn-secondary mt-3">📋 {% trans "Share my results" %}</button>
   </div>
 
   <!-- Summary -->
