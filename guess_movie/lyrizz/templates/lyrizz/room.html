@@ -23,6 +23,12 @@ setTimeout(() => {
     $('#start-link').removeClass('disabled');
 }, 2000);
 
+var savedUsername = localStorage.getItem('movizz_username');
+if (savedUsername && /^Anonymous[A-Za-z0-9]{6}$/.test($("#user-name").val())) {
+  $("#user-name").val(savedUsername);
+  $.ajax({ url: '/lyrizz/change_user_name/', data: { 'user_name': savedUsername }, dataType: 'json' });
+}
+
 /*
 var webSocketFactory = {
   connectionTries: 1,
@@ -199,9 +205,8 @@ $("#user-name").keyup(function(){
               },
               dataType: 'json',
               success: function (data) {
-                context = {'user_name': user_name}
-                userSocket.send(JSON.stringify(context));
-
+                if (user_name.trim()) localStorage.setItem('movizz_username', user_name);
+                userSocket.send(JSON.stringify({'user_name': user_name}));
               }
           });
 

@@ -21,6 +21,12 @@ ALREADY_CREATED = 0
 
 setTimeout(() => { $('#start-link').removeClass('disabled'); }, 2000);
 
+var savedUsername = localStorage.getItem('movizz_username');
+if (savedUsername && /^Anonymous[A-Za-z0-9]{6}$/.test($('#user-name').val())) {
+  $('#user-name').val(savedUsername);
+  $.ajax({ url: '/change_user_name/', data: { 'user_name': savedUsername }, dataType: 'json' });
+}
+
 // ── WebSocket helpers ──────────────────────────────────────────────────
 connect_socket = function(url) {
   var connectionTries = 1;
@@ -139,6 +145,7 @@ $('#user-name').keyup(function() {
       data: { 'user_name': user_name },
       dataType: 'json',
       success: function(data) {
+        if (user_name.trim()) localStorage.setItem('movizz_username', user_name);
         userSocket.send(JSON.stringify({'user_name': user_name}));
       }
     });
