@@ -47,10 +47,14 @@ $(document).ready(function() {
     $('#table-container').html(s)
   }
 
+  var shareAnswers = null;
+
   update_table2 = function(results) {
     var list_answer = results['dict_answer']['{{request.session.user_id}}']
+    shareAnswers = list_answer;
     var score_user  = list_answer.reduce((a, b) => a + b, 0)
     var nb_question = {{ nb_question }}
+    document.getElementById('share-btn').style.display = 'inline-block';
     var s = '<h2 class="text-accent font-semibold text-sm uppercase tracking-widest mb-4">{% trans "Summary of questions" %} — ' + score_user + ' / ' + nb_question + '</h2>'
     s += '<ul class="collection" style="text-align:left;">'
 
@@ -112,6 +116,21 @@ $(document).ready(function() {
   $('#new-link').click(function() {
     gameSocket.send(JSON.stringify({'message': 'new_game'}));
   });
+
+  window.copyShare = function() {
+    if (!shareAnswers) return;
+    const score = shareAnswers.reduce((a, b) => a + b, 0);
+    const nb = {{ nb_question }};
+    const grid = shareAnswers.map(a => a === 1 ? '🟩' : '🟥').join('');
+    const text = '🎬 Movizz — {% trans "Image mode" %}\n' + score + '/' + nb + ' {% trans "films found" %}\n' + grid + '\nmovizz.fr';
+    const btn = document.getElementById('share-btn');
+    navigator.clipboard.writeText(text).then(function() {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ {% trans "Copied!" %}';
+      btn.disabled = true;
+      setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+    });
+  };
 });
 </script>
 {% endblock %}
@@ -139,6 +158,8 @@ $(document).ready(function() {
     {% else %}
       <p class="text-muted text-sm">{% trans "(Waiting for the host for a new game)" %}</p>
     {% endif %}
+    <br class="mb-3">
+    <button id="share-btn" onclick="copyShare()" class="btn-secondary mt-3" style="display:none;">📋 {% trans "Share my results" %}</button>
   </div>
 
   <!-- Summary (filled by JS) -->

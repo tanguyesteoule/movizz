@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-06 19:55+0000\n"
+"POT-Creation-Date: 2026-04-30 12:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -448,33 +448,56 @@ msgstr ""
 msgid "Next question"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:49
-#: quizz/templates/quizz/room_results_image.html:122
+#: quizz/templates/quizz/room_results.html:48
+msgid "Quote mode"
+msgstr ""
+
+#: quizz/templates/quizz/room_results.html:48
+#: quizz/templates/quizz/room_results_image.html:125
+msgid "films found"
+msgstr ""
+
+#: quizz/templates/quizz/room_results.html:55
+#: quizz/templates/quizz/room_results_image.html:129
+msgid "Copied!"
+msgstr ""
+
+#: quizz/templates/quizz/room_results.html:67
+#: quizz/templates/quizz/room_results_image.html:141
 msgid "Game is over !"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:50
-#: quizz/templates/quizz/room_results_image.html:123
+#: quizz/templates/quizz/room_results.html:68
+#: quizz/templates/quizz/room_results_image.html:142
 msgid "Here are the final scores."
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:58
+#: quizz/templates/quizz/room_results.html:76
 msgid "Player"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:92
-#: quizz/templates/quizz/room_results_image.html:138
+#: quizz/templates/quizz/room_results.html:110
+#: quizz/templates/quizz/room_results_image.html:157
 msgid "Play again"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:94
-#: quizz/templates/quizz/room_results_image.html:140
+#: quizz/templates/quizz/room_results.html:112
+#: quizz/templates/quizz/room_results_image.html:159
 msgid "(Waiting for the host for a new game)"
 msgstr ""
 
-#: quizz/templates/quizz/room_results.html:101
-#: quizz/templates/quizz/room_results_image.html:54
+#: quizz/templates/quizz/room_results.html:115
+#: quizz/templates/quizz/room_results_image.html:162
+msgid "Share my results"
+msgstr ""
+
+#: quizz/templates/quizz/room_results.html:121
+#: quizz/templates/quizz/room_results_image.html:58
 msgid "Summary of questions"
+msgstr ""
+
+#: quizz/templates/quizz/room_results_image.html:125
+msgid "Image mode"
 msgstr ""
 
 #~ msgid "room-presel"

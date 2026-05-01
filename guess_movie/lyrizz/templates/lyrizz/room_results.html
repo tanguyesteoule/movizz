@@ -45,6 +45,23 @@ if (window.location.protocol == 'https:') {
     gameSocket.send(data)
   })
 
+  function buildShareText() {
+    const answers = {{ list_answer }};
+    const score = {{ score_user }};
+    const nb = {{ nb_question }};
+    const grid = answers.map(a => a === 1 ? '🟩' : '🟥').join('');
+    return '🎵 Lyrizz\n' + score + '/' + nb + ' chansons trouvées\n' + grid + '\nmovizz.fr';
+  }
+
+  window.copyShare = function() {
+    const btn = document.getElementById('share-btn');
+    navigator.clipboard.writeText(buildShareText()).then(function() {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Copié !';
+      btn.disabled = true;
+      setTimeout(function() { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+    });
+  };
 
 });
 </script>
@@ -94,11 +111,12 @@ if (window.location.protocol == 'https:') {
 </div>
 <br />
   {% if request.session.game_master == room_name%}
-<!--<a href="#" ></a>-->
   <a id="new-link" class="btn-large waves-effect btn-color">Rejouer</a><br />
 {% else %}
 (En attente de l'hote pour une nouvelle partie)
 {% endif%}
+  <br />
+  <button id="share-btn" onclick="copyShare()" class="btn-large" style="background:transparent;border:1px solid currentColor;cursor:pointer;">📋 Partager mes résultats</button>
   <br />
 <h5 class="color-title-button">Résumé des questions ({{ score_user }} / {{ nb_question }})</h5>
   <div style="margin: 0 auto; width:80%;">
