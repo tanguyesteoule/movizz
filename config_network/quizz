@@ -68,8 +68,9 @@ server {
     alias /home/tanguy/movizz/guess_movie/media/covers;
   }
 
-  location /media/screenshot {
-    alias /home/tanguy/movizz/guess_movie/media/screenshot;
+  location /protected-screenshots/ {
+    internal;
+    alias /home/tanguy/movizz/guess_movie/media/screenshot/;
   }
 
   location /ws/ {

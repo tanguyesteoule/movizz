@@ -781,7 +781,11 @@ def serve_screenshot(request, token):
         raise Http404
     if not os.path.exists(full_path):
         raise Http404
-    response = FileResponse(open(full_path, 'rb'))
+    if django_settings.DEBUG:
+        response = FileResponse(open(full_path, 'rb'))
+    else:
+        response = HttpResponse()
+        response['X-Accel-Redirect'] = f'/protected-screenshots/{rel_path}'
     response['Cache-Control'] = 'private, max-age=300'
     return response
 
