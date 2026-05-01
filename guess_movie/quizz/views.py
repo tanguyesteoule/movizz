@@ -1,3 +1,4 @@
+from django.conf import settings as django_settings
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, FileResponse, Http404
 from django.core import signing
@@ -8,6 +9,7 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 
 from .forms import ContactForm
+from .utils import sign_img_path
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, Country, MovieCountry, GamePlayer, \
     Preselect, Screenshot, QuestionImage, AnswerImage, News
 import random
@@ -621,7 +623,6 @@ def about(request):
 
 
 def contact(request):
-    from django.conf import settings as django_settings
     captcha_error = None
     if request.method == 'POST':
         # Verify reCAPTCHA
@@ -769,26 +770,20 @@ def get_movie_info(request):
 """
 
 
-def sign_img_path(path):
-    """Return a signed, opaque token for a screenshot path."""
-    return signing.dumps(str(path), salt='screenshot')
-
-
 def serve_screenshot(request, token):
-    """Proxy view: verify signed token and stream the screenshot file."""
-    from django.conf import settings as django_settings
     try:
         rel_path = signing.loads(token, salt='screenshot')
     except signing.BadSignature:
         raise Http404
     full_path = os.path.join(django_settings.MEDIA_ROOT, 'screenshot', rel_path)
-    # Guard against path traversal
     screenshot_root = os.path.join(os.path.abspath(django_settings.MEDIA_ROOT), 'screenshot')
     if not os.path.abspath(full_path).startswith(screenshot_root):
         raise Http404
     if not os.path.exists(full_path):
         raise Http404
-    return FileResponse(open(full_path, 'rb'))
+    response = FileResponse(open(full_path, 'rb'))
+    response['Cache-Control'] = 'private, max-age=300'
+    return response
 
 
 def home(request):

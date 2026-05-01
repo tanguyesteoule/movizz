@@ -5,7 +5,8 @@ from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 
 from .models import GamePlayer, Player
-from .views import Game, Question, Movie, Answer, QuestionImage, Screenshot, AnswerImage, sign_img_path
+from .utils import sign_img_path
+from .views import Game, Question, Movie, Answer, QuestionImage, Screenshot, AnswerImage
 from django.db.models import F
 import numpy as np
 
