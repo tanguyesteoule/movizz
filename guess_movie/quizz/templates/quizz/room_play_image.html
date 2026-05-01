@@ -68,7 +68,7 @@ $(document).ready(function() {
       $('#reveal-div').html('')
       $('#result').html('')
 
-      img_path = '{{ MEDIA_URL }}/screenshot/' + data['image_url']
+      img_path = '/img/' + data['image_url'] + '/';
       $('img#screenshot-img').attr('src', img_path)
       $('#thumb1').attr('src', img_path)
       $('#thumb2').removeAttr('src').css('visibility', 'hidden');
@@ -105,7 +105,7 @@ $(document).ready(function() {
 
   update_img = function(img, n) {
     clean_arrival();
-    img_path = "{{ MEDIA_URL }}/screenshot/" + img;
+    img_path = '/img/' + img + '/';
     $('img#screenshot-img').attr('src', img_path)
     $('#thumb' + parseInt(n)).attr('src', img_path).css('visibility', 'visible');
   }
@@ -265,7 +265,7 @@ $(document).ready(function() {
   <div id="cont-screenshot" class="text-center">
     <!-- Main image wrapper (overlay positioned relative to this) -->
     <div id="screenshot-main-wrap">
-      <img id="screenshot-img" style="visibility:hidden;" class="screenshot" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" />
+      <img id="screenshot-img" style="visibility:hidden;" class="screenshot" src="{% url 'quizz:serve_screenshot' image_signed %}" alt="" />
       <div id="cont-right-answer-div">
         <div id="right-answer-div"></div>
       </div>
@@ -273,7 +273,7 @@ $(document).ready(function() {
 
     <!-- Thumbnails (navigation entre les images déjà révélées) -->
     <div id="thumb-row" class="flex justify-center gap-3 mt-3">
-      <img id="thumb1" class="screenshot-thumb" style="visibility:hidden;" src="{{ MEDIA_URL }}/screenshot/{{ image }}" alt="" />
+      <img id="thumb1" class="screenshot-thumb" style="visibility:hidden;" src="{% url 'quizz:serve_screenshot' image_signed %}" alt="" />
       <img id="thumb2" class="screenshot-thumb" style="visibility:hidden;" alt="" />
       <img id="thumb3" class="screenshot-thumb" style="visibility:hidden;" alt="" />
     </div>

@@ -1,5 +1,7 @@
+from django.conf import settings as django_settings
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, FileResponse, Http404
+from django.core import signing
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.views import generic
@@ -7,6 +9,7 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 
 from .forms import ContactForm
+from .utils import sign_img_path
 from .models import Movie, Quote, Question, Genre, MovieGenre, Game, Answer, Player, Country, MovieCountry, GamePlayer, \
     Preselect, Screenshot, QuestionImage, AnswerImage, News
 import random
@@ -23,6 +26,7 @@ from collections import Counter
 import pandas as pd
 from django.utils.safestring import mark_safe
 from django.utils import translation
+import os
 
 """
 # Init NLP
@@ -514,7 +518,7 @@ def room_play_image(request, room_name, game_name):
         context['movies'] = [question.movie1, question.movie2, question.movie3]
         context['user_list'] = user_list
         context['already_answer'] = already_answer
-        context['image'] = image
+        context['image_signed'] = sign_img_path(image)
         context['started'] = started
 
         return render(request, 'quizz/room_play_image.html', context)
@@ -619,7 +623,6 @@ def about(request):
 
 
 def contact(request):
-    from django.conf import settings as django_settings
     captcha_error = None
     if request.method == 'POST':
         # Verify reCAPTCHA
@@ -765,6 +768,26 @@ def get_movie_info(request):
     resp = {'name': movie.name, 'year': movie.year, 'image_url': str(movie.image), 'director': movie.director, 'quotes': quotes, 'words_sign': words_sign}
     return JsonResponse(resp)
 """
+
+
+def serve_screenshot(request, token):
+    try:
+        rel_path = signing.loads(token, salt='screenshot')
+    except signing.BadSignature:
+        raise Http404
+    full_path = os.path.join(django_settings.MEDIA_ROOT, 'screenshot', rel_path)
+    screenshot_root = os.path.join(os.path.abspath(django_settings.MEDIA_ROOT), 'screenshot')
+    if not os.path.abspath(full_path).startswith(screenshot_root):
+        raise Http404
+    if not os.path.exists(full_path):
+        raise Http404
+    if django_settings.DEBUG:
+        response = FileResponse(open(full_path, 'rb'))
+    else:
+        response = HttpResponse()
+        response['X-Accel-Redirect'] = f'/protected-screenshots/{rel_path}'
+    response['Cache-Control'] = 'private, max-age=300'
+    return response
 
 
 def home(request):
